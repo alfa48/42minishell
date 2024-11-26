@@ -101,7 +101,7 @@ t_node	*add_node(t_node *root, t_node *new, int side)
 }
 
 t_node*	init_shell(char *command_line)
-{
+{//usar array de funcoes
 	t_node	*root;
 	t_node	*tmp;
 	char	*sep_position[5];
@@ -320,7 +320,7 @@ void	set_or_add_env_var(const char *env_entry, t_env_var **g_env_list)
 	if (equal_sign)
 	{
 		name_len = equal_sign - env_entry;
-		strncpy(name, env_entry, name_len);
+		ft_strlcpy(name, env_entry, name_len);
 		name[name_len] = '\0';
 		value = equal_sign + 1;
 		if (set_it(name, value, g_env_list) == 42)
@@ -329,7 +329,7 @@ void	set_or_add_env_var(const char *env_entry, t_env_var **g_env_list)
 	else
 	{
 		name_len = ft_strlen(env_entry) + 1;
-		strncpy(name, env_entry, name_len);
+		ft_strlcpy(name, env_entry, name_len);
 		name[name_len] = '\0';
 		if (set_it(name, "''", g_env_list) == 42)
 			return ;
@@ -356,7 +356,7 @@ int	main(void)
 	cmd = malloc(sizeof(t_cmd));
 	init_args(cmd);
 	initialize_env_list(&(cmd->g_env_list), environ);
-	if (cmd->g_env_list == NULL)
+	if (!cmd->g_env_list)
 		return (0 * printf("Error in create env list!\n"));
 	while (1)
 	{
@@ -371,12 +371,12 @@ int	main(void)
 					mini_built_in(cmd, &(cmd->g_env_list));
 				else
 					traverse_tree(cmd->root, cmd->array, cmd->size);
+				free_tree(cmd->root);
 			}
 			else
 				printf("Erro ao criar a árvore!\n");
 			cmd->index = 0;
-			free_tree(cmd->root);
-			free_ms(cmd->arg);
+			free_ms(cmd);
 			free(cmd->line);
 		}
 	}

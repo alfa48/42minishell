@@ -35,8 +35,10 @@ t_token	*next_token(t_cmd_line *cmd)
 	check_space(cmd);
 	ft_enter(cmd);
 
-	t_token* (*funArry[])(t_cmd_line *) = {check_end, check_condicitional, check_pipe_or, check_ex_cmd, check_relative_path, check_env,
-		check_special_characters, check_high_commas, check_litle_high_commas, check_redirectors, check_hifem, check_absolutely_path};
+	t_token* (*funArry[])(t_cmd_line *) = {check_end, check_condicitional,
+	check_pipe_or, check_ex_cmd, check_relative_path, check_env,
+	check_special_characters, check_high_commas, check_litle_high_commas,
+	check_redirectors, check_hifem, check_absolutely_path};
 
 	size_t	i = 0;
 	while (i < (sizeof(funArry) / sizeof(funArry[0])))

@@ -83,7 +83,7 @@ void    exec2()
 
 void	traverse_tree(t_node *root, char **array, int size)
 {
-	if (root == NULL)
+	if (!root || !array)
 		return ;
 
     traverse_tree(root->left, array, size);
@@ -106,7 +106,7 @@ void	traverse_tree(t_node *root, char **array, int size)
             pid_t pid_2;
                 char *matr[] = {"PATH=/bin", NULL};
                 
-
+            
             pipe(fd);
             pid_1 = fork();//exec cm1
             //printf("PID: %d\n", pid_1);
@@ -137,21 +137,16 @@ void	traverse_tree(t_node *root, char **array, int size)
                 close(fd[0]); // Fecha o lado de leitura
                 close(fd[1]); // Fecha o lado de ESCRITA
                 //printf("CMD depois do pipe %s", array[root->index + 1]);
-                if (mini_strstr(root->command, "echo") != NULL)
+                if (mini_strstr(root->command, "echo") != NULL)//tem logica
                      mini_echo(root->command);
                 else
                     execve(execve_args1[0], execve_args1, matr);
                 exit(1);
-
-                //exec cmd2
-                //execve(ft_strjoin("/bin/", root->command), NULL, "PATH=/bin");
-
             }
             close(fd[0]); // Fecha o lado de leitura do pipe
             close(fd[1]); // Fecha o lado de escrita do pipe
             
             waitpid(pid_2, NULL, 0);
-
         }
 
     }

@@ -24,6 +24,7 @@ void    init_args(t_cmd  *cmd)
 	cmd->root = NULL;
 	cmd->g_env_list = NULL;
 	cmd->line = NULL;
+	cmd->arg = NULL;
 	cmd->nl = 0;
 }
 

@@ -53,7 +53,7 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 
 
 	cmd->arg = ft_split(cmd->root->command, ' ');
-	if (cmd == NULL)
+	if (!cmd)
 		return ;
 	if (ft_strcmp("cd", cmd->arg[0]) == 0)
 		mini_cd(cmd->arg[1], *g_env_list);
@@ -84,12 +84,11 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
     }*/
 	else
 	{
-       // printf("nenhum mini_built_in\n\n");
-
 		p = fork();
 		if (p == 0)
         {
             char **execve_args = get_args(cmd->root->command);
+            printf("nenhum mini_built_in\n\n");
             execve(execve_args[0], execve_args, envp);
             printf("error: ao executar o comando: %s\n", cmd->root->command);
         }

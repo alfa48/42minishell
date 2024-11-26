@@ -92,7 +92,7 @@ void    mini_export(char **args, t_env_var **g_env_list);
 void    mini_unset(char **args, t_env_var **g_env_list);
 
 //token/cmd_in/cmd_envexit.c
-void    free_ms(char** matriz);
+void    free_ms(t_cmd *cmd);
 void    mini_env(t_env_var *g_env_list);
 void    mini_exit(void);
 

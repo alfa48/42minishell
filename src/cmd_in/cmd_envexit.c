@@ -27,19 +27,16 @@ void    mini_env(t_env_var *g_env_list)
     }
 }
 
-void free_ms(char** matriz)
+void free_ms(t_cmd *cmd)
 {
 	int	i;
-	int	j;
 
-	i = 0;
-	if (matriz)
+	i = -1;
+	if (cmd->arg)
 	{
-		while (matriz[i])
-			i ++;
-		j = -1;
-		while (++j < i)
-			free(matriz[j]);
-		free(matriz);
+		while (cmd->arg[++i])
+			free(cmd->arg[i]);
+		free(cmd->arg);
+		cmd->arg = NULL;
 	}
 }
