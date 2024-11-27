@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:56:05 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/11/27 10:10:40 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/11/27 10:26:21 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,12 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 	pid_t   p;
 	//char	*argv[] = {NULL };
 	char	*envp[] = { "PATH=/bin", "TERM=xterm" , NULL };
+
+
+
+
+
+
 
 
 	cmd->arg = ft_split(cmd->root->command, ' ');
