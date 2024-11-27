@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_vars.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 09:34:57 by manandre          #+#    #+#             */
-/*   Updated: 2024/11/20 09:34:58 by manandre         ###   ########.fr       */
+/*   Updated: 2024/11/27 14:14:57 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ int	calc_tree_size(t_node *root)
 void    init_args(t_cmd  *cmd)
 {
 	cmd->root = NULL;
-	cmd->g_env_list = NULL;
 	cmd->line = NULL;
 	cmd->arg = NULL;
 	cmd->nl = 0;
+	cmd->g_env_list->counter_exp = 0;
 }
 
 void    init_args_next(t_cmd  *cmd)

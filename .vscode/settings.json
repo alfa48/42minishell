@@ -3,6 +3,7 @@
         "type_traits": "c",
         "cstdlib": "cpp",
         "new": "cpp",
-        "minishell.h": "c"
+        "minishell.h": "c",
+        "libft.h": "c"
     }
 }

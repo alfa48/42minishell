@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:24:48 by manandre          #+#    #+#             */
-/*   Updated: 2024/11/20 12:24:49 by manandre         ###   ########.fr       */
+/*   Updated: 2024/11/27 14:07:37 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,12 +81,12 @@ void    exec2()
    // printf("executar este cmd...\n");
 }
 
-void	traverse_tree(t_node *root, char **array, int size)
+void	traverse_tree(t_node *root, char **array, int size, t_env_var *g_env_list)
 {
 	if (!root || !array)
 		return ;
 
-    traverse_tree(root->left, array, size);
+    traverse_tree(root->left, array, size, g_env_list);
 
     if (root->command)
     {
@@ -120,7 +120,7 @@ void	traverse_tree(t_node *root, char **array, int size)
                 close(fd[0]); // Fecha o lado de leitura
                 close(fd[1]); // Fecha o lado de ESCRITA
                 if (mini_strstr(root->command, "echo") != NULL)
-                     mini_echo(root->command);
+                     mini_echo(g_env_list, root->command);
                 else
                     execve(execve_args[0], execve_args, matr);
                 exit(1);
@@ -138,7 +138,7 @@ void	traverse_tree(t_node *root, char **array, int size)
                 close(fd[1]); // Fecha o lado de ESCRITA
                 //printf("CMD depois do pipe %s", array[root->index + 1]);
                 if (mini_strstr(root->command, "echo") != NULL)//tem logica
-                     mini_echo(root->command);
+                     mini_echo(g_env_list, root->command);
                 else
                     execve(execve_args1[0], execve_args1, matr);
                 exit(1);
@@ -153,8 +153,8 @@ void	traverse_tree(t_node *root, char **array, int size)
 
 }
 
-void    exec(t_cmd *cmd)
+void    exec(t_cmd *cmd, t_env_var *g_env_list)
 {
     printf("%s\n", cmd->root->operator);
-    traverse_tree(cmd->root, cmd->array, cmd->size);
+    traverse_tree(cmd->root, cmd->array, cmd->size, g_env_list);
 }

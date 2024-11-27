@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/11/27 09:55:34 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/11/27 14:15:30 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -354,8 +354,9 @@ int	main(void)
 	extern char **environ;
 
 	cmd = malloc(sizeof(t_cmd));
-	init_args(cmd);
+	cmd->g_env_list = NULL;
 	initialize_env_list(&(cmd->g_env_list), environ);
+	init_args(cmd);
 	if (!cmd->g_env_list)
 		return (0 * printf("Error in create env list!\n"));
 	while (1)
@@ -370,12 +371,13 @@ int	main(void)
 				if (cmd->size == 1)
 					mini_built_in(cmd, &(cmd->g_env_list));
 				else
-					traverse_tree(cmd->root, cmd->array, cmd->size);
+					traverse_tree(cmd->root, cmd->array, cmd->size, cmd->g_env_list);
 				free_tree(cmd->root);
 			}
 			else
 				printf("Erro ao criar a árvore!\n");
 			cmd->index = 0;
+			cmd->g_env_list->counter_exp = 0;
 			free_ms(cmd);
 			free(cmd->line);
 		}

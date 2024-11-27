@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:28:30 by manandre          #+#    #+#             */
-/*   Updated: 2024/11/18 11:20:08 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/11/27 13:08:15 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct	s_env_var
 {
 	char	*name;
     char	*value;
+	int		counter_exp;
     struct s_env_var	*next;
 }	t_env_var;
 

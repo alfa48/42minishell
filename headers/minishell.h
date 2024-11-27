@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/11/20 15:20:28 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/11/27 14:10:42 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ t_token *create_token(int type, char *lexema);
 t_token *next_token(t_cmd_line *c_line);
 
 //token/cmd_in/cmd_cepeu.c
-void    mini_echo(char *arg);
+void    mini_echo(t_env_var *env_var, char *arg);
 void    mini_cd(char *path, t_env_var *g_env_list);
 void    mini_pwd(void);
 void    mini_export(char **args, t_env_var **g_env_list);
@@ -119,8 +119,8 @@ void	fill_array_cmd(t_node *root, char **array, int *index);
 
 //resources/utils/mini_utils.c
 char    **get_args(char *cmd);
-void    exec(t_cmd *cmd);
-void	traverse_tree(t_node *root, char **array, int size);
+void    exec(t_cmd *cmd, t_env_var *g_env_list);
+void	traverse_tree(t_node *root, char **array, int size, t_env_var *g_env_list);
 
 
 # endif

@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:56:05 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/11/27 10:26:21 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/11/27 14:04:50 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
     else if (strcmp(cmd->arg[0], "unset") == 0)
 		mini_unset(cmd->arg, g_env_list);
     else if (ft_strcmp("echo", cmd->arg[0]) == 0)
-		mini_echo(cmd->line);
+		mini_echo(*g_env_list, cmd->line);
     /*else if ('.' == cmd->arg[0][0]) EXECUTAR UM EXECUTAVEL EX:./a.out
     {
         printf("%c\n", cmd->arg[0][0]);
