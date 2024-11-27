@@ -6,37 +6,62 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/11/20 16:39:54 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/11/27 10:10:46 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static bool check_quotes_balance(const char *arg)
+{
+    int single_quotes;
+    int double_quotes;
+
+    single_quotes = 0;
+    double_quotes = 0;
+    while (*arg)
+    {
+        if (*arg == '\'')
+            single_quotes ++;
+        else if (*arg == '"')
+            double_quotes ++;
+        arg ++;
+    }
+    if (single_quotes % 2 == 0 && double_quotes % 2 == 0)
+        return (true);
+    return (false);
+}
+
 void    mini_echo(char *arg)
 {
-    bool    single_quote;
-    bool    double_quote;
-    int new_line;
+    bool    inside_single_quote;
+    bool    inside_double_quote;
+    int     new_line;
     char    *init;
 
-    new_line = 0;
-    single_quote = false;
-    double_quote = false;
+    inside_single_quote = false;
+    inside_double_quote = false;
+    if (!check_quotes_balance(arg))
+    {
+        write(2, "Error: unclosed quotes\n", 24);
+        return ;
+    }
     init = get_word(arg, &new_line);
     if (!init)
         return ;
     while (*init)
     {
-        while (*init == ' ' && !single_quote && !double_quote)
+        while (*init == ' ' && !inside_single_quote && !inside_double_quote)
         {
-            init ++;
+            init++;
             if (*init && *init != ' ')
                 write(1, " ", 1);
         }
-        if (*init == '\'')
-            single_quote = !single_quote;
-        else if (*init == '"')
-            double_quote = !double_quote;
+
+        if (*init == '\'' && !inside_double_quote)
+            inside_single_quote = !inside_single_quote;
+        else if (*init == '"' && !inside_single_quote)
+            inside_double_quote = !inside_double_quote;
         else
             write(1, init, 1);
         init++;

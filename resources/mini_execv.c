@@ -6,18 +6,18 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:56:05 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/11/20 15:40:21 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/11/27 10:10:40 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *get_word(char *line, int *sig)
+char    *get_word(char *line, int *sig)
 {
-    char *init;
-    char *end;
-    char  *start;
-    int i;
+    char    *init;
+    char    *end;
+    char    *start;
+    int     i;
 
     i = -1;
     init = mini_strstr(line, "echo");
