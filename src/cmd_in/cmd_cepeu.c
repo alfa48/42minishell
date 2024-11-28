@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/11/27 15:39:33 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/11/28 15:10:10 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,16 @@ bool check_quotes_balance(const char *arg)
         arg ++;
     }
     if (single_quotes % 2 == 0 && double_quotes % 2 == 0)
-    {
-        if (ft_strchr(arg, '"') > ft_strchr(arg, '\''))
-
         return (true);
-    }
     return (false);
 }
 
 
 static char *ft_sub(char *str1, char *ptr_start, char *str2)
 {
-/*
+
     if (!ptr_start || !str1 || !str2) 
         return (NULL);
-*/
     printf("str1: %s, start: %c, sub: %s\n", str1, ptr_start[0], str2);
     
     char *pos = ptr_start; 
