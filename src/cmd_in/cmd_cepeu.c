@@ -6,11 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-<<<<<<< HEAD
 /*   Updated: 2024/11/27 15:39:33 by fjilaias         ###   ########.fr       */
-=======
-/*   Updated: 2024/11/28 16:35:33 by fjilaias         ###   ########.fr       */
->>>>>>> aae8325311df509d37fc812d8dbf2a71f056a3a1
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,22 +50,16 @@ static char *ft_sub(char *str1, char *ptr_start, char *str2)
     printf("Esta é o ft_sub\n");
     while (*end > 32)
         end++;
-    size_t newlen = strlen(str1) - (end - pos) + strlen(str2);
+    size_t newlen = strlen(str1) - ((end - 1) - pos) + strlen(str2);
     char new[newlen + 1];
-    char *p = new;
-    size_t prefix_len = pos - str1;
-
-    strncpy(p, str1, prefix_len);
-    p += prefix_len;
-
-    strcpy(p, str2);
-    p += strlen(str2);
-
-    strcpy(p, end);
-    new[newlen] = '\0';
-    strcpy(str1, new);
-
-    printf("Esta é o ft_sub fim: %s\n", str1);
+    char *p = new; 
+    strncpy(p, str1, pos - str1);  
+    p += pos - str1;  
+    strcpy(p, str2);  
+    p += strlen(str2);  
+    strcpy(p, end);   
+    strcpy(str1, new); 
+    printf("Esta é o ft_sub fim\n");
     return (str1);
 }
 
@@ -115,14 +105,8 @@ char    *mini_expand(t_env_var *g_env_var, char *s)
         start = tmp;
        // printf("%s \n",  ft_findenv(start, g_env_var));
        var_env = ft_findenv(start, g_env_var);
-        if (var_env == NULL)
-        {
-            while (*start > 32)
-            {
-                    *start = ' ';
-                    start ++;
-            }
-        }
+        if (!var_env)
+            ft_sub(tmp, start, " ");
         else
             ft_sub(tmp, start, var_env);
     }
@@ -133,7 +117,7 @@ int is_expand(t_env_var *env_var, char *s)
 {
     int i = 0;
     char *tmp = s;
-
+    
     while (tmp && (tmp = ft_strchr(tmp, '$')) != NULL)
     {
         if (tmp[1] > 32)
@@ -159,11 +143,11 @@ void    mini_echo(t_env_var *env_var, char *arg)
     is_expand(env_var, arg);
     inside_single_quote = false;
     inside_double_quote = false;
-    if (!check_quotes_balance(arg))
+   /* if (!check_quotes_balance(arg))
     {
         write(2, "Error: unclosed quotes\n", 24);
         return ;
-    }
+    }*/
     init = get_word(arg, &new_line);
     if (!init)
         return ;
