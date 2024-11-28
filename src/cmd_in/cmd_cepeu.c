@@ -37,18 +37,18 @@ bool check_quotes_balance(const char *arg)
 }
 
 
-static char    *ft_sub(char *str1, char *ptr_start, char *str2)
+static char *ft_sub(char *str1, char *ptr_start, char *str2)
 {
 
-    if (ptr_start == NULL || str1 == NULL) 
-        return (NULL);  
+    if (!ptr_start || !str1 || !str2) 
+        return (NULL);
 
     printf("str1: %s, start: %c, sub: %s\n", str1, ptr_start[0], str2);
     
     char *pos = ptr_start; 
     char *end = pos;
     printf("Esta é o ft_sub\n");
-    while (*end != ' ' && *end != '\0')
+    while (*end <= 32)
         end++;  
     size_t newlen = strlen(str1) - (end - pos) + strlen(str2);
     char new[newlen + 1];
@@ -60,7 +60,7 @@ static char    *ft_sub(char *str1, char *ptr_start, char *str2)
     strcpy(p, end);   
     strcpy(str1, new); 
     printf("Esta é o ft_sub fim\n");
-    return (NULL);
+    return (str1);
 }
 
 char    *ft_findenv(char *s, t_env_var *g_env_list)
@@ -94,6 +94,7 @@ char    *mini_expand(t_env_var *g_env_var, char *s)
 {
     char    *start;
     char    *tmp;
+    char *var_env;
 
     tmp = s;
     printf("Esta é o mini_expand\n");
@@ -103,7 +104,11 @@ char    *mini_expand(t_env_var *g_env_var, char *s)
     {
         start = s;
        // printf("%s \n",  ft_findenv(start, g_env_var));
-        ft_sub(s, start, ft_findenv(start, g_env_var));
+       var_env = ft_findenv(start, g_env_var);
+        if (!var_env)
+            ft_sub(s, start, " ");
+        else
+            ft_sub(s, start, var_env);
     }
     return (tmp);
 }
