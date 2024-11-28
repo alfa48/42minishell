@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/11/28 15:10:10 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/11/28 16:35:33 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,14 @@ char    *mini_expand(t_env_var *g_env_var, char *s)
         start = tmp;
        // printf("%s \n",  ft_findenv(start, g_env_var));
        var_env = ft_findenv(start, g_env_var);
-        if (!var_env)
-            ft_sub(tmp, start, " ");
+        if (var_env == NULL)
+        {
+            while (*start > 32)
+            {
+                    *start = ' ';
+                    start ++;
+            }
+        }
         else
             ft_sub(tmp, start, var_env);
     }
@@ -112,7 +118,7 @@ int is_expand(t_env_var *env_var, char *s)
 {
     int i = 0;
     char *tmp = s;
-    
+
     while (tmp && (tmp = ft_strchr(tmp, '$')) != NULL)
     {
         if (tmp[1] > 32)
@@ -138,11 +144,11 @@ void    mini_echo(t_env_var *env_var, char *arg)
     is_expand(env_var, arg);
     inside_single_quote = false;
     inside_double_quote = false;
-   /* if (!check_quotes_balance(arg))
+    if (!check_quotes_balance(arg))
     {
         write(2, "Error: unclosed quotes\n", 24);
         return ;
-    }*/
+    }
     init = get_word(arg, &new_line);
     if (!init)
         return ;
