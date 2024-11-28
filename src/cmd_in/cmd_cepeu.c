@@ -76,10 +76,10 @@ char    *ft_findenv(char *s, t_env_var *g_env_list)
     while (tmp)
     {
         //printf("inicio %c e fim %c\n", s[0], s[i - 1]);
-        int h = (int)ft_strlen(tmp->name);
-        printf("v = %i e v2 = %i\n", h, i -1);
+        int len = (int)ft_strlen(tmp->name);
+        printf("v = %i e v2 = %i\n", len, i -1);
             // == (i - 1))
-        if ((ft_strncmp(tmp->name, s + 1, i - 1) == 0) && (h == (i - 1)))
+        if ((ft_strncmp(tmp->name, s + 1, i - 1) == 0) && (len == (i - 1)))
         {
             printf("Valor %s, Name %s\n", tmp->value, tmp->name);
             return (tmp->value);
@@ -97,9 +97,9 @@ char    *mini_expand(t_env_var *g_env_var, char *s)
 
     tmp = s;
     printf("Esta é o mini_expand\n");
-    while (*s && *s != '$')// ola$
+    while (*s && *s != '$')
         s ++;
-    if(*s == '$')// sosinho
+    if(*s == '$')
     {
         start = s;
        // printf("%s \n",  ft_findenv(start, g_env_var));
@@ -110,19 +110,21 @@ char    *mini_expand(t_env_var *g_env_var, char *s)
 
 int is_expand(t_env_var *env_var, char *s)
 {
-    int i = -1;
+    int i = 0;
     char *tmp = s;
-    while (tmp && ft_strchr(tmp,  '$') &&
-        ((ft_strchr(tmp ,'$')[1] != ' ') ||
-            (ft_strchr(tmp ,'$')[1] != '\0')))
+    
+    while (tmp && (tmp = ft_strchr(tmp, '$')) != NULL)
     {
-        ++i;
-        mini_expand(env_var, tmp);
-        printf("%i Este é o TMP - %s \n", i, tmp);
-        if (tmp)
+        if (tmp[1] > 32)
+        {
+            mini_expand(env_var, tmp);
+            printf("%d Este é o TMP - %s \n", i, tmp);
             env_var->counter_exp++;
+        }
+        tmp++;
+        i++;
     }
-    return (env_var->counter_exp);
+    return env_var->counter_exp;
 }
 
 void    mini_echo(t_env_var *env_var, char *arg)
