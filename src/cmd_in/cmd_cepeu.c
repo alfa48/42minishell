@@ -39,18 +39,18 @@ bool check_quotes_balance(const char *arg)
 
 static char *ft_sub(char *str1, char *ptr_start, char *str2)
 {
-
+/*
     if (!ptr_start || !str1 || !str2) 
         return (NULL);
-
+*/
     printf("str1: %s, start: %c, sub: %s\n", str1, ptr_start[0], str2);
     
     char *pos = ptr_start; 
     char *end = pos;
     printf("Esta é o ft_sub\n");
-    while (*end <= 32)
-        end++;  
-    size_t newlen = strlen(str1) - (end - pos) + strlen(str2);
+    while (*end > 32)
+        end++;
+    size_t newlen = strlen(str1) - ((end - 1) - pos) + strlen(str2);
     char new[newlen + 1];
     char *p = new; 
     strncpy(p, str1, pos - str1);  
@@ -98,19 +98,19 @@ char    *mini_expand(t_env_var *g_env_var, char *s)
 
     tmp = s;
     printf("Esta é o mini_expand\n");
-    while (*s && *s != '$')
-        s ++;
-    if(*s == '$')
+    while (*tmp && *tmp != '$')
+        tmp ++;
+    if(*tmp == '$')
     {
-        start = s;
+        start = tmp;
        // printf("%s \n",  ft_findenv(start, g_env_var));
        var_env = ft_findenv(start, g_env_var);
         if (!var_env)
-            ft_sub(s, start, " ");
+            ft_sub(tmp, start, " ");
         else
-            ft_sub(s, start, var_env);
+            ft_sub(tmp, start, var_env);
     }
-    return (tmp);
+    return (s);
 }
 
 int is_expand(t_env_var *env_var, char *s)
@@ -126,6 +126,7 @@ int is_expand(t_env_var *env_var, char *s)
             printf("%d Este é o TMP - %s \n", i, tmp);
             env_var->counter_exp++;
         }
+        printf("COUNTER: %d\n", i);
         tmp++;
         i++;
     }
