@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/11/27 14:15:30 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/11/28 08:55:33 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -319,7 +319,7 @@ void	set_or_add_env_var(const char *env_entry, t_env_var **g_env_list)
 	equal_sign = ft_strchr(env_entry, '=');
 	if (equal_sign)
 	{
-		name_len = equal_sign - env_entry;
+		name_len = (equal_sign - env_entry) + 1;
 		ft_strlcpy(name, env_entry, name_len);
 		name[name_len] = '\0';
 		value = equal_sign + 1;
