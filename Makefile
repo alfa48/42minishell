@@ -14,11 +14,12 @@ NAME = minishell
 RSC_DIR = ./resources
 
 SRC =$(RSC_DIR)/main.c \
-	$(RSC_DIR)/mini_execv.c \
+	$(RSC_DIR)/mini/mini_execv.c \
 	$(RSC_DIR)/init/init_vars.c \
 	$(RSC_DIR)/utils/mini_utils.c \
 	$(RSC_DIR)/cmd_in/cmd_cepeu.c \
-	$(RSC_DIR)/cmd_in/cmd_envexit.c
+	$(RSC_DIR)/cmd_in/cmd_envexit.c \
+	$(RSC_DIR)/signal/mini_signal.c
 
 OBJ = $(SRC:.c=.o)
 

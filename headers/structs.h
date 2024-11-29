@@ -13,18 +13,6 @@
 #ifndef	STRUCTS_H
 # define STRACTS_H
 
-typedef struct	s_cmd_line
-{
-	char	*buffer;
-	int	corrent_buffer;
-	int	pointer;
-	int	fd;
-	char	*line;
-	char	*lexema;
-	int	index;
-	int	init_lex;
-}	t_cmd_line;
-
 typedef struct	s_node
 {
 	char	*command;

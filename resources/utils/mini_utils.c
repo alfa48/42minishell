@@ -76,11 +76,6 @@ void    exec1(char **array, int index)
 */
 
 
-void    exec2()
-{
-   // printf("executar este cmd...\n");
-}
-
 void	traverse_tree(t_node *root, char **array, int size, t_env_var *g_env_list)
 {
 	if (!root || !array)

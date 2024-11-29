@@ -21,6 +21,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <errno.h>
+#include <signal.h>
 #include <linux/limits.h>
 # include "structs.h"
 # include "libft.h"
@@ -28,6 +29,9 @@
 # define BUFFER_SIZE 3
 # define FILE_MODE_WRITE O_WRONLY | O_CREAT | O_TRUNC
 # define FILE_MODE_READ O_RDONLY
+
+//variaveis globais
+extern int g_signal;
 
 //cmd_in/cmd_envexit.c
 void    free_ms(t_cmd *cmd);
@@ -49,8 +53,9 @@ t_node	*create_node(char *operator, char *command, int index);
 t_node	*add_node(t_node *root, t_node *new, int side);
 t_node	*init_shell(char *command_line);
 char	*mini_strstr(const char *haystack, const char *needle);
+void	ft_error(t_cmd *cmd,char *msg, int flag);
 
-//resources/mini_execv.c
+//resources/signal/mini_execv.c
 void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list);
 void    list_env_vars(t_env_var *g_env_list);
 void	set_or_add_env_var(const char *env_entry, t_env_var **g_env_list);
@@ -67,6 +72,11 @@ void	fill_array_cmd(t_node *root, char **array, int *index);
 char    **get_args(char *cmd);
 void    exec(t_cmd *cmd, t_env_var *g_env_list);
 void	traverse_tree(t_node *root, char **array, int size, t_env_var *g_env_list);
+
+//resources/signal/mini_signal.c
+void    signal_handler(int signal);
+void    check_signal();
+
 
 
 # endif

@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+int	g_signal = 0;
+
 void	free_tree(t_node *root)
 {
 	if (root == NULL)
@@ -348,6 +350,35 @@ void	initialize_env_list(t_env_var **g_env_list, char **envp)
     }
 }
 
+void ft_free(t_cmd *cmd)
+{
+	cmd->index = 0;
+	cmd->g_env_list->counter_exp = 0;
+	free_ms(cmd);
+	free(cmd->line);
+}
+
+void	ft_error(t_cmd *cmd, char *msg, int flag)
+{
+	(void) cmd;
+	printf("Error: %s\n", msg);
+	if (flag)
+		ft_free(cmd);
+	free(cmd);
+	exit(1);
+}
+
+int is_only_spaces(char *str)
+{
+    while (*str)
+    {
+        if (*str != ' ' && *str != '\t')
+            return 0;
+        str++;
+    }
+    return 1;
+}
+
 int	main(void)
 {
 	t_cmd	*cmd;
@@ -357,31 +388,29 @@ int	main(void)
 	cmd->g_env_list = NULL;
 	initialize_env_list(&(cmd->g_env_list), environ);
 	init_args(cmd);
+	
+	check_signal();
+
 	if (!cmd->g_env_list)
-		return (0 * printf("Error in create env list!\n"));
+		ft_error(cmd, "create env list", 0);
 	while (1)
 	{
 		cmd->line = readline("\033[36mminishell$> \033[0m");
-		if (cmd->line || cmd->line[0] != '\0')
+		if(!cmd->line || cmd->line[0] == '\0' || is_only_spaces(cmd->line))
+			continue;
+		cmd->root = init_shell(cmd->line);
+		if (cmd->root)
 		{
-			printf("Error in create env list!: %s$\n", cmd->line);
-			cmd->root = init_shell(cmd->line);
-			if (cmd->root)
-			{
-				init_args_next(cmd);
-				if (cmd->size == 1)
-					mini_built_in(cmd, &(cmd->g_env_list));
-				else
-					traverse_tree(cmd->root, cmd->array, cmd->size, cmd->g_env_list);
-				free_tree(cmd->root);
-			}
+			init_args_next(cmd);
+			if (cmd->size == 1)
+				mini_built_in(cmd, &(cmd->g_env_list));
 			else
-				printf("Erro ao criar a árvore!\n");
-			cmd->index = 0;
-			cmd->g_env_list->counter_exp = 0;
-			free_ms(cmd);
-			free(cmd->line);
+				traverse_tree(cmd->root, cmd->array, cmd->size, cmd->g_env_list);
+			free_tree(cmd->root);
 		}
+		else
+			ft_error(cmd, "create tree", 1);
+		ft_free(cmd);
 	}
 	return (0);
 }

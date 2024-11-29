@@ -4,6 +4,10 @@
         "cstdlib": "cpp",
         "new": "cpp",
         "minishell.h": "c",
-        "libft.h": "c"
+        "libft.h": "c",
+        "limits.h": "c",
+        "signal.h": "c",
+        "errno.h": "c",
+        "fcntl.h": "c"
     }
 }
