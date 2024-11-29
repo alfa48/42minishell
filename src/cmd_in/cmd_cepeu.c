@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/11/28 15:10:10 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/11/27 15:39:33 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,21 @@ bool check_quotes_balance(const char *arg)
         arg ++;
     }
     if (single_quotes % 2 == 0 && double_quotes % 2 == 0)
+    {
+        if (ft_strchr(arg, '"') > ft_strchr(arg, '\''))
+
         return (true);
+    }
     return (false);
 }
 
 
 static char *ft_sub(char *str1, char *ptr_start, char *str2)
 {
-
+/*
     if (!ptr_start || !str1 || !str2) 
         return (NULL);
+*/
     printf("str1: %s, start: %c, sub: %s\n", str1, ptr_start[0], str2);
     
     char *pos = ptr_start; 
@@ -45,16 +50,22 @@ static char *ft_sub(char *str1, char *ptr_start, char *str2)
     printf("Esta é o ft_sub\n");
     while (*end > 32)
         end++;
-    size_t newlen = strlen(str1) - ((end - 1) - pos) + strlen(str2);
+    size_t newlen = strlen(str1) - (end - pos) + strlen(str2);
     char new[newlen + 1];
-    char *p = new; 
-    strncpy(p, str1, pos - str1);  
-    p += pos - str1;  
-    strcpy(p, str2);  
-    p += strlen(str2);  
-    strcpy(p, end);   
-    strcpy(str1, new); 
-    printf("Esta é o ft_sub fim\n");
+    char *p = new;
+    size_t prefix_len = pos - str1;
+
+    strncpy(p, str1, prefix_len);
+    p += prefix_len;
+
+    strcpy(p, str2);
+    p += strlen(str2);
+
+    strcpy(p, end);
+    new[newlen] = '\0';
+    strcpy(str1, new);
+
+    printf("Esta é o ft_sub fim: %s\n", str1);
     return (str1);
 }
 
