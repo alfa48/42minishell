@@ -13,20 +13,6 @@
 #ifndef	STRUCTS_H
 # define STRACTS_H
 
-typedef struct	s_token
-{
-	t_type_token type;
-	char *lexema;
-	
-}	t_token;
-
-typedef struct s_token_map
-{
-	char c;
-	int type;
-	char *lexema;
-}	t_token_map;
-
 typedef struct	s_cmd_line
 {
 	char	*buffer;

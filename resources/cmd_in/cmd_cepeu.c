@@ -37,100 +37,85 @@ bool check_quotes_balance(const char *arg)
 }
 
 
-static char *ft_sub(char *str1, char *ptr_start, char *str2)
+char *ft_sub(char *ptr_start, char *str2)
 {
-/*
-    if (!ptr_start || !str1 || !str2) 
+    if (!ptr_start || !str2)
         return (NULL);
-*/
-    printf("str1: %s, start: %c, sub: %s\n", str1, ptr_start[0], str2);
-    
+
     char *pos = ptr_start; 
     char *end = pos;
-    printf("Esta é o ft_sub\n");
-    while (*end > 32)
+
+   while (*end > 32)
         end++;
-    size_t newlen = strlen(str1) - ((end - 1) - pos) + strlen(str2);
-    char new[newlen + 1];
-    char *p = new; 
-    strncpy(p, str1, pos - str1);  
-    p += pos - str1;  
-    strcpy(p, str2);  
-    p += strlen(str2);  
-    strcpy(p, end);   
-    strcpy(str1, new); 
-    printf("Esta é o ft_sub fim\n");
-    return (str1);
+
+    size_t prefix_len = pos - ptr_start;
+    size_t new_len = prefix_len + strlen(str2) + strlen(end) + 1;
+
+    char *new = malloc(new_len);
+    if (!new)
+        return (NULL);
+
+    strncpy(new, ptr_start, prefix_len);
+    strcpy(new + prefix_len, str2);
+    strcat(new, end);
+
+    strcpy(ptr_start, new);
+    free(new);
+    return (ptr_start);
 }
 
-char    *ft_findenv(char *s, t_env_var *g_env_list)
-{
-    int i;
-    t_env_var *tmp;
 
-    i = 0;
-    printf("Esta é o ft_findenv\n");
-    while (s[i] && s[i] != ' ')
-        i ++;
-    tmp = g_env_list;
-    while (tmp)
+char *ft_findenv(char *s, t_env_var *g_env_list)
+{
+    int i = 0;
+
+    while (s[i] > 32)
+        i++;
+
+    t_env_var *tmp_env_var = g_env_list;
+    while (tmp_env_var)
     {
-        //printf("inicio %c e fim %c\n", s[0], s[i - 1]);
-        int len = (int)ft_strlen(tmp->name);
-        printf("v = %i e v2 = %i\n", len, i -1);
-            // == (i - 1))
-        if ((ft_strncmp(tmp->name, s + 1, i - 1) == 0) && (len == (i - 1)))
-        {
-            printf("Valor %s, Name %s\n", tmp->value, tmp->name);
-            return (tmp->value);
-        }
-        tmp = tmp->next;
+        int len = strlen(tmp_env_var->name);
+        if (strncmp(tmp_env_var->name, s + 1, i - 1) == 0 && len == (i - 1))
+            return (tmp_env_var->value);
+        tmp_env_var = tmp_env_var->next;
     }
-   //  printf("Esta é o ft_findenv r: null\n");
     return (NULL);
 }
 
-char    *mini_expand(t_env_var *g_env_var, char *s)
+char *mini_expand(t_env_var *g_env_var, char *str)
 {
-    char    *start;
-    char    *tmp;
+    char *tmp = str;
     char *var_env;
 
-    tmp = s;
-    printf("Esta é o mini_expand\n");
-    while (*tmp && *tmp != '$')
-        tmp ++;
-    if(*tmp == '$')
+   while (*tmp && *tmp != '$')
+        tmp++;
+
+    if (*tmp == '$')
     {
-        start = tmp;
-       // printf("%s \n",  ft_findenv(start, g_env_var));
-       var_env = ft_findenv(start, g_env_var);
+        var_env = ft_findenv(tmp, g_env_var);
         if (!var_env)
-            ft_sub(tmp, start, " ");
+            ft_sub(tmp, " ");
         else
-            ft_sub(tmp, start, var_env);
+            ft_sub(tmp, var_env);
     }
-    return (s);
+    return (str);
 }
 
-int is_expand(t_env_var *env_var, char *s)
+char *is_expand(t_env_var *env_var, char *s)
 {
-    int i = 0;
     char *tmp = s;
-    
-    while (tmp && (tmp = ft_strchr(tmp, '$')) != NULL)
+
+    while ((tmp = strchr(tmp, '$')) != NULL)
     {
         if (tmp[1] > 32)
         {
-            mini_expand(env_var, tmp);
-            printf("%d Este é o TMP - %s \n", i, tmp);
+            s = mini_expand(env_var, tmp);
             env_var->counter_exp++;
         }
-        printf("COUNTER: %d\n", i);
         tmp++;
-        i++;
     }
-    return env_var->counter_exp;
+    return (s);
 }
 
 void    mini_echo(t_env_var *env_var, char *arg)
@@ -140,7 +125,10 @@ void    mini_echo(t_env_var *env_var, char *arg)
     int     new_line;
     char    *init;
 
-    is_expand(env_var, arg);
+    (void) env_var;
+   
+        is_expand(env_var, arg);
+    printf("STRING PARA O ECHO: %s\n", arg);
     inside_single_quote = false;
     inside_double_quote = false;
    /* if (!check_quotes_balance(arg))

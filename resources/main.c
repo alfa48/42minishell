@@ -364,6 +364,7 @@ int	main(void)
 		cmd->line = readline("\033[36mminishell$> \033[0m");
 		if (cmd->line || cmd->line[0] != '\0')
 		{
+			printf("Error in create env list!: %s$\n", cmd->line);
 			cmd->root = init_shell(cmd->line);
 			if (cmd->root)
 			{
