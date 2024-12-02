@@ -11,27 +11,20 @@
 # **************************************************************************** #
 
 NAME = minishell
-SRC_DIR = ./src
 RSC_DIR = ./resources
-
-SRC = $(SRC_DIR)/minishell.c \
-	$(SRC_DIR)/utils/functions_one.c \
-	$(SRC_DIR)/base/input.c \
-	$(SRC_DIR)/base/bread.c \
-	$(SRC_DIR)/buffer/init_buffer.c \
-	$(SRC_DIR)/buffer/io_buffer.c \
-	$(SRC_DIR)/token/check.c \
-	$(SRC_DIR)/token/check_utils.c \
-	$(SRC_DIR)/token/lexs.c \
-	$(SRC_DIR)/token/tokens.c \
-	$(SRC_DIR)/token/tokens_aux.c \
-	$(SRC_DIR)/cmd_in/cmd_cepeu.c \
-	$(SRC_DIR)/cmd_in/cmd_envexit.c \
+SRC = $(RSC_DIR)/cmd_cepeu.c \
+	$(RSC_DIR)/cmd_envexit.c \
 	$(RSC_DIR)/main.c \
 	$(RSC_DIR)/mini_execv.c \
 	$(RSC_DIR)/init/init_vars.c \
-	$(RSC_DIR)/utils/mini_utils.c 
-
+	$(RSC_DIR)/utils/mini_utils.c \
+	$(RSC_DIR)/utils/mini_utils_2.c \
+	$(RSC_DIR)/utils/mini_utils_3.c \
+	$(RSC_DIR)/init_shell.c \
+	$(RSC_DIR)/first_handlers.c\
+	$(RSC_DIR)/parsers_cmd.c \
+	$(RSC_DIR)/mini_expand.c
+	
 OBJ = $(SRC:.c=.o)
 
 LIBFT_DIR = ./libft

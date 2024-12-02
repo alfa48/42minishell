@@ -42,24 +42,24 @@ typedef struct	s_cmd_line
 typedef struct	s_node
 {
 	char	*command;
-    int		index;
+	int		index;
 	char	*operator;
-    struct s_node	*left;
-    struct s_node	*right;
+	struct s_node	*left;
+	struct s_node	*right;
 }	t_node;
 
 typedef struct	s_env_var
 {
 	char	*name;
-    char	*value;
+	char	*value;
 	int		counter_exp;
-    struct s_env_var	*next;
+	struct s_env_var	*next;
 }	t_env_var;
 
 typedef	struct s_cmd
 {
 	struct s_node	*root;
-	int		size;//quantidade de elementos da arvore
+	int		size;
 	char	**array;
 	char	*line;
 	char	**arg;
@@ -69,5 +69,15 @@ typedef	struct s_cmd
 	t_env_var	*g_env_list;
 
 } t_cmd;
+
+typedef struct s_funcArray
+{
+	t_node	*(*handlers[5])(char *command_line);
+}	t_funcArray;
+
+typedef struct s_parseFuncs
+{
+	t_node *(*parsers[5])(char *, t_node *, int);
+}	t_parseFuncs;
 
 #endif

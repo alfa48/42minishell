@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/11/27 14:10:42 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/02 15:12:27 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,43 +84,78 @@ void	ft_enter(t_cmd_line *cmd);
 t_token *create_token(int type, char *lexema);
 t_token *next_token(t_cmd_line *c_line);
 
-//token/cmd_in/cmd_cepeu.c
-void    mini_echo(t_env_var *env_var, char *arg);
-void    mini_cd(char *path, t_env_var *g_env_list);
-void    mini_pwd(void);
-void    mini_export(char **args, t_env_var **g_env_list);
-void    mini_unset(char **args, t_env_var **g_env_list);
 
-//token/cmd_in/cmd_envexit.c
-void    free_ms(t_cmd *cmd);
-void    mini_env(t_env_var *g_env_list);
-void    mini_exit(void);
+
+//------------------------------------------------------------------------------
+
+
 
 //resources/main.c
-char	*mini_epur_str(char *str);
-t_node	*parse_command(char *command_line, t_node *root, int side);
-t_node	*create_node(char *operator, char *command, int index);
-t_node	*add_node(t_node *root, t_node *new, int side);
-t_node	*init_shell(char *command_line);
-char	*mini_strstr(const char *haystack, const char *needle);
+int main(void);
 
 //resources/mini_execv.c
-void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list);
-void    list_env_vars(t_env_var *g_env_list);
-void	set_or_add_env_var(const char *env_entry, t_env_var **g_env_list);
-void	initialize_env_list(t_env_var **g_env_list, char **ev);
 char    *get_word(char *line, int *sig);
+void    list_env_vars(t_env_var *g_env_list);
+void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list);
 
 //resources/init/init_vars
-int	calc_tree_size(t_node *root);
+int calc_tree_size(t_node *root);
 void    init_args(t_cmd  *cmd);
 void    init_args_next(t_cmd  *cmd);
 void	fill_array_cmd(t_node *root, char **array, int *index);
 
 //resources/utils/mini_utils.c
 char    **get_args(char *cmd);
+char    *mini_strcat(char* dest, const char* src);
 void    exec(t_cmd *cmd, t_env_var *g_env_list);
 void	traverse_tree(t_node *root, char **array, int size, t_env_var *g_env_list);
+
+//resources/utils/mini_utils_2.c
+void	free_tree(t_node *root);
+char	*mini_epur_str(char *str);
+t_node	*create_node(char *operator, char *command, int index);
+t_node	*add_node(t_node *root, t_node *new, int side);
+
+//resources/utils/mini_utils_3.c
+char	*mini_strstr(const char *haystack, const char *needle);
+void	set_or_add_env_var(const char *env_entry, t_env_var **g_env_list);
+void	initialize_env_list(t_env_var **g_env_list, char **ev);
+int	set_it(char *name, const char *value, t_env_var **g_env_list);
+
+//resources/mini_expand.c
+char *concat_strings(char **str_array);
+char **expanding(char *str, t_env_var *g_env_list);
+
+//token/cmd_in/cmd_envexit.c
+void    free_ms(t_cmd *cmd);
+void    mini_env(t_env_var *g_env_list);
+void    mini_exit(void);
+
+//resources/cmd_cepeu.c
+void    mini_echo(t_env_var *env_var, char *arg);
+void    mini_cd(char *path, t_env_var *g_env_list);
+void    mini_pwd(void);
+void    mini_export(char **args, t_env_var **g_env_list);
+void    mini_unset(char **args, t_env_var **g_env_list);
+char    *ft_findenv(char *s, t_env_var *g_env_list);
+
+//resources/first_handler.c
+t_node	*handle_pipe(char *command_line);
+t_node	*handle_double_right(char *command_line);
+t_node	*handle_double_left(char *command_line);
+t_node	*handle_single_right(char *command_line);
+t_node	*handle_single_left(char *command_line);
+
+//resources/parse_cmd.c
+t_node	*parse_pipe(char *command, t_node *root, int side);
+t_node	*parse_double_right(char *command, t_node *root, int side);
+t_node	*parse_double_left(char *command, t_node *root, int side);
+t_node	*parse_single_right(char *command, t_node *root, int side);
+t_node	*parse_single_left(char *command, t_node *root, int side);
+
+//resources/init_shell.cls
+t_node	*init_shell(char *command_line);
+t_node	*parse_command(char *command, t_node *root, int side);
 
 
 # endif

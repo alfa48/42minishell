@@ -6,38 +6,59 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:24:48 by manandre          #+#    #+#             */
-/*   Updated: 2024/11/27 14:07:37 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/02 15:15:19 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minishell.h"
 
-
-static int get_args_size(char **cmd_args)
+char	*mini_strcat(char* dest, const char* src)
 {
-    int size = 0;
-    while (cmd_args[size] != NULL) {
-        size++;
-    }
-    return size;
+	char    *p_dest;
+
+	p_dest = dest;
+	while (*p_dest != '\0')
+		p_dest ++;
+	while (*src != '\0')
+	{
+		*p_dest = *src;
+		p_dest ++;
+		src ++;
+	}
+	*p_dest = '\0';
+	return (dest);
+}
+
+static int	get_args_size(char **cmd_args)
+{
+	int	size;
+
+	size = 0;
+	while (cmd_args[size] != NULL)
+		size ++;
+	return (size);
 }
 
 char    **get_args(char *cmd)
 {
-        char **cmd_args = ft_split(cmd, ' ');
+	char	**cmd_args;
+	char	**execve_args;
+	int		i;
 
-        char **execve_args = malloc((get_args_size(cmd_args) + 1) * sizeof(char *));
-        execve_args[0] =  ft_strjoin("/bin/", cmd_args[0]);
-        int i = 0;
-        while (++i < get_args_size(cmd_args))
-            execve_args[i] = cmd_args[i];
-        execve_args[i] = NULL;
-        i = -1;
-       /* while (cmd_args[++i] != NULL) {
-            printf("cmd_args[%d]: %s\n", i, execve_args[i]);  // Exibe o argumento
-    }*/
-    return (execve_args);
+	i = 0;
+	cmd_args = ft_split(cmd, ' ');
+	execve_args = malloc((get_args_size(cmd_args) + 1) * sizeof(char *));
+	execve_args[0] =  ft_strjoin("/bin/", cmd_args[0]);
+	while (++i < get_args_size(cmd_args))
+		execve_args[i] = cmd_args[i];
+	execve_args[i] = NULL;
+	/*
+	i = -1;
+	 while (cmd_args[++i] != NULL)
+		printf("cmd_args[%d]: %s\n", i, execve_args[i]);  // Exibe o argumento
+	*/
+	return (execve_args);
 }
 
 int    is_prev_pipe(char **array, int index)

@@ -6,118 +6,179 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 16:07:45 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/11/29 16:38:44 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/02 16:01:56 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Função para dividir a string mantendo os espaços  
-char **ft_extra_split(const char *str) {  
-    size_t len = strlen(str);  
-    char **result = malloc((len + 1) * sizeof(char*)); // Aloca espaço suficiente  
-    if (!result) {  
-        perror("Memória insuficiente");  
-        exit(1);  
-    }  
-
-    int idx = 0;  
-    const char *start = str;  
-    
-    while (*start) {  
-        // Encontra o próximo espaço  
-        const char *end = start;  
-        while (*end && *end != ' ') {  
-            end++;  
-        }  
-
-        // Se 'start' é diferente de 'end', significa que encontramos uma palavra ou espaços  
-        if (end > start) {  
-            // Aloca espaço para a substring (inclui os espaços)  
-            size_t length = end - start;  
-            result[idx] = malloc((length + 1) * sizeof(char)); // +1 para o terminador nulo  
-        
-            if (!result[idx]) {  
-                perror("Memória insuficiente");  
-                exit(1);  
-            }  
-
-            // Copia a parte da string  
-            strncpy(result[idx], start, length);  
-            result[idx][length] = '\0'; // Adiciona o terminador nulo  
-            idx++;  
-        } else { // Se encontrarmos um espaço, tratamos igualmente  
-            result[idx] = strdup(" "); // Armazena o espaço como uma string  
-            idx++;  
-        }  
-
-        start = end; // Move o ponteiro 'start' para o próximo caractere após o espaço  
-    }  
-
-    result[idx] = NULL; // Marca o final do array  
-    return result;  
-}
-
-void    IDN(char *str)
+void	free_matrix_safe(char **matrix)
 {
-    char    **out;
-    char    *tmp;
-    char    *env;
-    int     i;
+    int 	i;
 
-    i = 0;
-    out = ft_extra_split(str, ' ');
-    if (out[i])
+	i = -1;
+    if (!matrix)
+        return ;
+    while (matrix[++i] != NULL)
     {
-        while (out[i])
-        {
-            if (out[i][0] == '$')
-            {
-                env = ft_get_env(out[i]);
-                if (env)
-                {
-                    tmp = out[i];
-                    out[i] = env;
-                    free(tmp);
-                }
-            }
-            i ++;
-        }
+        if (matrix[i] != NULL)
+			free(matrix[i]);
     }
-    else
-        prinft("PAU\n");
+    free(matrix);
 }
 
-char    *concat_strings(char **str_array)
+static char	**ft_sep_words(char **strs, int size, char *s)
 {
-    // Concatena todas as strings do array em uma única string  
-    size_t total_length = 0;  
-    int i = 0;  
+	int	count;
+	int	c_word;
+	int	temp;
+
+	count = 0;
+	c_word = 0;
+	while (c_word < size)
+	{
+		// Avança até encontrar uma palavra
+		while (s[count] == ' ' && s[count] != '\0')
+			count ++;
+		temp = count;
+		// Avança até o primeiro espaço (fim da palavra)
+		while (s[temp] != ' ' && s[temp] != '\0')
+			temp ++;
+		// Adiciona tudo após o primeiro espaço à mesma string
+		while (s[temp] == ' ' && s[temp] != '\0')
+			temp ++;
+		strs[c_word] = malloc((temp - count + 1) * sizeof(char));
+		// Dar free na matriz se a alocacao falhar
+		ft_memcpy(strs[c_word], &s[count], temp - count);
+		strs[c_word][temp - count] = '\0';
+		count = temp;
+		c_word ++;
+	}
+	strs[c_word] = NULL;
+	return (strs);
+}
+
+char	**ft_extra_split(char const *s)
+{
+	char	**strs;
+	int		pos;
+	int		size; 
+
+	pos = 0;
+	size = 0;
+	if (s == NULL || ft_strlen(s) == 0)
+		return (NULL);
+	while (s[pos] != '\0')
+	{
+		if (s[pos] != ' ' && (s[pos + 1] == ' ' || s[pos + 1] == '\0'))
+			size ++;
+		pos ++;
+	}
+	strs = malloc((size + 1) * sizeof(char *));
+	if (strs == NULL)
+		return (NULL);
+	strs = ft_sep_words(strs, size, (char *)s);
+	return (strs);
+}
+
+char	*concat_strings(char **str_array)
+{
+	char	*result;
+	size_t		total_length;
+	int		i;
+	int		j;
+
+	i = 0;
+	total_length = 0;
+	while (str_array[i])
+	{
+		total_length += ft_strlen(str_array[i]);
+		i ++;
+	}
+	total_length += (i - 1);
+	result = malloc((total_length + 1) * sizeof(char));
+	if (!result)
+	{
+		perror("Not enough memory");
+		exit(1);
+	}
+	result[0] = '\0';
+	j = 0;
+	while (str_array[j])
+	{
+		mini_strcat(result, str_array[j]);
+		if (str_array[j + 1])
+			mini_strcat(result, " ");
+		j ++;
+	}
+	free_matrix_safe(str_array);
+	return (result);
+}
+
+char	*set_it_well(const char *str, const char *value)  
+{  
+	int		i;
+	int		j;
+	int		no_space;
+	int		space;
+	char	*out;
     
-    // Calcula o comprimento total necessário, considerando espaços entre as strings  
-    while (str_array[i]) {  
-        total_length += strlen(str_array[i]);  
-        i++;  
-    }  
+	i = 0;  
+	no_space = 0;  
+	space = 0;
+	while (str[i])
+	{  
+		if (str[i] > 32)
+  		      	no_space ++;  
+		else if (str[i] == ' ')
+			space ++;
+		i ++;
+	}
+	out = (char *)malloc(sizeof(char) * (ft_strlen(value) + space + 1));
+	if (!out)
+		return NULL;
+	ft_strlcpy(out, value, ft_strlen(value) + 1);
+	j = ft_strlen(value);
+	i = 0;  
+	while (str[i] != '\0')
+	{  
+		if (str[i] == ' ')
+			out[j++] = ' ';
+		i ++;
+	}
+	out[j] = '\0';
+	return (out);  
+}
 
-    // Adiciona espaços entre as strings, exceto após a última  
-    total_length += (i - 1); // Adiciona (n-1) espaços, onde n é o número total de strings  
+char	**expanding(char *str, t_env_var *g_env_list)
+{
+	char	**out;  
+	char	*tmp;
+	char	*env;
+	int		i;  
 
-    // Aloca memória para a string concatenada  
-    char *result = malloc((total_length + 1) * sizeof(char)); // +1 para o caractere nulo  
-    if (!result) {  
-        perror("Memória insuficiente");  
-        exit(1); // Sair em caso de erro  
-    }  
-
-    // Copia as strings e adiciona espaços entre elas  
-    result[0] = '\0'; // Inicializa a string resultante  
-    for (int j = 0; str_array[j]; j++) {  
-        strcat(result, str_array[j]); // Concatena a string  
-        if (str_array[j + 1]) {  
-            strcat(result, " "); // Adiciona espaço entre as strings  
-        }  
-    }  
-
-    return result;  
+	out = ft_extra_split(str);  
+	if (out == NULL)  
+		return (NULL);
+	i = 0;
+	while (out[i] != NULL)
+	{
+		if (out[i][0] == '$')
+		{
+			env = ft_findenv(mini_epur_str(out[i]) + 1, g_env_list);
+			if (env != NULL)
+			{
+				tmp = out[i];
+				out[i] = set_it_well(out[i], env);
+				free(tmp);
+			}
+			else
+			{
+				free(out[i]);
+				out[i] = ft_strdup("");
+			}
+		}
+		i ++;
+	}
+	return (out);
 }
