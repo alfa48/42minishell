@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/02 16:40:47 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/03 09:11:04 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	mini_echo(t_env_var *env_var, char *arg)
 	int     	new_line;
 	char    *init;
 
+	new_line = 0;
 	arg = concat_strings(expanding(arg, env_var));
 	inside_single_quote = false;
 	inside_double_quote = false;
@@ -73,7 +74,8 @@ void	mini_echo(t_env_var *env_var, char *arg)
 			inside_double_quote = !inside_double_quote;
 		else
 			write(1, init, 1);
-		init ++;
+		if (*init)
+			init ++;
 	}
 	free(arg);
 	if (new_line)

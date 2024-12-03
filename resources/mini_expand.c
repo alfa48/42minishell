@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 16:07:45 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/02 16:01:56 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/03 09:40:52 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,14 +103,9 @@ char	*concat_strings(char **str_array)
 		exit(1);
 	}
 	result[0] = '\0';
-	j = 0;
-	while (str_array[j])
-	{
+	j = -1;
+	while (str_array[++j])
 		mini_strcat(result, str_array[j]);
-		if (str_array[j + 1])
-			mini_strcat(result, " ");
-		j ++;
-	}
 	free_matrix_safe(str_array);
 	return (result);
 }
@@ -152,31 +147,34 @@ char	*set_it_well(const char *str, const char *value)
 
 char	**expanding(char *str, t_env_var *g_env_list)
 {
-	char	**out;  
+	char	**out;
 	char	*tmp;
 	char	*env;
-	int		i;  
+	char	*var_name;
+	int		i;
 
-	out = ft_extra_split(str);  
-	if (out == NULL)  
-		return (NULL);
+	out = ft_extra_split(str);
+	if (out == NULL)
+	    return (NULL);
 	i = 0;
 	while (out[i] != NULL)
 	{
 		if (out[i][0] == '$')
 		{
-			env = ft_findenv(mini_epur_str(out[i]) + 1, g_env_list);
-			if (env != NULL)
-			{
-				tmp = out[i];
+		    var_name = mini_epur_str(out[i] + 1);
+		    env = ft_findenv(var_name, g_env_list);
+		    if (env != NULL)
+		    {
+		        tmp = out[i];
 				out[i] = set_it_well(out[i], env);
 				free(tmp);
 			}
 			else
 			{
-				free(out[i]);
-				out[i] = ft_strdup("");
+			    free(out[i]);
+			    out[i] = ft_strdup("");
 			}
+			free(var_name);
 		}
 		i ++;
 	}
