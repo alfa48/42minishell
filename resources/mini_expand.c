@@ -110,34 +110,109 @@ char	*concat_strings(char **str_array)
 	return (result);
 }
 
-char	*set_it_well(const char *str, const char *value)  
+char	*set_it_well(const char *str, const char *value)
+{
+	size_t	prefix_len;
+	size_t	suffix_start;
+	size_t	total_len;
+	char	*out;
+
+	prefix_len = 0;
+	suffix_start = 0;
+    // Localiza onde o "$" começa
+	while (str[prefix_len] && str[prefix_len] != '$')
+		prefix_len ++;
+    // Localiza o final do nome da variável
+	suffix_start = prefix_len + 1;
+	while (str[suffix_start] && (ft_isalnum(str[suffix_start])
+		|| str[suffix_start] == '_'))
+        suffix_start ++;
+    // Calcula o tamanho total: prefixo + valor expandido + sufixo
+	total_len = prefix_len + ft_strlen(value) + ft_strlen(str + suffix_start) + 1;
+	out = (char *)malloc(total_len);
+	if (!out)
+		return (NULL);
+    // Copia o prefixo
+	ft_strlcpy(out, str, prefix_len + 1);
+    // Concatena o valor expandido
+	ft_strlcat(out, value, total_len);
+    // Concatena o sufixo (caracteres após a variável)
+	ft_strlcat(out, str + suffix_start, total_len);
+	return (out);
+}
+
+char	**expanding(char *str, t_env_var *g_env_list)
+{
+	char	**out;
+	char	*env;
+	char	*tmp;
+	char	*p;
+	int		i;
+
+	i = -1;
+	out = ft_extra_split(str);
+	if (!out)
+		return (NULL);
+	while (out[++i] != NULL)
+	{
+		if ((p = ft_strchr(out[i], '$'))
+			&& *(p + 1) != '\'' 
+			&& *(p + 1) != '"'
+			&& *(p + 1) != ' '
+			&& *(p + 1) != '\0')
+		{
+			env = ft_findenv(p + 1, g_env_list);
+			if (env)
+			{
+				tmp = out[i];
+				out[i] = set_it_well(out[i], env);
+				free(tmp);
+			}
+			else
+			{
+				free(out[i]);
+				out[i] = ft_strdup("");
+			}
+		}
+	}
+	return (out);
+}
+
+/*char	*set_it_well(const char *str, const char *value)  
 {  
 	int		i;
 	int		j;
-	int		no_space;
+	int		same_char;
+	int		dif_char;
 	int		space;
 	char	*out;
     
 	i = 0;  
-	no_space = 0;  
+	same_char = 0;
 	space = 0;
+	dif_char = 0;
 	while (str[i])
 	{  
-		if (str[i] > 32)
-  		      	no_space ++;  
+		if (value[i] == str[i])
+  		      	same_char ++;
+  		else if (ft_isalnum(str[i]) && (value[i] != str[i]))
+  			dif_char ++;
 		else if (str[i] == ' ')
 			space ++;
 		i ++;
 	}
-	out = (char *)malloc(sizeof(char) * (ft_strlen(value) + space + 1));
+	out = (char *)malloc(sizeof(char) * (ft_strlen(value) + space + dif_char + 1));
 	if (!out)
-		return NULL;
+		return (NULL);
 	ft_strlcpy(out, value, ft_strlen(value) + 1);
+	
 	j = ft_strlen(value);
-	i = 0;  
+	i = 0;
 	while (str[i] != '\0')
-	{  
-		if (str[i] == ' ')
+	{
+		if (i > same_char && i < (dif_char + same_char))
+			out[j++] = str[i];
+		if (i < (dif_char + same_char + space))
 			out[j++] = ' ';
 		i ++;
 	}
@@ -148,6 +223,7 @@ char	*set_it_well(const char *str, const char *value)
 char	**expanding(char *str, t_env_var *g_env_list)
 {
 	char	**out;
+	char	*p;
 	char	*tmp;
 	char	*env;
 	char	*var_name;
@@ -159,24 +235,24 @@ char	**expanding(char *str, t_env_var *g_env_list)
 	i = 0;
 	while (out[i] != NULL)
 	{
-		if (out[i][0] == '$')
+		if ((p = ft_strchr(out[i], '$')) && *(p + 1) != '\'' && *(p + 1) != '"')
 		{
-		    var_name = mini_epur_str(out[i] + 1);
-		    env = ft_findenv(var_name, g_env_list);
-		    if (env != NULL)
-		    {
-		        tmp = out[i];
+			var_name = mini_epur_str(p + 1);
+			env = ft_findenv(var_name, g_env_list);
+			if (env != NULL)
+			{
+				tmp = out[i];
 				out[i] = set_it_well(out[i], env);
 				free(tmp);
 			}
 			else
 			{
-			    free(out[i]);
-			    out[i] = ft_strdup("");
+				free(out[i]);
+				out[i] = ft_strdup("");
 			}
 			free(var_name);
 		}
 		i ++;
 	}
 	return (out);
-}
+}*/

@@ -34,17 +34,19 @@ bool	check_quotes_balance(const char *arg)
 
 char	*ft_findenv(char *s, t_env_var *g_env_list)
 {
-	t_env_var *tmp;
+    t_env_var *tmp = g_env_list;
 
-	tmp = g_env_list;
-	while (tmp)
-	{
-		if (ft_strcmp(tmp->name, s) == 0)
-			return (tmp->value);
-		tmp = tmp->next;
-	}
-	return (NULL);
+    while (tmp)
+    {
+        size_t len = ft_strlen(tmp->name);
+        if (ft_strncmp(s, tmp->name, len) == 0 
+        	&& (!s[len] || !ft_isalnum(s[len])))
+            return (tmp->value);
+        tmp = tmp->next;
+    }
+    return (NULL);
 }
+
 
 void	mini_echo(t_env_var *env_var, char *arg)
 {
