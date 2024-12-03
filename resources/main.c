@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/02 15:13:37 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/03 10:04:15 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ int	main(void)
 		if (cmd->line || cmd->line[0] != '\0')
 		{
 			cmd->root = init_shell(cmd->line);
-			inorder_traversal(cmd->root);
 			if (cmd->root)
 			{
 				init_args_next(cmd);
