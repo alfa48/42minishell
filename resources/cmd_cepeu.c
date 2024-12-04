@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/04 15:41:21 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:34:57 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,44 +60,55 @@ char	*ft_findenv(char *s, t_env_var *g_env_list)
     return (NULL);
 }
 
+static int	process_quote_char(char *init, bool *in_s_q, bool *in_d_q)
+{
+    if (*init == '\'' && !*in_d_q)
+    {
+        *in_s_q = !*in_s_q;
+        return (1);
+    }
+    else if (*init == '"' && !*in_s_q)
+    {
+        *in_d_q = !*in_d_q;
+        return (1);
+    }
+    return (0);
+}
+
 void	mini_echo(t_env_var *env_var, char *arg)
 {
-	bool    inside_single_quote;
-	bool    inside_double_quote;
-	int     	new_line;
-	char    *init;
+    bool	in_s_q;
+    bool	in_d_q;
+    int		new_line;
+    char	*init;
 
-	new_line = 0;
-	if (!check_quotes_balance(arg))
-		return ;
-	arg = concat_strings(expanding(arg, env_var));
-	inside_single_quote = false;
-	inside_double_quote = false;
-	init = get_word(arg, &new_line);
-	if (!init)
-		return ;
-	while (*init)
-	{
-		while (*init == ' ' && !inside_single_quote && !inside_double_quote)
-		{
-			init ++;
-			if (*init && *init != ' ')
+    new_line = 0;
+    if (!check_quotes_balance(arg))
+        return ;
+    arg = concat_strings(expanding(arg, env_var));
+    in_s_q = false;
+    in_d_q = false;
+    init = get_word(arg, &new_line);
+    if (!init)
+        return;
+    while (*init)
+    {
+        while (*init == ' ' && !in_s_q && !in_d_q)
+        {
+            init ++;
+            if (*init && *init != ' ')
 				write(1, " ", 1);
-		}
-		if (*init == '\'' && !inside_double_quote)
-			inside_single_quote = !inside_single_quote;
-		else if (*init == '"' && !inside_single_quote)
-			inside_double_quote = !inside_double_quote;
-		else
+        }
+        if (!process_quote_char(init, &in_s_q, &in_d_q))
 			write(1, init, 1);
 		if (*init)
 			init ++;
-	}
-	free(arg);
-	if (new_line)
-		write(1, "\n", 1);
+    }
+    free(arg);
+    if (new_line)
+        write(1, "\n", 1);
 }
-	
+
 void	mini_cd(char *path, t_env_var *g_env_list)
 {
 	char cwd[PATH_MAX];
