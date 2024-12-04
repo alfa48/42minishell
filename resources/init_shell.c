@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_shell.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 10:07:11 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/02 10:07:32 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/04 14:26:15 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_node	*init_shell(char *command_line)
 	t_node	*root;
 	t_funcArray	func_array;
 
-	if (!command_line)
+	if (!command_line || ft_strlen(command_line) < 1)
 		return (NULL);
 	root = NULL;
 	func_array = init_func_array();

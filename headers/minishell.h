@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/02 15:12:27 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/04 11:31:41 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,17 +104,21 @@ void    init_args(t_cmd  *cmd);
 void    init_args_next(t_cmd  *cmd);
 void	fill_array_cmd(t_node *root, char **array, int *index);
 
+
 //resources/utils/mini_utils.c
 char    **get_args(char *cmd);
 char    *mini_strcat(char* dest, const char* src);
 void    exec(t_cmd *cmd, t_env_var *g_env_list);
 void	traverse_tree(t_node *root, char **array, int size, t_env_var *g_env_list);
+void	*ft_memset_space(void *ptr, int value, size_t num);
 
 //resources/utils/mini_utils_2.c
 void	free_tree(t_node *root);
 char	*mini_epur_str(char *str);
 t_node	*create_node(char *operator, char *command, int index);
 t_node	*add_node(t_node *root, t_node *new, int side);
+int is_special_char(char c);
+int is_echo_printable(char c);
 
 //resources/utils/mini_utils_3.c
 char	*mini_strstr(const char *haystack, const char *needle);

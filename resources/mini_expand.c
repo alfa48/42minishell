@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 16:07:45 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/03 09:42:32 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/04 15:37:51 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,22 +144,18 @@ char	*set_it_well(const char *str, const char *value)
 char	**expanding(char *str, t_env_var *g_env_list)
 {
 	char	**out;
-	char	*env;
 	char	*tmp;
+	char	*env;
 	char	*p;
 	int		i;
 
 	i = -1;
-	out = ft_extra_split(str);
-	if (!out)
+	if (!(out = ft_extra_split(str)))
 		return (NULL);
 	while (out[++i] != NULL)
 	{
-		if ((p = ft_strchr(out[i], '$'))
-			&& *(p + 1) != '\'' 
-			&& *(p + 1) != '"'
-			&& *(p + 1) != ' '
-			&& *(p + 1) != '\0')
+		p = ft_strchr(out[i], '$');
+		if ((p) && ft_isalnum(*(p + 1)) && *(p + 1) != '\0')
 		{
 			env = ft_findenv(p + 1, g_env_list);
 			if (env)
@@ -167,92 +163,14 @@ char	**expanding(char *str, t_env_var *g_env_list)
 				tmp = out[i];
 				out[i] = set_it_well(out[i], env);
 				free(tmp);
+				i --;
 			}
 			else
 			{
-				free(out[i]);
-				out[i] = ft_strdup("");
+				ft_memset_space(ft_strchr(out[i], '$'), ' ', ft_strlen(out[i]));
+				i --;
 			}
 		}
 	}
 	return (out);
 }
-
-/*char	*set_it_well(const char *str, const char *value)  
-{  
-	int		i;
-	int		j;
-	int		same_char;
-	int		dif_char;
-	int		space;
-	char	*out;
-    
-	i = 0;  
-	same_char = 0;
-	space = 0;
-	dif_char = 0;
-	while (str[i])
-	{  
-		if (value[i] == str[i])
-  		      	same_char ++;
-  		else if (ft_isalnum(str[i]) && (value[i] != str[i]))
-  			dif_char ++;
-		else if (str[i] == ' ')
-			space ++;
-		i ++;
-	}
-	out = (char *)malloc(sizeof(char) * (ft_strlen(value) + space + dif_char + 1));
-	if (!out)
-		return (NULL);
-	ft_strlcpy(out, value, ft_strlen(value) + 1);
-	
-	j = ft_strlen(value);
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if (i > same_char && i < (dif_char + same_char))
-			out[j++] = str[i];
-		if (i < (dif_char + same_char + space))
-			out[j++] = ' ';
-		i ++;
-	}
-	out[j] = '\0';
-	return (out);  
-}
-
-char	**expanding(char *str, t_env_var *g_env_list)
-{
-	char	**out;
-	char	*p;
-	char	*tmp;
-	char	*env;
-	char	*var_name;
-	int		i;
-
-	out = ft_extra_split(str);
-	if (out == NULL)
-	    return (NULL);
-	i = 0;
-	while (out[i] != NULL)
-	{
-		if ((p = ft_strchr(out[i], '$')) && *(p + 1) != '\'' && *(p + 1) != '"')
-		{
-			var_name = mini_epur_str(p + 1);
-			env = ft_findenv(var_name, g_env_list);
-			if (env != NULL)
-			{
-				tmp = out[i];
-				out[i] = set_it_well(out[i], env);
-				free(tmp);
-			}
-			else
-			{
-				free(out[i]);
-				out[i] = ft_strdup("");
-			}
-			free(var_name);
-		}
-		i ++;
-	}
-	return (out);
-}*/

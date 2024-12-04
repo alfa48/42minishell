@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/03 09:56:48 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/04 15:41:21 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,36 @@ bool	check_quotes_balance(const char *arg)
 	}
 	if (single_quotes % 2 == 0 && double_quotes % 2 == 0)
 		return (true);
-	return (false);
+	else
+	{
+		printf("Error: unclosed quotes\n");
+		return (false);
+	}
+}
+
+bool	is_valid_var_char(char c)
+{
+    return (ft_isalnum(c) || c == '_');
 }
 
 char	*ft_findenv(char *s, t_env_var *g_env_list)
 {
-    t_env_var *tmp = g_env_list;
+	size_t	len;
+    t_env_var	*tmp;
 
+	tmp = g_env_list;
     while (tmp)
     {
-        size_t len = ft_strlen(tmp->name);
-        if (ft_strncmp(s, tmp->name, len) == 0 
-        	&& (!s[len] || !ft_isalnum(s[len])))
-            return (tmp->value);
+		len = ft_strlen(tmp->name);
+		if (ft_strncmp(s, tmp->name, len) == 0)
+        {
+			if (!is_valid_var_char(s[len]))
+				return (tmp->value);
+        }
         tmp = tmp->next;
     }
     return (NULL);
 }
-
 
 void	mini_echo(t_env_var *env_var, char *arg)
 {
@@ -56,6 +68,8 @@ void	mini_echo(t_env_var *env_var, char *arg)
 	char    *init;
 
 	new_line = 0;
+	if (!check_quotes_balance(arg))
+		return ;
 	arg = concat_strings(expanding(arg, env_var));
 	inside_single_quote = false;
 	inside_double_quote = false;

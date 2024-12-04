@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/03 10:04:15 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/04 15:19:27 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,6 @@ int	main(void)
 					traverse_tree(cmd->root, cmd->array, cmd->size, cmd->g_env_list);
 				free_tree(cmd->root);
 			}
-			else
-				printf("Erro ao criar a árvore!\n");
 			cmd->index = 0;
 			cmd->g_env_list->counter_exp = 0;
 			free_ms(cmd);

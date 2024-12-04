@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:03:32 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/02 15:14:24 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/04 12:41:57 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,43 @@ char	*mini_epur_str(char *str)
 		return (ft_strdup(out));
 	else
 		return (NULL);
+}
+
+int	is_special_char(char c)
+{
+	int i = 0;
+	const char	*special_chars;
+
+	special_chars = ", +-=/^@#%:~´.'";
+	while (special_chars[i] != '\0')
+    {
+        if (c == special_chars[i])
+            return (1);
+		i ++;
+	}
+	return (0);
+}
+
+int	is_echo_printable(char c)
+{
+	if (is_special_char(c))
+		return (1);
+	if (ft_isprint(c))
+		return (1);
+	return (0);
+}
+
+void	*ft_memset_space(void *ptr, int value, size_t num)
+{
+	unsigned char	*p;
+	size_t			i;
+
+	p = ptr;
+	i = 0;
+	while (i < num && !is_special_char(p[i]))
+	{
+		p[i] = (unsigned char) value;
+		i ++;
+	}
+	return (ptr);
 }
