@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 16:07:45 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/04 16:39:37 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/09 11:46:58 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,71 +14,59 @@
 
 void	free_matrix_safe(char **matrix)
 {
-    int 	i;
+	int 	i;
 
 	i = -1;
-    if (!matrix)
-        return ;
-    while (matrix[++i] != NULL)
-    {
-        if (matrix[i] != NULL)
+	if (!matrix)
+		return ;
+	while (matrix[++i] != NULL)
+	{
+		if (matrix[i] != NULL)
 			free(matrix[i]);
+	}
+	free(matrix);
+}
+
+/*char **ft_extra_split(const char *s)
+{
+    if (!s || !*s) return NULL;
+
+    char **strs = NULL;
+    int size = 0, count = 0, in_quote = 0;
+    char quote_char = '\0';
+
+    for (int i = 0; s[i]; i ++) {
+        if ((s[i] == '\'' || s[i] == '"') && (!in_quote || s[i] == quote_char)) {
+            in_quote = !in_quote;
+            quote_char = in_quote ? s[i] : '\0';
+        } else if (!in_quote && s[i] == ' ') {
+            size++;
+        }
     }
-    free(matrix);
-}
 
-static char	**ft_sep_words(char **strs, int size, char *s)
-{
-	int	count;
-	int	c_word;
-	int	temp;
+    strs = malloc((size + 2) * sizeof(char *));
+    if (!strs) return NULL;
 
-	count = 0;
-	c_word = 0;
-	while (c_word < size)
-	{
-		// Avança até encontrar uma palavra
-		while (s[count] == ' ' && s[count] != '\0')
-			count ++;
-		temp = count;
-		// Avança até o primeiro espaço (fim da palavra)
-		while (s[temp] != ' ' && s[temp] != '\0')
-			temp ++;
-		// Adiciona tudo após o primeiro espaço à mesma string
-		while (s[temp] == ' ' && s[temp] != '\0')
-			temp ++;
-		strs[c_word] = malloc((temp - count + 1) * sizeof(char));
-		// Dar free na matriz se a alocacao falhar
-		ft_memcpy(strs[c_word], &s[count], temp - count);
-		strs[c_word][temp - count] = '\0';
-		count = temp;
-		c_word ++;
-	}
-	strs[c_word] = NULL;
-	return (strs);
-}
+    in_quote = 0;
+    quote_char = '\0';
+    const char *start = s;
 
-char	**ft_extra_split(char const *s)
-{
-	char	**strs;
-	int		pos;
-	int		size; 
+    for (int i = 0; s[i]; i++) {
+        if ((s[i] == '\'' || s[i] == '"') && (!in_quote || s[i] == quote_char)) {
+            in_quote = !in_quote;
+            quote_char = in_quote ? s[i] : '\0';
+        } else if (!in_quote && s[i] == ' ') {
+            strs[count++] = strndup(start, s + i - start);
+            start = s + i + 1;
+        }
+    }
 
-	pos = 0;
-	size = 0;
-	if (s == NULL || ft_strlen(s) == 0)
-		return (NULL);
-	while (s[pos] != '\0')
-	{
-		if (s[pos] != ' ' && (s[pos + 1] == ' ' || s[pos + 1] == '\0'))
-			size ++;
-		pos ++;
-	}
-	strs = malloc((size + 1) * sizeof(char *));
-	if (strs == NULL)
-		return (NULL);
-	strs = ft_sep_words(strs, size, (char *)s);
-	return (strs);
+    if (*start) {
+        strs[count++] = strdup(start);
+    }
+
+    strs[count] = NULL;
+    return strs;
 }
 
 char	*concat_strings(char **str_array)
@@ -110,67 +98,147 @@ char	*concat_strings(char **str_array)
 	return (result);
 }
 
-char	*set_it_well(const char *str, const char *value)
-{
-	size_t	prefix_len;
-	size_t	suffix_start;
-	size_t	total_len;
-	char	*out;
-
-	prefix_len = 0;
-	suffix_start = 0;
-    // Localiza onde o "$" começa
-	while (str[prefix_len] && str[prefix_len] != '$')
-		prefix_len ++;
-    // Localiza o final do nome da variável
-	suffix_start = prefix_len + 1;
-	while (str[suffix_start] && (ft_isalnum(str[suffix_start])
-		|| str[suffix_start] == '_'))
-        suffix_start ++;
-    // Calcula o tamanho total: prefixo + valor expandido + sufixo
-	total_len = prefix_len + ft_strlen(value) + ft_strlen(str + suffix_start) + 1;
-	out = (char *)malloc(total_len);
-	if (!out)
-		return (NULL);
-    // Copia o prefixo
-	ft_strlcpy(out, str, prefix_len + 1);
-    // Concatena o valor expandido
-	ft_strlcat(out, value, total_len);
-    // Concatena o sufixo (caracteres após a variável)
-	ft_strlcat(out, str + suffix_start, total_len);
-	return (out);
+// Função auxiliar para verificar se estamos dentro de aspas
+bool is_inside_quotes(const char *str, int pos, char quote_type) {
+    bool inside = false;
+    for (int i = 0; i < pos; i++) {
+        if (str[i] == quote_type) {
+            inside = !inside;
+        }
+    }
+    return inside;
 }
 
-char	**expanding(char *str, t_env_var *g_env_list)
+// Função para processar uma única variável e expandi-la
+char *expand_variable(const char *str, int var_start, t_env_var *g_env_list) {
+    int var_end = var_start + 1;
+    while (isalnum(str[var_end]) || str[var_end] == '_') {
+        var_end++;
+    }
+    char *var_name = strndup(str + var_start + 1, var_end - var_start - 1);
+    char *var_value = ft_findenv(var_name, g_env_list);
+    free(var_name);
+    if (!var_value) {
+        var_value = ""; // Substituir por vazio se não encontrar
+    }
+
+    // Construir nova string com a expansão
+    size_t new_len = strlen(str) - (var_end - var_start) + strlen(var_value) + 1;
+    char *new_str = malloc(new_len);
+    if (!new_str) return NULL;
+
+    strncpy(new_str, str, var_start);       // Prefixo
+    strcpy(new_str + var_start, var_value); // Valor expandido
+    strcat(new_str, str + var_end);         // Sufixo
+    return new_str;
+}*/
+
+char	*ft_strndup(const char *s, size_t n)
 {
-	char	**out;
-	char	*tmp;
-	char	*env;
-	char	*p;
+	size_t	len;
+	size_t	i;
+	char	*dup;
+
+    len = 0;
+    if (!s)
+		return (NULL);
+	while (s[len] && len < n)
+        len ++;
+	if (!(dup = (char *)malloc(len + 1)))
+		return (NULL);
+	i = -1;
+    while (++i < len)
+		dup[i] = s[i];
+	dup[len] = '\0';
+    return (dup);
+}
+
+char	*ft_strjoin_free(char *s1, const char *s2)
+{
+	char	*new_str;
+
+	if (!s1 || !s2)
+		return (NULL);
+    new_str = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!new_str)
+		return (NULL);
+	ft_strlcpy(new_str, s1, ft_strlen(s1) + 1);
+    mini_strcat(new_str, s2);
+    free(s1);
+    return (new_str);
+}
+
+bool	is_valid_var_start(char c)
+{
+	return (ft_isalnum(c) || c == '_');
+}
+
+void	handle_regular_char(char *str, int *i, char **result)
+{
+	char temp[2];
+
+    temp[0] = str[*i];
+	temp[1] = '\0';
+    *result = ft_strjoin_free(*result, temp);
+    (*i) ++;
+}
+
+void	handle_variable(char *str, int *i, char **result, t_env_var *g_env_list)
+{
+	int		var_start;
+	char	*var_name;
+	char	*var_value;
+
+    var_start = *i + 1;
+    while (is_valid_var_start(str[var_start]))
+        var_start ++;
+    var_name = ft_strndup(str + *i + 1, var_start - (*i + 1));
+    var_value = ft_findenv(var_name, g_env_list);
+    free(var_name);
+    if (var_value)
+        *result = ft_strjoin_free(*result, var_value);
+    *i = var_start;
+}
+
+
+void	handle_quotes(char *str, int *i, char **result, bool *in_s_q, bool *in_d_q)
+{
+    if (str[*i] == '\'' && !(*in_d_q))
+	{
+        *in_s_q = !(*in_s_q);
+        *result = ft_strjoin_free(*result, "'");
+    }
+	else if (str[*i] == '"' && !(*in_s_q))
+	{
+        *in_d_q = !(*in_d_q);
+        *result = ft_strjoin_free(*result, "\"");
+    }
+    (*i)++;
+}
+
+char	*expanding(char *str, t_env_var *g_env_list)
+{
+	bool	in_s_q;
+	bool	in_d_q;
+	char	*result;
 	int		i;
 
-	i = -1;
-	if (!(out = ft_extra_split(str)))
-		return (NULL);
-	while (out[++i] != NULL)
+	i = 0;
+    in_s_q = false, in_d_q = false;
+    if (!str || !g_env_list)
+        return (NULL);
+    result = malloc(1);
+    if (!result)
+        return (NULL);
+    result[0] = '\0';
+    while (str[i])
 	{
-		p = ft_strchr(out[i], '$');
-		if ((p) && ft_isalnum(*(p + 1)) && *(p + 1) != '\0')
-		{
-			env = ft_findenv(p + 1, g_env_list);
-			if (env)
-			{
-				tmp = out[i];
-				out[i] = set_it_well(out[i], env);
-				free(tmp);
-				i --;
-			}
-			else
-			{
-				ft_memset_space(ft_strchr(out[i], '$'), ' ', ft_strlen(out[i]));
-				i --;
-			}
-		}
-	}
-	return (out);
+        if (str[i] == '\'' || str[i] == '"')
+            handle_quotes(str, &i, &result, &in_s_q, &in_d_q);
+        else if (str[i] == '$' && !in_s_q && is_valid_var_start(str[i + 1]))
+            handle_variable(str, &i, &result, g_env_list);
+        else
+            handle_regular_char(str, &i, &result);
+    }
+    return (result);
 }

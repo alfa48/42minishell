@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/04 16:34:57 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/09 09:47:58 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,20 +44,20 @@ bool	is_valid_var_char(char c)
 char	*ft_findenv(char *s, t_env_var *g_env_list)
 {
 	size_t	len;
-    t_env_var	*tmp;
+	t_env_var	*tmp;
 
 	tmp = g_env_list;
-    while (tmp)
-    {
+	while (tmp)
+	{
 		len = ft_strlen(tmp->name);
 		if (ft_strncmp(s, tmp->name, len) == 0)
-        {
+		{
 			if (!is_valid_var_char(s[len]))
 				return (tmp->value);
-        }
-        tmp = tmp->next;
-    }
-    return (NULL);
+		}
+		tmp = tmp->next;
+	}
+	return (NULL);
 }
 
 static int	process_quote_char(char *init, bool *in_s_q, bool *in_d_q)
@@ -85,7 +85,7 @@ void	mini_echo(t_env_var *env_var, char *arg)
     new_line = 0;
     if (!check_quotes_balance(arg))
         return ;
-    arg = concat_strings(expanding(arg, env_var));
+    arg = expanding(arg, env_var);
     in_s_q = false;
     in_d_q = false;
     init = get_word(arg, &new_line);

@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/04 11:31:41 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/09 08:35:32 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,8 +128,7 @@ int	set_it(char *name, const char *value, t_env_var **g_env_list);
 
 //resources/mini_expand.c
 char *concat_strings(char **str_array);
-char **expanding(char *str, t_env_var *g_env_list);
-
+char *expanding(char *str, t_env_var *g_env_list);
 //token/cmd_in/cmd_envexit.c
 void    free_ms(t_cmd *cmd);
 void    mini_env(t_env_var *g_env_list);
