@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/09 09:47:58 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/09 14:54:24 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,26 @@
 
 bool	check_quotes_balance(const char *arg)
 {
-	int	single_quotes;
-	int	double_quotes;
+	bool	in_single_quote;
+	bool	in_double_quote;
 
-	single_quotes = 0;
-	double_quotes = 0;
-	while (*arg)
+	in_single_quote = false;
+	in_double_quote = false;
+    while (*arg)
 	{
-		if (*arg == '\'')
-			single_quotes ++;
-		else if (*arg == '"')
-			double_quotes ++;
-		arg ++;
-	}
-	if (single_quotes % 2 == 0 && double_quotes % 2 == 0)
+        if (*arg == '\'' && !in_double_quote)
+            in_single_quote = !in_single_quote;
+        else if (*arg == '"' && !in_single_quote)
+            in_double_quote = !in_double_quote;
+        arg ++;
+    }
+    if (!in_single_quote && !in_double_quote)
 		return (true);
-	else
+    else
 	{
 		printf("Error: unclosed quotes\n");
 		return (false);
-	}
+    }
 }
 
 bool	is_valid_var_char(char c)
@@ -77,20 +77,18 @@ static int	process_quote_char(char *init, bool *in_s_q, bool *in_d_q)
 
 void	mini_echo(t_env_var *env_var, char *arg)
 {
-    bool	in_s_q;
-    bool	in_d_q;
     int		new_line;
     char	*init;
+    bool	in_s_q;
+    bool	in_d_q;
 
     new_line = 0;
-    if (!check_quotes_balance(arg))
-        return ;
-    arg = expanding(arg, env_var);
+    if (!(arg = expanding(arg, env_var)))
+		return ;
     in_s_q = false;
-    in_d_q = false;
-    init = get_word(arg, &new_line);
-    if (!init)
-        return;
+    in_d_q = false; 
+    if (!(init = get_word(arg, &new_line)))
+        return ;
     while (*init)
     {
         while (*init == ' ' && !in_s_q && !in_d_q)

@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/09 08:35:32 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/09 13:43:17 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ void    mini_env(t_env_var *g_env_list);
 void    mini_exit(void);
 
 //resources/cmd_cepeu.c
+bool check_quotes_balance(const char *arg);
 void    mini_echo(t_env_var *env_var, char *arg);
 void    mini_cd(char *path, t_env_var *g_env_list);
 void    mini_pwd(void);
