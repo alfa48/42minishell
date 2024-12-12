@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/04 15:19:27 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:23:31 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	main(void)
 				if (cmd->size == 1)
 					mini_built_in(cmd, &(cmd->g_env_list));
 				else
-					traverse_tree(cmd->root, cmd->array, cmd->size, cmd->g_env_list);
+					exec(cmd, environ);
 				free_tree(cmd->root);
 			}
 			cmd->index = 0;

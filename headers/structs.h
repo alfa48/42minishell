@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:28:30 by manandre          #+#    #+#             */
-/*   Updated: 2024/11/27 13:08:15 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:26:54 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,11 @@ typedef	struct s_cmd
 	char	**arg;
 	int		index;
 	int		nl;
+	int		ncmd;
 	int		status_cmd_prev;
 	t_env_var	*g_env_list;
 
-} t_cmd;
+}	t_cmd;
 
 typedef struct s_funcArray
 {

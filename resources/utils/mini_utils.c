@@ -6,14 +6,15 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:24:48 by manandre          #+#    #+#             */
-/*   Updated: 2024/12/02 15:15:19 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:37:59 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
 
-char	*mini_strcat(char* dest, const char* src)
+void	execute_tree(t_node *root, char **env, t_cmd *cmd);
+
+char	*mini_strcat(char *dest, const char *src)
 {
 	char    *p_dest;
 
@@ -40,7 +41,7 @@ static int	get_args_size(char **cmd_args)
 	return (size);
 }
 
-char    **get_args(char *cmd)
+char	**get_args(char *cmd)
 {
 	char	**cmd_args;
 	char	**execve_args;
@@ -53,129 +54,294 @@ char    **get_args(char *cmd)
 	while (++i < get_args_size(cmd_args))
 		execve_args[i] = cmd_args[i];
 	execve_args[i] = NULL;
-	/*
-	i = -1;
-	 while (cmd_args[++i] != NULL)
-		printf("cmd_args[%d]: %s\n", i, execve_args[i]);  // Exibe o argumento
-	*/
 	return (execve_args);
 }
 
-int    is_prev_pipe(char **array, int index)
+void	execute_command(t_node *node, char **env)
 {
-    if (index > 1)
-        if (!ft_strcmp(array[index - 1], "|"))
-            return (1);
-    return (0);
+	char	**execve_args;
+
+	pid_t pid = fork();
+	if (pid == 0)
+	{
+		execve_args = get_args(node->command);
+		fprintf(stderr, "Debug: Comando full %s\n", execve_args[0]);
+		execve(execve_args[0], execve_args, env);
+		perror("execve failed");
+		exit(1);
+	}
+	//waitpid(pid, NULL, 0);
 }
 
-int    is_next_pipe(char **array, int size, int index)
+void	execute_pipe(t_node *node, char **env, t_cmd *cmd)
 {
-    //printf("proximo é |\n");
-    if (index < size)
-        if (!ft_strcmp(array[index], "|"))
-            return (1);
-    return (0);
+	int	pipefd[2];
+
+	if (pipe(pipefd) == -1)
+	{
+		perror("pipe failed");
+		return ;
+	}
+	pid_t pid1 = fork();
+	if (pid1 == 0)
+	{
+		// Processo filho para o comando da esquerda
+		dup2(pipefd[1], STDOUT_FILENO);  // Redireciona stdout para o pipe
+		close(pipefd[0]);
+		close(pipefd[1]);
+		execute_tree(node->left, env, cmd);
+		exit(0);
+	}
+	waitpid(pid1, NULL, 0);
+	pid_t pid2 = fork();
+	if (pid2 == 0)
+	{
+		// Processo filho para o comando da direita
+		dup2(pipefd[0], STDIN_FILENO);   // Redireciona stdin para o pipe
+		close(pipefd[0]);
+		close(pipefd[1]);
+		execute_tree(node->right, env, cmd);
+		exit(0);
+	}
+	close(pipefd[0]);
+	close(pipefd[1]);
+	waitpid(pid2, NULL, 0);
+}
+
+void	exec_redout(t_node *node, char **env,  t_cmd *cmd)
+{
+	int	fd;
+
+	pid_t pid = fork();
+	if (pid == 0)
+	{
+		fd = open(node->right->command, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fd != -1)
+		{
+			dup2(fd, STDOUT_FILENO);
+			close(fd);
+		}
+		execute_tree(node->left, env, cmd);
+		exit(0);
+	}
+	waitpid(pid, NULL, 0);
 }
 /*
-void    exec1(char **array, int index)
+       <<
+       
+command   EOF | fn.txt
+*/
+void	exec_redin(t_node *node, char **env,  t_cmd *cmd)
 {
-    printf("Ver o proximo cmd e executar este cmd...\n");
+	int	fd;
 
-
-    if (ft_strcmp(array[index], "|"))
-        exec_pipe();
-    else if (ft_strcmp(array[index], ">"))
-        exc_redirect(array[index]);  
-    else if (ft_strcmp(array[index], "<"))
-        exc_redirect(array[index]);
-    else if (ft_strcmp(array[index], ">>"))
-        exc_redirect(array[index]);  
-    else if (ft_strcmp(array[index], "<<"))
-        exc_redirect(array[index]);  
+	pid_t pid = fork();
+	if (pid == 0)
+	{
+		fd = open(node->right->command, O_RDONLY);
+		if (fd == -1)
+		{
+			perror("open failed for input file");
+			exit(1);
+		}
+		dup2(fd, STDIN_FILENO);
+		close(fd);
+		execute_tree(node->left, env, cmd);
+		exit(0);
+	}
+	waitpid(pid, NULL, 0);
 }
+
+void	exec_redout_append(t_node *node, char **env,  t_cmd *cmd)
+{
+	int	fd;
+
+	pid_t pid = fork();
+	if (pid == 0)
+	{
+		fd = open(node->right->command, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (fd == -1)
+		{
+			perror("open failed for output file");
+			exit(1);
+		}
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+		execute_tree(node->left, env, cmd);
+		exit(0);
+	}
+	waitpid(pid, NULL, 0);
+}
+
+void	exec_heredoc(t_node *node, char **env,  t_cmd *cmd)
+{
+    char* result = NULL;
+    size_t total_size = 0;
+    size_t buffer_size = 1024;
+    int	fd;
+   pid_t	pid;
+    result = malloc(buffer_size);
+    result[0] = '\0';\
+    
+    pid = fork();
+    if (pid == 0)
+    {
+    		while (1)
+	    {
+
+		char* line = readline("heredoc> ");
+		if (!line) {
+		printf("Apagando %s\n", line);
+		    free(result);
+		    return ;
+		}
+		// Verifica se é o marcador de fim
+		if (strcmp(line, node->right->command) == 0) {
+		    free(line);
+		    break;
+		}
+		// Calcula novo tamanho necessário
+		size_t needed = total_size + strlen(line) + 2; // +2 para \n e \0
+		// Realoca se necessário
+		if (needed > buffer_size) {
+		    buffer_size = needed * 2;
+		    char* new_buffer = realloc(result, buffer_size);
+		    if (!new_buffer) {
+		        free(result);
+		        free(line);
+		        return ;
+		    }
+		    result = new_buffer;
+		}
+		// Adiciona a linha ao resultado
+		strcat(result, line);
+		strcat(result, "\n");
+		total_size = strlen(result);
+		// Limpa a linha atual e move para nova linha
+		rl_replace_line("", 0);
+		//rl_on_new_line();
+		rl_redisplay();
+		free(line);
+		
+		// Redirecionar stdin para o terminal
+		int fd_terminal = open("/dev/tty", O_RDONLY);
+		if (fd_terminal == -1) {
+		perror("Erro ao abrir /dev/tty");
+		exit(1);
+		}
+		dup2(fd_terminal, STDIN_FILENO);
+		close(fd_terminal);
+	    }
+	    fd = open("heredoc_file.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	    write(fd, result, ft_strlen(result));
+	    free(result);
+	    free(node->right->command);
+	    node->right->command = ft_strdup("heredoc_file.txt");
+	    	exec_redin(node, env, cmd);
+	}
+	waitpid(pid, NULL, 0);
+}
+
+/*
+
+cat << kjhk
+
+    <<
+cmd     hdoc> f.txt
+
+
 */
 
-
-void    exec2()
+void	ffexec_heredoc(t_node *node, char **env,  t_cmd *cmd)
 {
-   // printf("executar este cmd...\n");
-}
+	char	*line;
+	size_t		len;
+	int		pipefd[2];
 
-void	traverse_tree(t_node *root, char **array, int size, t_env_var *g_env_list)
-{
-	if (!root || !array)
+	if (pipe(pipefd) == -1)
+	{
+		perror("pipe failed");
 		return ;
-
-    traverse_tree(root->left, array, size, g_env_list);
-
-    if (root->command)
-    {
-        /*IF (O NÓ ANTERIOR É UM PIPE)
-           
-        if (is_prev_pipe(array, root->index))
-        {
-  
-            {PEGA O CONTEUDO DEIXADO PELO COMANDO ANTERIOR NO PIPE E USAR COMO ARGUMENTO}*/
-                   /*/ IF (O NÓ POSTERIOR É UM PIPE)
-            */
-        if (is_next_pipe(array, size, root->index))
-        {
-            //{EXECUTAR O cmd1 E GUARDAR O RESULTADO NO PIPE criar o filho para aexec cm2 com o resultado do cmd1}
-            int fd[2];
-            pid_t pid_1;
-            pid_t pid_2;
-                char *matr[] = {"PATH=/bin", NULL};
-                
-            
-            pipe(fd);
-            pid_1 = fork();//exec cm1
-            //printf("PID: %d\n", pid_1);
-            if (pid_1 == 0)
-            {   
-                //printf("P1 ESTA SENDO EXECUTADO: %s\n", root->command);
-                char **execve_args = get_args(root->command);
-
-              //  char *args1[] = {ft_strjoin("/bin/", cmd_args[0]) , &cmd_args[1], NULL};
-                dup2(fd[1], STDOUT_FILENO);
-                close(fd[0]); // Fecha o lado de leitura
-                close(fd[1]); // Fecha o lado de ESCRITA
-                if (mini_strstr(root->command, "echo") != NULL)
-                     mini_echo(g_env_list, root->command);
-                else
-                    execve(execve_args[0], execve_args, matr);
-                exit(1);
-            }
-            //criar processo para exec cmd2
-            waitpid(pid_1, NULL, 0);
-
-            pid_2 = fork();
-            if (pid_2 == 0)
-            {   
-                //printf("P2 ESTA SENDO EXECUTADO: \n");
-                char **execve_args1 = get_args(array[root->index + 1]);
-                dup2(fd[0], STDIN_FILENO);
-                close(fd[0]); // Fecha o lado de leitura
-                close(fd[1]); // Fecha o lado de ESCRITA
-                //printf("CMD depois do pipe %s", array[root->index + 1]);
-                if (mini_strstr(root->command, "echo") != NULL)//tem logica
-                     mini_echo(g_env_list, root->command);
-                else
-                    execve(execve_args1[0], execve_args1, matr);
-                exit(1);
-            }
-            close(fd[0]); // Fecha o lado de leitura do pipe
-            close(fd[1]); // Fecha o lado de escrita do pipe
-            
-            waitpid(pid_2, NULL, 0);
-        }
-
-    }
-
+	}
+	pid_t pid = fork();
+	if (pid == 0)
+	{
+		close(pipefd[0]); // Fechar o lado de leitura no processo filho
+		line = NULL;
+		len = 0;
+		while (1)
+		{
+			fprintf(stderr, "> "); // Prompt do here-doc
+			if (getline(&line, &len, stdin) == -1)
+			{
+				perror("getline failed");
+				break ;
+			}
+			if (strncmp(line, node->right->command, strlen(node->right->command)) == 0 &&
+				line[strlen(node->right->command)] == '\n')
+				break ; // Se o delimitador for encontrado
+			write(pipefd[1], line, strlen(line));
+		}
+		free(line);
+		close(pipefd[1]);
+		exit(0);
+	}
+	waitpid(pid, NULL, 0);
+	close(pipefd[1]); // Fechar o lado de escrita no processo pai
+	pid = fork();
+	if (pid == 0)
+	{
+		dup2(pipefd[0], STDIN_FILENO);
+		close(pipefd[0]);
+		execute_tree(node->left, env, cmd);
+		exit(0);
+	}
+	close(pipefd[0]);
+	waitpid(pid, NULL, 0);
 }
 
-void    exec(t_cmd *cmd, t_env_var *g_env_list)
+void	execute_redirect(t_node *node, char **env,  t_cmd *cmd)
 {
-    printf("%s\n", cmd->root->operator);
-    traverse_tree(cmd->root, cmd->array, cmd->size, g_env_list);
+	if (node->operator)
+	{
+		if (ft_strcmp(node->operator, ">") == 0)
+			exec_redout(node, env, cmd);
+		else if (ft_strcmp(node->operator, "<") == 0)
+			exec_redin(node, env, cmd);
+		else if (ft_strcmp(node->operator, ">>") == 0)
+			exec_redout_append(node, env, cmd);
+		else if (ft_strcmp(node->operator, "<<") == 0)
+			exec_heredoc(node, env, cmd);
+		else
+			fprintf(stderr, "Erro: Operador desconhecido '%s'\n", node->operator);
+	}
+}
+
+void	execute_tree(t_node *root, char **env, t_cmd *cmd)
+{
+	if (!root)
+		return ;
+	fprintf(stderr, "Debug: Executando comando %s\n", root->command ? root->command : root->operator);
+	if (root->command != NULL)
+	{
+		execute_command(root, env);
+		cmd->ncmd++;
+	}
+	else if (root->operator && ft_strcmp(root->operator, "|") == 0)
+		execute_pipe(root, env, cmd);
+	else if (root->operator != NULL)
+		execute_redirect(root, env, cmd);
+		
+	
+}
+
+void    exec(t_cmd *cmd, char **env)
+{
+	int	i = -1;
+	t_node *tmp_root = cmd->root;
+	(void) env;
+	fprintf(stderr, "Debug: root: %s\n", cmd->root->operator);
+	execute_tree(tmp_root, env, cmd);
+	while (++i < cmd->ncmd)
+		waitpid(-1, NULL, 0);
 }

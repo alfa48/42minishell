@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 10:07:11 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/04 14:26:15 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/10 08:06:25 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static t_funcArray	init_func_array(void)
 
 static t_parseFuncs	init_parse_funcs(void)
 {
-	t_parseFuncs func_array;
+	t_parseFuncs	func_array;
 
 	func_array.parsers[0] = parse_pipe;
 	func_array.parsers[1] = parse_double_right;

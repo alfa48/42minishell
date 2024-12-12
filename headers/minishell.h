@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/09 13:43:17 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:20:18 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ t_token *next_token(t_cmd_line *c_line);
 int main(void);
 
 //resources/mini_execv.c
+void only_expor_cmd(t_env_var *g_env_list);
 char    *get_word(char *line, int *sig);
 void    list_env_vars(t_env_var *g_env_list);
 void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list);
@@ -104,11 +105,10 @@ void    init_args(t_cmd  *cmd);
 void    init_args_next(t_cmd  *cmd);
 void	fill_array_cmd(t_node *root, char **array, int *index);
 
-
 //resources/utils/mini_utils.c
 char    **get_args(char *cmd);
 char    *mini_strcat(char* dest, const char* src);
-void    exec(t_cmd *cmd, t_env_var *g_env_list);
+void    exec(t_cmd *cmd, char **env);
 void	traverse_tree(t_node *root, char **array, int size, t_env_var *g_env_list);
 void	*ft_memset_space(void *ptr, int value, size_t num);
 
