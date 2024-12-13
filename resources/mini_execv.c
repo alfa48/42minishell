@@ -6,11 +6,84 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:56:05 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/04 07:43:04 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/13 13:32:54 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+  
+
+char*	my_strtok(char* str, const char* delimiters)
+{  
+	static char* next_token = NULL; // Ponteiro estático para a próxima posição a ser analisada na string  
+
+    // Se a string for nula, começamos a nova divisão da última string processada  
+    if (str != NULL)
+        next_token = str; // Inicializa com a nova string  
+
+    // Se não há mais tokens para processar, retornamos NULL  
+    if (next_token == NULL)  
+        return NULL;  
+
+    // Pula os delimitadores iniciais  
+    char* token_start = next_token; // Marca o início do token  
+    while (*next_token && ft_strchr(delimiters, *next_token) != NULL) 
+        next_token++; // Avança até o primeiro caractere não delimitador  
+
+    // Se atingirmos o final da string, não há mais tokens  
+    if (*next_token == '\0')  
+        return NULL;  
+
+    // Avança até o final do token  
+    while (*next_token && ft_strchr(delimiters, *next_token) == NULL)
+        next_token++; // Continua até encontrar um delimitador  
+
+    // Se encontramos um delimitador, substituímos por \0 e ajustamos o ponteiro   
+    if (*next_token) {  
+        *next_token = '\0'; // Terminamos o token  
+        next_token++; // Avança para o próximo caractere para a próxima chamada  
+    }
+    return token_start; // Retorna o início do token encontrado  
+}  
+
+void mini_val(char *str, t_env_var **g_env_list)
+{
+	char	*name;
+	char	*token;
+	char	*value;
+	char	*equals_sign;
+	int		i =0;
+	char *ntk = NULL;
+
+    token = my_strtok(str, " \t");
+	str = token;
+    while (token)
+	{
+        // Verifique se o token está no formato "VAR=VAL"
+        equals_sign = ft_strchr(token, '=');
+        if (equals_sign)
+		{
+            *equals_sign = '\0';
+            name = token;
+            value = equals_sign + 1;
+            set_it(name, value, g_env_list);
+        }
+		else if (!i)
+		{	
+			ntk = ft_strdup(token);
+			i ++;
+		}
+		name = ft_strdup("");
+		value = ft_strdup("");
+		token = my_strtok(NULL, " \t");
+    }
+	if (i > 0)
+	{
+		printf("apagar a lista. nao criar variaveis e executar o comando com o: %s\n", ntk);
+	}
+
+	free(ntk);
+}
 
 char    *get_word(char *line, int *sig)
 {
@@ -66,7 +139,7 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 	else if (strcmp(cmd->arg[0], "unset") == 0)
 		mini_unset(cmd->arg, g_env_list);
 	else if (ft_strcmp("echo", cmd->arg[0]) == 0)
-		mini_echo(*g_env_list, cmd->line);
+		mini_echo(cmd->line);
     /*else if ('.' == cmd->arg[0][0]) EXECUTAR UM EXECUTAVEL EX:./a.out
     {
         printf("%c\n", cmd->arg[0][0]);
@@ -80,13 +153,16 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
         }
         waitpid(p, NULL, 0);
     }*/
+   	/*else if (ft_strchr(cmd->arg[0], "=") == 0)
+		mini_val();*/
 	else
 	{
 		p = fork();
 		if (p == 0)
 		{
 		    char **execve_args = get_args(cmd->root->command);
-		    printf("nenhum mini_built_in\n\n");
+		    mini_val(cmd->line, &(cmd->val_only));
+			list_env_vars(cmd->val_only);
 		    execve(execve_args[0], execve_args, envp);
 		    printf("error: ao executar o comando: %s\n", cmd->root->command);
         }

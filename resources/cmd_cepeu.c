@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/10 11:30:19 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/13 08:08:14 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static int	process_quote_char(char *init, bool *in_s_q, bool *in_d_q)
     return (0);
 }
 
-void	mini_echo(t_env_var *env_var, char *arg)
+void	mini_echo(char *arg)
 {
     int		new_line;
     char	*init;
@@ -83,8 +83,6 @@ void	mini_echo(t_env_var *env_var, char *arg)
     bool	in_d_q;
 
     new_line = 0;
-    if (!(arg = expanding(arg, env_var)))
-		return ;
     in_s_q = false;
     in_d_q = false; 
     if (!(init = get_word(arg, &new_line)))
@@ -102,7 +100,6 @@ void	mini_echo(t_env_var *env_var, char *arg)
 		if (*init)
 			init ++;
     }
-    free(arg);
     if (new_line)
         write(1, "\n", 1);
 }

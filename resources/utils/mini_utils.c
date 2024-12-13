@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:24:48 by manandre          #+#    #+#             */
-/*   Updated: 2024/12/12 16:37:59 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/13 09:10:52 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,8 +186,16 @@ void	exec_heredoc(t_node *node, char **env,  t_cmd *cmd)
     pid = fork();
     if (pid == 0)
     {
-    		while (1)
+    	while (1)
 	    {
+		// Redirecionar stdin para o terminal
+		int fd_terminal = open("/dev/tty", O_RDONLY);
+		if (fd_terminal == -1) {
+		perror("Erro ao abrir /dev/tty");
+		exit(1);
+		}
+		dup2(fd_terminal, STDIN_FILENO);
+		close(fd_terminal);
 
 		char* line = readline("heredoc> ");
 		if (!line) {
@@ -222,15 +230,6 @@ void	exec_heredoc(t_node *node, char **env,  t_cmd *cmd)
 		//rl_on_new_line();
 		rl_redisplay();
 		free(line);
-		
-		// Redirecionar stdin para o terminal
-		int fd_terminal = open("/dev/tty", O_RDONLY);
-		if (fd_terminal == -1) {
-		perror("Erro ao abrir /dev/tty");
-		exit(1);
-		}
-		dup2(fd_terminal, STDIN_FILENO);
-		close(fd_terminal);
 	    }
 	    fd = open("heredoc_file.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	    write(fd, result, ft_strlen(result));
@@ -241,16 +240,6 @@ void	exec_heredoc(t_node *node, char **env,  t_cmd *cmd)
 	}
 	waitpid(pid, NULL, 0);
 }
-
-/*
-
-cat << kjhk
-
-    <<
-cmd     hdoc> f.txt
-
-
-*/
 
 void	ffexec_heredoc(t_node *node, char **env,  t_cmd *cmd)
 {

@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/12 16:23:31 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/13 12:11:03 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,13 @@ int	main(void)
 		cmd->line = readline("minishell$> ");
 		if (cmd->line || cmd->line[0] != '\0')
 		{
+
 			cmd->root = init_shell(cmd->line);
 			if (cmd->root)
 			{
 				init_args_next(cmd);
+				if (!(cmd->line = expanding(cmd->line, cmd->g_env_list)))
+					return (0);
 				if (cmd->size == 1)
 					mini_built_in(cmd, &(cmd->g_env_list));
 				else

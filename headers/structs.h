@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:28:30 by manandre          #+#    #+#             */
-/*   Updated: 2024/12/12 16:26:54 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/13 10:04:44 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef	struct s_cmd
 	int		nl;
 	int		ncmd;
 	int		status_cmd_prev;
+	t_env_var 	*val_only;
 	t_env_var	*g_env_list;
 
 }	t_cmd;

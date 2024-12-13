@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/12 16:20:18 by fjilaias         ###   ########.fr       */
+/*   Updated: 2024/12/13 10:42:16 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ t_token *next_token(t_cmd_line *c_line);
 int main(void);
 
 //resources/mini_execv.c
+void	mini_val(char *str, t_env_var **g_env_list);
 void only_expor_cmd(t_env_var *g_env_list);
 char    *get_word(char *line, int *sig);
 void    list_env_vars(t_env_var *g_env_list);
@@ -129,6 +130,7 @@ int	set_it(char *name, const char *value, t_env_var **g_env_list);
 //resources/mini_expand.c
 char *concat_strings(char **str_array);
 char *expanding(char *str, t_env_var *g_env_list);
+
 //token/cmd_in/cmd_envexit.c
 void    free_ms(t_cmd *cmd);
 void    mini_env(t_env_var *g_env_list);
@@ -136,7 +138,7 @@ void    mini_exit(void);
 
 //resources/cmd_cepeu.c
 bool check_quotes_balance(const char *arg);
-void    mini_echo(t_env_var *env_var, char *arg);
+void    mini_echo(char *arg);
 void    mini_cd(char *path, t_env_var *g_env_list);
 void    mini_pwd(void);
 void    mini_export(char **args, t_env_var **g_env_list);
