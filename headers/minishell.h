@@ -106,7 +106,16 @@ void    init_args(t_cmd  *cmd);
 void    init_args_next(t_cmd  *cmd);
 void	fill_array_cmd(t_node *root, char **array, int *index);
 
+//esources/utils/heredoc.c
+void	exec_heredoc(t_node *node, char **env, t_cmd *cmd);
+
+//resources/utils/exec_pipe_redirectrs.c
+void	execute_pipe(t_node *node, char **env, t_cmd *cmd);
+void	execute_redirect(t_node *node, char **env,  t_cmd *cmd);
+
 //resources/utils/mini_utils.c
+void	execute_tree(t_node *root, char **env, t_cmd *cmd);
+void	exec_redin(t_node *node, char **env, t_cmd *cmd);
 char    **get_args(char *cmd);
 char    *mini_strcat(char* dest, const char* src);
 void    exec(t_cmd *cmd, char **env);

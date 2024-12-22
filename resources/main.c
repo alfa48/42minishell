@@ -40,13 +40,11 @@ int	main(void)
 		cmd->line = readline("minishell$> ");
 		if (cmd->line || cmd->line[0] != '\0')
 		{
-
 			cmd->root = init_shell(cmd->line);
 			if (cmd->root)
 			{
+				cmd->line = expanding(cmd->line, cmd->g_env_list);
 				init_args_next(cmd);
-				if (!(cmd->line = expanding(cmd->line, cmd->g_env_list)))
-					return (0);
 				if (cmd->size == 1)
 					mini_built_in(cmd, &(cmd->g_env_list));
 				else

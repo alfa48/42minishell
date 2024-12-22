@@ -17,6 +17,8 @@ SRC = $(RSC_DIR)/cmd_cepeu.c \
 	$(RSC_DIR)/main.c \
 	$(RSC_DIR)/mini_execv.c \
 	$(RSC_DIR)/init/init_vars.c \
+	$(RSC_DIR)/utils/heredoc.c \
+	$(RSC_DIR)/utils/exec_pipe_redirectrs.c \
 	$(RSC_DIR)/utils/mini_utils.c \
 	$(RSC_DIR)/utils/mini_utils_2.c \
 	$(RSC_DIR)/utils/mini_utils_3.c \

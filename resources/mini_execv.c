@@ -12,7 +12,6 @@
 
 #include "minishell.h"
   
-
 char*	my_strtok(char* str, const char* delimiters)
 {  
 	static char* next_token = NULL; // Ponteiro estático para a próxima posição a ser analisada na string  
@@ -46,7 +45,7 @@ char*	my_strtok(char* str, const char* delimiters)
     return token_start; // Retorna o início do token encontrado  
 }  
 
-void mini_val(char *str, t_env_var **g_env_list)
+void	mini_val(char *str, t_env_var **g_env_list)
 {
 	char	*name;
 	char	*token;
@@ -120,7 +119,6 @@ char    *get_word(char *line, int *sig)
 void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 {
 	pid_t   p;
-	//char	*argv[] = {NULL };
 	char	*envp[] = { "PATH=/bin", "TERM=xterm" , NULL };
 
 	cmd->arg = ft_split(cmd->root->command, ' ');
@@ -140,21 +138,6 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 		mini_unset(cmd->arg, g_env_list);
 	else if (ft_strcmp("echo", cmd->arg[0]) == 0)
 		mini_echo(cmd->line);
-    /*else if ('.' == cmd->arg[0][0]) EXECUTAR UM EXECUTAVEL EX:./a.out
-    {
-        printf("%c\n", cmd->arg[0][0]);
-        char	*argv[] = {"./minishell", NULL };
-        char	*envp[] = { NULL };
-        p = fork();
-		if (p == 0)
-        {
-            execve(argv[0], argv, envp);
-            printf("error\n");
-        }
-        waitpid(p, NULL, 0);
-    }*/
-   	/*else if (ft_strchr(cmd->arg[0], "=") == 0)
-		mini_val();*/
 	else
 	{
 		p = fork();
@@ -162,13 +145,12 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 		{
 		    char **execve_args = get_args(cmd->root->command);
 		    mini_val(cmd->line, &(cmd->val_only));
-			list_env_vars(cmd->val_only);
+		    list_env_vars(cmd->val_only);
 		    execve(execve_args[0], execve_args, envp);
 		    printf("error: ao executar o comando: %s\n", cmd->root->command);
-        }
+		}
 		waitpid(p, NULL, 0);
 	}
-
 	return ;
 }
 
