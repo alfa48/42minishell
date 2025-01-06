@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/13 12:11:03 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/06 15:17:35 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int	main(void)
 		cmd->line = readline("minishell$> ");
 		if (cmd->line || cmd->line[0] != '\0')
 		{
+			add_history(cmd->line);
 			cmd->root = init_shell(cmd->line);
 			if (cmd->root)
 			{

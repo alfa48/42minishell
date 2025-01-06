@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/13 10:42:16 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/06 15:10:23 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,9 @@ char	*mini_strstr(const char *haystack, const char *needle);
 void	set_or_add_env_var(const char *env_entry, t_env_var **g_env_list);
 void	initialize_env_list(t_env_var **g_env_list, char **ev);
 int	set_it(char *name, const char *value, t_env_var **g_env_list);
+
+//resources/utils/mini_utils_4.c
+int does_it_exist(char *name, t_env_var *current);
 
 //resources/mini_expand.c
 char *concat_strings(char **str_array);

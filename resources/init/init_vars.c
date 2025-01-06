@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 09:34:57 by manandre          #+#    #+#             */
-/*   Updated: 2024/12/13 10:18:41 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/06 16:26:36 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void    init_args(t_cmd  *cmd)
 	cmd->ncmd = 0;
 	cmd->val_only = NULL;
 	cmd->g_env_list->counter_exp = 0;
+	cmd->pid_count = 0;
 }
 
 void    init_args_next(t_cmd  *cmd)

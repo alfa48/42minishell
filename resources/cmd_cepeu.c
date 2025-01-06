@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/06 12:35:03 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/06 13:23:29 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ void	mini_pwd(void)
 
 void	mini_export(char **args, t_env_var **g_env_list)
 {
-	int	i;
+	int		i;
 	
 	if (!args[1])
 	{

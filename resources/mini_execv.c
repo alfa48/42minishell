@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:56:05 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/06 10:34:40 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/06 15:18:26 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	mini_val(char *str, t_env_var **g_env_list)
 	char	*token;
 	char	*value;
 	char	*equals_sign;
-	int		i =0;
+	int		i = 0;
 	char *ntk = NULL;
 
     token = my_strtok(str, " \t");
@@ -80,6 +80,7 @@ void	mini_val(char *str, t_env_var **g_env_list)
 	{
 		printf("apagar a lista. nao criar variaveis e executar o comando com o: %s\n", ntk);
 	}
+
 	free(ntk);
 }
 
@@ -137,16 +138,25 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 		mini_unset(cmd->arg, g_env_list);
 	else if (ft_strcmp("echo", cmd->arg[0]) == 0)
 		mini_echo(cmd->line);
+	else if (ft_strchr(cmd->line, '='))
+	{
+		p = fork();
+		if (p == 0)
+		{
+		    mini_val(cmd->line, &(cmd->val_only));
+		    list_env_vars(cmd->val_only);
+		}
+		waitpid(p, NULL, 0);
+	}
 	else
 	{
 		p = fork();
 		if (p == 0)
 		{
-		    char **execve_args = get_args(cmd->root->command);
-		    mini_val(cmd->line, &(cmd->val_only));
-		    list_env_vars(cmd->val_only);
-		    execve(execve_args[0], execve_args, envp);
-		    printf("error: ao executar o comando: %s\n", cmd->root->command);
+			char **execve_args = get_args(cmd->root->command);
+			execve(execve_args[0], execve_args, envp);
+			printf("error: ao executar o comando: %s\n", cmd->root->command);
+
 		}
 		waitpid(p, NULL, 0);
 	}
