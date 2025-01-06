@@ -50,7 +50,9 @@ int	main(void)
 	while (1)
 	{
 		cmd->line = readline("minishell$> ");
-		if (cmd->line && !is_only_spaces(cmd->line))
+		if (!cmd->line)
+			break;
+		if (!is_only_spaces(cmd->line))
 		{
 			add_history(cmd->line);
 			cmd->root = init_shell(cmd->line);
@@ -67,15 +69,8 @@ int	main(void)
 			cmd->index = 0;
 			cmd->g_env_list->counter_exp = 0;
 			free_ms(cmd);
-			free(cmd->line);
 		}
-		else
-		{
-			if (cmd->line)
-				free(cmd->line);
-			else
-				break;
-		}
+		free(cmd->line);
 	}
 	return (0);
 }
