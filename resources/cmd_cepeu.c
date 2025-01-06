@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/13 08:08:14 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/06 12:35:03 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,31 +75,55 @@ static int	process_quote_char(char *init, bool *in_s_q, bool *in_d_q)
     return (0);
 }
 
-void	mini_echo(char *arg)
+char	*process_cmd(char *arg)
 {
-    int		new_line;
-    char	*init;
+	char	*out;
     bool	in_s_q;
     bool	in_d_q;
 
-    new_line = 0;
     in_s_q = false;
-    in_d_q = false; 
+    in_d_q = false;
+	if (!(out = malloc((ft_strlen(arg) + 2))))
+		return NULL;
+	char *tmp = out;
+    while (*arg)
+    {
+        while (*arg == ' ' && !in_s_q && !in_d_q)
+        {
+            arg ++;
+            if (*arg && *arg != ' ')
+			{
+				*out = ' ';
+				out ++;
+			}
+        }
+        if (!process_quote_char(arg, &in_s_q, &in_d_q))
+		{
+				*out = *arg;
+				out ++;
+		}
+		if (*arg)
+			arg ++;
+    }
+     *out = '\0';
+	return (tmp);
+}
+
+void	mini_echo(char *arg)
+{
+    int		new_line;
+	char	*init;
+	char	*print;
+
+    new_line = 0;
     if (!(init = get_word(arg, &new_line)))
         return ;
-    while (*init)
-    {
-        while (*init == ' ' && !in_s_q && !in_d_q)
-        {
-            init ++;
-            if (*init && *init != ' ')
-				write(1, " ", 1);
-        }
-        if (!process_quote_char(init, &in_s_q, &in_d_q))
-			write(1, init, 1);
-		if (*init)
-			init ++;
-    }
+	else
+	{
+		print = process_cmd(init);
+		write(1, print, ft_strlen(print));
+	}
+	free(print);
     if (new_line)
         write(1, "\n", 1);
 }

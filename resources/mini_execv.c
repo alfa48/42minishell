@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:56:05 by fjilaias          #+#    #+#             */
-/*   Updated: 2024/12/13 13:32:54 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/06 10:34:40 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ void	mini_val(char *str, t_env_var **g_env_list)
 	{
 		printf("apagar a lista. nao criar variaveis e executar o comando com o: %s\n", ntk);
 	}
-
 	free(ntk);
 }
 

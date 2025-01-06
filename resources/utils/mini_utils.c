@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:24:48 by manandre          #+#    #+#             */
-/*   Updated: 2024/12/13 09:10:52 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/06 10:50:57 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,3 @@ void    exec(t_cmd *cmd, char **env)
 	fprintf(stderr, "Debug: root: %s\n", cmd->root->operator);
 	execute_tree(tmp_root, env, cmd);
 }
-
-/*Agora eu queria que ideias de como eu posso depois de ler e ter arganizada todos os possíveis nós, percorrer a árvore no ato de executar o comando, considerando se depois de um comando há um pipe ou outro redirecionador, se antes de um comando foi deixado um pipe, e assim por diante. Ca tenho funcões que o meu projeto em C permite usar : "readline, rl_clear_history, rl_on_new_line, rl_replace_line, rl_redisplay, add_history, printf, malloc, free, write, access, open, read, close, fork, wait, waitpid, wait3, wait4, signal, sigaction, sigemptyset, sigaddset, kill, exit, getcwd, chdir, stat, lstat, fstat, unlink, execve, dup, dup2, pipe, opendir, readdir, closedir, strerror, perror, isatty, ttyname, ttyslot, ioctl, getenv, tcsetattr, tcgetattr, tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs"
-*/
