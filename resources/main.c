@@ -24,6 +24,17 @@ void	inorder_traversal(t_node *root)
 	inorder_traversal(root->right);
 }
 
+int is_only_spaces(char *str)
+{
+	while (*str)
+	{
+		if (*str != ' ' && *str != '\t')
+			return (0);
+		str++;
+	}
+	return (1);
+}
+
 int	main(void)
 {
 	t_cmd	*cmd;
@@ -38,7 +49,7 @@ int	main(void)
 	while (1)
 	{
 		cmd->line = readline("minishell$> ");
-		if (cmd->line || cmd->line[0] != '\0')
+		if (cmd->line && !is_only_spaces(cmd->line))
 		{
 			add_history(cmd->line);
 			cmd->root = init_shell(cmd->line);
@@ -57,6 +68,8 @@ int	main(void)
 			free_ms(cmd);
 			free(cmd->line);
 		}
+		if (cmd->line)
+			free(cmd->line);
 	}
 	return (0);
 }
