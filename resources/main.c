@@ -46,6 +46,7 @@ int	main(void)
 	init_args(cmd);
 	if (!cmd->g_env_list)
 		return (0 * printf("Error in create env list!\n"));
+	handle_signals();
 	while (1)
 	{
 		cmd->line = readline("minishell$> ");
@@ -68,8 +69,13 @@ int	main(void)
 			free_ms(cmd);
 			free(cmd->line);
 		}
-		if (cmd->line)
-			free(cmd->line);
+		else
+		{
+			if (cmd->line)
+				free(cmd->line);
+			else
+				break;
+		}
 	}
 	return (0);
 }

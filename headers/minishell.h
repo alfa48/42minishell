@@ -175,5 +175,9 @@ t_node	*parse_single_left(char *command, t_node *root, int side);
 t_node	*init_shell(char *command_line);
 t_node	*parse_command(char *command, t_node *root, int side);
 
+//resources/signals/cmd_signal.c
+void    handle_signals(void);
+void    sigint_handler(int signum);
+
 
 # endif

@@ -25,7 +25,8 @@ SRC = $(RSC_DIR)/cmd_cepeu.c \
 	$(RSC_DIR)/init_shell.c \
 	$(RSC_DIR)/first_handlers.c\
 	$(RSC_DIR)/parsers_cmd.c \
-	$(RSC_DIR)/mini_expand.c
+	$(RSC_DIR)/mini_expand.c \
+	$(RSC_DIR)/signals/cmd_signal.c
 	
 OBJ = $(SRC:.c=.o)
 
