@@ -137,7 +137,8 @@ void	initialize_env_list(t_env_var **g_env_list, char **ev);
 int	set_it(char *name, const char *value, t_env_var **g_env_list);
 
 //resources/utils/mini_utils_4.c
-int does_it_exist(char *name, t_env_var *current);
+char *get_env_var(const char *name, t_env_var *env_list);
+char *get_first_word(char *line);
 
 //resources/mini_expand.c
 char *concat_strings(char **str_array);
@@ -156,6 +157,7 @@ void    mini_pwd(void);
 void    mini_export(char **args, t_env_var **g_env_list);
 void    mini_unset(char **args, t_env_var **g_env_list);
 char    *ft_findenv(char *s, t_env_var *g_env_list);
+void execute_in_child(char *path, char *args[]);
 
 //resources/first_handler.c
 t_node	*handle_pipe(char *command_line);
@@ -178,6 +180,9 @@ t_node	*parse_command(char *command, t_node *root, int side);
 //resources/signals/cmd_signal.c
 void    handle_signals(void);
 void    sigint_handler(int signum);
+
+//resources/path/path_utils.c
+char *find_executable(const char *command, t_env_var **g_env_list);
 
 
 # endif

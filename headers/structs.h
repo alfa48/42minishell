@@ -68,6 +68,7 @@ typedef	struct s_cmd
 	int		ncmd;
 	int		status_cmd_prev;
     int		pid_count;
+	int status_cmd;
 	t_env_var 	*val_only;
 	t_env_var	*g_env_list;
 

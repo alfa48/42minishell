@@ -116,10 +116,15 @@ char    *get_word(char *line, int *sig)
 	return (start);
 }
 
+void mini_status(t_cmd *cmd)
+{
+   printf("%d\n", cmd->status_cmd);
+}
+
 void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 {
 	pid_t   p;
-	char	*envp[] = { "PATH=/bin", "TERM=xterm" , NULL };
+	//char	*envp[] = { "PATH=/bin", "TERM=xterm" , NULL };
 
 	cmd->arg = ft_split(cmd->root->command, ' ');
 	if (!cmd)
@@ -138,6 +143,8 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 		mini_unset(cmd->arg, g_env_list);
 	else if (ft_strcmp("echo", cmd->arg[0]) == 0)
 		mini_echo(cmd->line);
+	else if (ft_strcmp("$?", cmd->arg[0]) == 0)
+		mini_status(cmd);
 	else if (ft_strchr(cmd->line, '='))
 	{
 		p = fork();
@@ -153,11 +160,24 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 		p = fork();
 		if (p == 0)
 		{
-			char **execve_args = get_args(cmd->root->command);
-			execve(execve_args[0], execve_args, envp);
-			printf("error: ao executar o comando: %s\n", cmd->root->command);
+			char *path = find_executable(get_first_word(cmd->root->command), g_env_list);
+            char *args[] = { get_first_word(cmd->root->command), NULL };
+            execute_in_child(path, args);
 
 		}
+		else
+		{
+        // Processo pai: aguarda o término do processo filho
+        int status;
+        waitpid(-1, &status, 0);
+        if (WIFEXITED(status)) {
+            int exit_status = WEXITSTATUS(status);
+			cmd->status_cmd = exit_status;
+            if (exit_status != 0)
+                printf("%s: command not found %d\n",get_first_word(cmd->root->command), exit_status);
+          } else if (WIFSIGNALED(status))
+             fprintf(stderr, "Command terminated by signal %d\n", WTERMSIG(status));
+       }
 		waitpid(p, NULL, 0);
 	}
 	return ;

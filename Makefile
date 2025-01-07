@@ -22,11 +22,13 @@ SRC = $(RSC_DIR)/cmd_cepeu.c \
 	$(RSC_DIR)/utils/mini_utils.c \
 	$(RSC_DIR)/utils/mini_utils_2.c \
 	$(RSC_DIR)/utils/mini_utils_3.c \
+	$(RSC_DIR)/utils/mini_utils_4.c \
 	$(RSC_DIR)/init_shell.c \
 	$(RSC_DIR)/first_handlers.c\
 	$(RSC_DIR)/parsers_cmd.c \
 	$(RSC_DIR)/mini_expand.c \
-	$(RSC_DIR)/signals/cmd_signal.c
+	$(RSC_DIR)/signals/cmd_signal.c \
+	$(RSC_DIR)/path/path_utils.c
 	
 OBJ = $(SRC:.c=.o)
 

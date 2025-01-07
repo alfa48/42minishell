@@ -29,6 +29,7 @@ void    init_args(t_cmd  *cmd)
 	cmd->val_only = NULL;
 	cmd->g_env_list->counter_exp = 0;
 	cmd->pid_count = 0;
+	cmd->status_cmd = 0;
 }
 
 void    init_args_next(t_cmd  *cmd)

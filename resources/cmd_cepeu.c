@@ -143,15 +143,35 @@ void	mini_cd(char *path, t_env_var *g_env_list)
 		perror("getcwd");
 }
 
-void	mini_pwd(void)
-{
-	char    cwd[42000];
+ void	mini_pwd(void)
+ {
+ 	char    cwd[42000];
 
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("%s\n", cwd);
-	else
-		perror("pwd");
+ 	if (getcwd(cwd, sizeof(cwd)) != NULL)
+ 		printf("%s\n", cwd);
+ 	else
+ 		perror("pwd");
+ }
+
+void execute_in_child(char *path, char *args[])
+{
+	    if (execve(path, args, NULL/*envp*/) == -1) {
+            free(path);
+            exit(EXIT_FAILURE);
+        }
+
+    free(path);
 }
+
+
+// void	mini_pwd(t_env_var **g_env_list)
+// {
+// 	(void) g_env_list;
+// 	char *path = find_executable("pwd", g_env_list);
+//     char *args[] = { "pwd", NULL };
+//     execute_in_child(path, args);
+// }
+
 
 void	mini_export(char **args, t_env_var **g_env_list)
 {
