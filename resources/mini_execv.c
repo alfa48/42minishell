@@ -45,7 +45,7 @@ char*	my_strtok(char* str, const char* delimiters)
     return token_start; // Retorna o início do token encontrado  
 }  
 
-void	mini_val(char *str, t_env_var **g_env_list)
+void	mini_val(char *str, t_cmd *cmd)
 {
 	char	*name;
 	char	*token;
@@ -54,19 +54,21 @@ void	mini_val(char *str, t_env_var **g_env_list)
 	int		i = 0;
 	char *ntk = NULL;
 
-    token = my_strtok(str, " \t");
+	token = my_strtok(str, " \t");
 	str = token;
-    while (token)
+	while (token)
 	{
-        // Verifique se o token está no formato "VAR=VAL"
-        equals_sign = ft_strchr(token, '=');
-        if (equals_sign)
+		equals_sign = ft_strchr(token, '=');
+		if (equals_sign)
 		{
-            *equals_sign = '\0';
-            name = token;
-            value = equals_sign + 1;
-            set_it(name, value, g_env_list);
-        }
+			*equals_sign = '\0';
+			name = token;
+			value = equals_sign + 1;
+			if (ft_findenv(name, cmd->g_env_list))
+				set_it(name, value, &cmd->g_env_list);
+			else
+				set_it(name, value, &cmd->val_only);
+		}
 		else if (!i)
 		{	
 			ntk = ft_strdup(token);
@@ -75,12 +77,9 @@ void	mini_val(char *str, t_env_var **g_env_list)
 		name = ft_strdup("");
 		value = ft_strdup("");
 		token = my_strtok(NULL, " \t");
-    }
-	if (i > 0)
-	{
-		printf("apagar a lista. nao criar variaveis e executar o comando com o: %s\n", ntk);
 	}
-
+	if (i > 0)
+		printf("apagar a lista. nao criar variaveis e executar o comando com o: %s\n", ntk);
 	free(ntk);
 }
 
@@ -152,7 +151,7 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 		p = fork();
 		if (p == 0)
 		{
-		    mini_val(cmd->line, &(cmd->val_only));
+		    mini_val(cmd->line, cmd);
 		    list_env_vars(cmd->val_only);
 		}
 		waitpid(p, NULL, 0);
@@ -164,10 +163,9 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 		if (p == 0)
 		{
 			char *path = find_executable(get_first_word(cmd->root->command), g_env_list);
-            char **args = get_args(cmd->line);
+            		char **args = get_args(cmd->line);
 			// get_first_word(cmd->root->command), NULL };
-            execute_in_child(path, args);
-
+            		execute_in_child(path, args);
 		}
 		else
 		{

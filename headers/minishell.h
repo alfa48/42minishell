@@ -94,8 +94,8 @@ t_token *next_token(t_cmd_line *c_line);
 int main(void);
 
 //resources/mini_execv.c
-void	mini_val(char *str, t_env_var **g_env_list);
-void only_expor_cmd(t_env_var *g_env_list);
+void	mini_val(char *str, t_cmd *cmd);
+void	only_expor_cmd(t_env_var *g_env_list);
 char    *get_word(char *line, int *sig);
 void    list_env_vars(t_env_var *g_env_list);
 void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list);
