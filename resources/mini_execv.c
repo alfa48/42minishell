@@ -124,9 +124,11 @@ void mini_status(t_cmd *cmd)
 void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 {
 	pid_t   p;
-	//char	*envp[] = { "PATH=/bin", "TERM=xterm" , NULL };
+	char	*str_p;
+	(void) str_p;
 
 	cmd->arg = ft_split(cmd->root->command, ' ');
+	str_p = process_cmd(cmd->arg[0]);//paraste aqui?
 	if (!cmd)
 		return ;
 	if (ft_strcmp("cd", cmd->arg[0]) == 0)
@@ -143,7 +145,7 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 		mini_unset(cmd->arg, g_env_list);
 	else if (ft_strcmp("echo", cmd->arg[0]) == 0)
 		mini_echo(cmd->line);
-	else if (ft_strcmp("$?", cmd->arg[0]) == 0)
+	else if (ft_strcmp("$?", cmd->arg[0]) == 0) //retirar daaqui, colocar na sub de variavel antes de processar o cmd
 		mini_status(cmd);
 	else if (ft_strchr(cmd->line, '='))
 	{
@@ -154,6 +156,7 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 		    list_env_vars(cmd->val_only);
 		}
 		waitpid(p, NULL, 0);
+		return ;
 	}
 	else
 	{
@@ -172,15 +175,21 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
         waitpid(-1, &status, 0);
         if (WIFEXITED(status)) {
             int exit_status = WEXITSTATUS(status);
-			cmd->status_cmd = exit_status;
-            if (exit_status != 0)
+            if (exit_status == 1)
+			{
                 printf("%s: command not found %d\n",get_first_word(cmd->root->command), exit_status);
-          } else if (WIFSIGNALED(status))
-             fprintf(stderr, "Command terminated by signal %d\n", WTERMSIG(status));
+				cmd->status_cmd = 127;
+			}
+			else if (exit_status == 0)
+				cmd->status_cmd = 0;
+			else
+				cmd->status_cmd = 126;
+          } 
        }
 		waitpid(p, NULL, 0);
+		return ;
 	}
-	return ;
+	cmd->status_cmd = 0;
 }
 
 void	list_env_vars(t_env_var *g_env_list)

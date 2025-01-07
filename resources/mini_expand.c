@@ -67,12 +67,18 @@ char    *expand_variable(char *str, char *result, int *i, t_env_var *g_env_list)
 	int		var_start;
 	char	*var_name;
 	char	*var_value;
+	(void)g_env_list;
 
 	var_start = *i + 1;
 	while (ft_isalnum(str[var_start]) || str[var_start] == '_')
 		var_start ++;
 	var_name = ft_strndup(str + *i + 1, var_start - (*i + 1));
-	var_value = ft_findenv(var_name, g_env_list);
+	if (var_start++ == '?')
+		var_value = cmd->status_cmd;
+	else
+		//var_value = ft_findenv(var_name, cmd->g_env_list);
+	if (!var_value)
+		//var_value = ft_findenv_fake(var_name, cmd->val_only;
 	free(var_name);
 	if (var_value)
 		result = ft_strjoin_free(result, var_value);
@@ -97,7 +103,7 @@ char	*process_char(char *str, char *r, int *i, bool *in_s_q, bool *in_d_q, t_env
 		(*i) ++;
 	}
 	else if (str[*i] == '$' && !*in_s_q &&
-		(ft_isalnum(str[*i + 1]) || str[*i + 1] == '_'))
+		(ft_isalnum(str[*i + 1]) || str[*i + 1] == '_' || str[*i + 1] == '?'))
 		r = expand_variable(str, r, i, env);
 	else
 	{

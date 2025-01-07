@@ -55,10 +55,10 @@ int	main(void)
 		if (!is_only_spaces(cmd->line))
 		{
 			add_history(cmd->line);
+			cmd->line = expanding(cmd->line, cmd->g_env_list);
 			cmd->root = init_shell(cmd->line);
 			if (cmd->root)
 			{
-				cmd->line = expanding(cmd->line, cmd->g_env_list);
 				init_args_next(cmd);
 				if (cmd->size == 1)
 					mini_built_in(cmd, &(cmd->g_env_list));

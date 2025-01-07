@@ -159,7 +159,6 @@ void execute_in_child(char *path, char *args[])
             free(path);
             exit(EXIT_FAILURE);
         }
-
     free(path);
 }
 

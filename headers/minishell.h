@@ -157,6 +157,7 @@ void    mini_pwd(void);
 void    mini_export(char **args, t_env_var **g_env_list);
 void    mini_unset(char **args, t_env_var **g_env_list);
 char    *ft_findenv(char *s, t_env_var *g_env_list);
+char	*process_cmd(char *arg);
 void execute_in_child(char *path, char *args[]);
 
 //resources/first_handler.c
