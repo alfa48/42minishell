@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 16:07:45 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/06 11:24:10 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/07 10:31:16 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,23 +62,24 @@ char	*ft_strjoin_free(char *s1, const char *s2)
 	return (new_str);
 }
 
-char    *expand_variable(char *str, char *result, int *i, t_env_var *g_env_list)
+char    *expand_variable(char *str, char *result, int *i, t_cmd *cmd)
 {
 	int		var_start;
 	char	*var_name;
 	char	*var_value;
-	(void)g_env_list;
 
 	var_start = *i + 1;
 	while (ft_isalnum(str[var_start]) || str[var_start] == '_')
 		var_start ++;
 	var_name = ft_strndup(str + *i + 1, var_start - (*i + 1));
-	if (var_start++ == '?')
-		var_value = cmd->status_cmd;
-	else
-		//var_value = ft_findenv(var_name, cmd->g_env_list);
+	var_value = ft_findenv(var_name, cmd->g_env_list);
+	if (str[var_start] == '?')
+	{
+		var_start ++;
+		var_value = ft_itoa(cmd->status_cmd);
+	}
 	if (!var_value)
-		//var_value = ft_findenv_fake(var_name, cmd->val_only;
+		var_value = ft_findenv(var_name, cmd->val_only);
 	free(var_name);
 	if (var_value)
 		result = ft_strjoin_free(result, var_value);
@@ -86,7 +87,7 @@ char    *expand_variable(char *str, char *result, int *i, t_env_var *g_env_list)
 	return (result);
 }
 
-char	*process_char(char *str, char *r, int *i, bool *in_s_q, bool *in_d_q, t_env_var *env)
+char	*process_char(char *str, char *r, int *i, bool *in_s_q, bool *in_d_q, t_cmd *cmd)
 {
 	char	temp[2];
 
@@ -104,7 +105,7 @@ char	*process_char(char *str, char *r, int *i, bool *in_s_q, bool *in_d_q, t_env
 	}
 	else if (str[*i] == '$' && !*in_s_q &&
 		(ft_isalnum(str[*i + 1]) || str[*i + 1] == '_' || str[*i + 1] == '?'))
-		r = expand_variable(str, r, i, env);
+		r = expand_variable(str, r, i, cmd);
 	else
 	{
 		temp[0] = str[*i];
@@ -115,7 +116,7 @@ char	*process_char(char *str, char *r, int *i, bool *in_s_q, bool *in_d_q, t_env
 	return (r);
 }
 
-char	*expand_string(char *str, t_env_var *env_l)
+char	*expand_string(char *str, t_cmd *cmd)
 {
 	int		i;
 	char	*result;
@@ -130,18 +131,18 @@ char	*expand_string(char *str, t_env_var *env_l)
 	result[0] = '\0';
 	while (str[i])
 	{
-		result = process_char(str, result, &i, &in_s_q, &in_d_q, env_l);
+		result = process_char(str, result, &i, &in_s_q, &in_d_q, cmd);
 		if (!result)
 			return (NULL);
 	}
  	return (result);
 }
 
-char	*expanding(char *str, t_env_var *g_env_list)
+char	*expanding(char *str, t_cmd *cmd)
 {
-	if (!str || !g_env_list)
+	if (!str || !cmd->g_env_list)
 		return (NULL);
 	if (!check_quotes_balance(str))
 		return (NULL);
-	return (expand_string(str, g_env_list));
+	return (expand_string(str, cmd));
 }

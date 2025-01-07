@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_signal.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 18:02:38 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/06 18:02:40 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/07 10:23:48 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void    handle_signals()
 {
     signal(SIGINT, sigint_handler);
-    signal(SIGQUIT, SIG_IGN); 
+    signal(SIGQUIT, SIG_IGN);
 }
 
 void    sigint_handler(int signum)

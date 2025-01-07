@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/06 13:23:29 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/07 10:49:14 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ void	mini_cd(char *path, t_env_var *g_env_list)
  		perror("pwd");
  }
 
-void execute_in_child(char *path, char *args[])
+void execute_in_child(char *path, char **args)
 {
 	    if (execve(path, args, NULL/*envp*/) == -1) {
             free(path);

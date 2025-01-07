@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:56:05 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/06 15:18:26 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/07 11:05:01 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 	(void) str_p;
 
 	cmd->arg = ft_split(cmd->root->command, ' ');
-	str_p = process_cmd(cmd->arg[0]);//paraste aqui?
+	//str_p = process_cmd(cmd->arg[0]);//paraste aqui?
 	if (!cmd)
 		return ;
 	if (ft_strcmp("cd", cmd->arg[0]) == 0)
@@ -164,7 +164,8 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 		if (p == 0)
 		{
 			char *path = find_executable(get_first_word(cmd->root->command), g_env_list);
-            char *args[] = { get_first_word(cmd->root->command), NULL };
+            char **args = get_args(cmd->line);
+			// get_first_word(cmd->root->command), NULL };
             execute_in_child(path, args);
 
 		}
@@ -177,7 +178,7 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
             int exit_status = WEXITSTATUS(status);
             if (exit_status == 1)
 			{
-                printf("%s: command not found %d\n",get_first_word(cmd->root->command), exit_status);
+                printf("%s: command not found\n",get_first_word(cmd->root->command));
 				cmd->status_cmd = 127;
 			}
 			else if (exit_status == 0)

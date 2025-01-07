@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/06 15:17:35 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/07 11:04:19 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int is_only_spaces(char *str)
 	{
 		if (*str != ' ' && *str != '\t')
 			return (0);
-		str++;
+		str ++;
 	}
 	return (1);
 }
@@ -51,11 +51,15 @@ int	main(void)
 	{
 		cmd->line = readline("minishell$> ");
 		if (!cmd->line)
-			break;
+		{
+			printf("exit\n");
+			break ;
+		}
 		if (!is_only_spaces(cmd->line))
 		{
 			add_history(cmd->line);
-			cmd->line = expanding(cmd->line, cmd->g_env_list);
+			cmd->line = process_cmd(cmd->line);
+			cmd->line = expanding(cmd->line, cmd);
 			cmd->root = init_shell(cmd->line);
 			if (cmd->root)
 			{
