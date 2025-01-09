@@ -113,6 +113,9 @@ void	exec_heredoc(t_node *node, char **env, t_cmd *cmd);
 
 //resources/utils/exec_pipe_redirectrs.c
 void	execute_pipe(t_node *node, char **env, t_cmd *cmd);
+void	execute_pipe_right(int pos, t_cmd *cmd);
+void	execute_pipe_left(int pos, t_cmd *cmd);
+void execute_pipe_middle(int pos, t_cmd *cmd);
 void	execute_redirect(t_node *node, char **env,  t_cmd *cmd);
 
 //resources/utils/mini_utils.c
@@ -191,6 +194,7 @@ char *find_executable(const char *command, t_env_var **g_env_list);
 void fork_crt_env_vars(t_cmd *cmd);
 void	wait_forks(t_cmd *cmd);
 void    fork_exec_cmd(t_cmd *cmd, t_node *node);
+void    fork_exec_cmd_(t_cmd *cmd, char *command);
 
 
 # endif

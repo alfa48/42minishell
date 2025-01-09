@@ -40,6 +40,110 @@ void	execute_pipe(t_node *node, char **env, t_cmd *cmd)
 	waitpid(pid2, NULL, 0);
 }
 
+void	execute_pipe_right(int pos, t_cmd *cmd)
+{
+	int pid;
+	char *path;
+	char **args;
+
+	cmd->pid_count++;
+	pid = fork();
+	if (pid == 0)
+	{
+//		cmd -> | 
+		dup2(cmd->pipefd[1], STDOUT_FILENO);  // Redireciona stdout para o pipe
+		close(cmd->pipefd[0]);
+		close(cmd->pipefd[1]);
+		path = find_executable(get_first_word(ft_strdup(cmd->array[pos])), &(cmd->g_env_list));
+			args = get_args(cmd->array[pos]);
+		if (execve(path, args, cmd->envl) == -1)
+		{
+			free(path);
+			exit(EXIT_FAILURE);
+		}
+	}
+	//  else{
+	//  	// Processo pai: fecha os descritores do pipe
+	  	//close(cmd->pipefd[0]);
+	  	//close(cmd->pipefd[1]);
+	//  }
+}
+
+void	execute_pipe_left(int pos, t_cmd *cmd)
+{
+	int pid;
+	char *path;
+	char **args;
+
+	cmd->pid_count++;
+	pid = fork();
+	if (pid == 0)
+	{
+//		| -> cmd
+		dup2(cmd->pipefd[0], STDIN_FILENO);  // Redireciona stdout para o pipe
+		close(cmd->pipefd[1]);
+		close(cmd->pipefd[0]);
+		path = find_executable(get_first_word(ft_strdup(cmd->array[pos])), &(cmd->g_env_list));
+			args = get_args(cmd->array[pos]);
+		if (execve(path, args, cmd->envl) == -1)
+		{
+			free(path);
+			exit(EXIT_FAILURE);
+		}
+	}
+	 else{
+	 	// Processo pai: fecha os descritores do pipe
+	 	//close(cmd->pipefd[0]);
+	 	//close(cmd->pipefd[1]);
+	 }
+}
+
+void execute_pipe_middle(int pos, t_cmd *cmd)
+{
+    int pid;
+    char *path;
+    char **args;
+
+    cmd->pid_count++;
+    pid = fork();
+    if (pid == -1)
+    {
+        perror("fork failed");
+        return;
+    }
+
+    if (pid == 0) // Processo filho
+    {
+        // Redireciona entrada padrão para o pipe de leitura
+        dup2(cmd->pipefd[0], STDIN_FILENO);
+
+        // Redireciona saída padrão para o pipe de escrita
+        dup2(cmd->pipefd[1], STDOUT_FILENO);
+        // Fecha os descritores do pipe (já redirecionados)
+		close(cmd->pipefd[0]);
+        close(cmd->pipefd[1]);
+
+
+        // Obtém o caminho do executável e os argumentos
+        path = find_executable(get_first_word(ft_strdup(cmd->array[pos])), &(cmd->g_env_list));
+        args = get_args(cmd->array[pos]);
+        // Executa o comando
+        if (execve(path, args, cmd->envl) == -1)
+        {
+            perror("execve failed");
+            free(path);
+            exit(EXIT_FAILURE);
+        }
+    }
+	else{
+		// Processo pai: fecha os descritores do pipe
+		//close(cmd->pipefd[0]);
+        //close(cmd->pipefd[1]);
+	}
+
+}
+
+
 void	exec_redout(t_node *node, char **env, t_cmd *cmd)
 {
 	int	fd;

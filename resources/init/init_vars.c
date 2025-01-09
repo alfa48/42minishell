@@ -49,8 +49,12 @@ void    init_args(t_cmd  *cmd, char **environ)
 void    init_args_next(t_cmd  *cmd)
 {
     cmd->size = calc_tree_size(cmd->root);
-    cmd->array = malloc(cmd->size * sizeof(char *));
+    cmd->array = malloc((cmd->size + 2) * sizeof(char *));
+     // Inicializa o array com NULL
+    cmd->array[0] = NULL; // Primeiro elemento é NULL
+    cmd->index = 1;       // Começa a preencher a partir do segundo elemento
     fill_array_cmd(cmd->root, cmd->array, &(cmd->index));
+    cmd->array[cmd->index] = NULL; // Último elemento é NULL
 }
 
 void	fill_array_cmd(t_node *root, char **array, int *index)

@@ -67,3 +67,23 @@ void    fork_exec_cmd(t_cmd *cmd, t_node *node)
         	}
 		}
 }
+
+void    fork_exec_cmd_(t_cmd *cmd, char *command)
+{
+        int pid;
+        char *path;
+        char **args;
+
+		pid = fork();
+        cmd->pid_count++;
+		if (pid == 0)
+		{
+			path = find_executable(get_first_word(ft_strdup(command)), &(cmd->g_env_list));
+                args = get_args(command);
+			if (execve(path, args, cmd->envl) == -1)
+			{
+				free(path);
+				exit(EXIT_FAILURE);
+        	}
+		}
+}

@@ -78,29 +78,105 @@ void	execute_command( t_cmd *cmd, t_node *node)
 			perror("fork failed");
 }
 
-void	execute_tree(t_node *root, t_cmd *cmd)
+void execute_tree(t_node *root, t_cmd *cmd)//apagar
 {
-	if (!root && !root->right)
-		return ;
+	(void) root;
+	(void) cmd;
+}
 
-	execute_tree(root->left, cmd);
-	// if (root->command != NULL)
-	if (root->command != NULL && !root->right->operator)
-		fork_exec_cmd(cmd, root);// execute_command(cmd, root);
-	else if (root->right->operator && ft_strcmp(root->right->operator, "|") == 0)
-		execute_pipe(root, cmd->envl, cmd);
-	else if (root->operator != NULL)
-		execute_redirect(root, cmd->envl, cmd);
-	execute_tree(root->right, cmd);
+
+
+int is_operator(char *str) {
+    if (!str)
+        return 0;
+
+    // Lista de operadores válidos
+    char *operators[] = {">", "<", ">>", "<<", "|"};
+    size_t num_operators = sizeof(operators) / sizeof(operators[0]);
+    size_t i = 0;
+
+    // Percorre a lista de operadores usando while
+    while (i < num_operators) {
+        if (ft_strcmp(str, operators[i]) == 0)
+            return 1;
+        i++;
+    }
+
+    return 0;
+}
+
+
+void execute_commands(int pos, t_cmd *cmd)
+{
+    if (!cmd->array[pos])
+		return;
+    execute_commands(pos - 1, cmd);
+    printf("DEBUG: Analisando token '%s'\n", cmd->array[pos]);
+    
+    // Se é um comando (não um operador)
+    if (cmd->array[pos] && !is_operator(cmd->array[pos]))
+    {
+        // Verifica o próximo token no array    
+        if (cmd->array[pos + 1])
+        {
+            // Se o próximo(right) token é um pipe
+            if (ft_strcmp(cmd->array[pos + 1], "|") == 0)
+            {
+                    if (cmd->array[pos - 1])
+                        if (ft_strcmp(cmd->array[pos - 1], "|") == 0)// Se o próximo(right) e o anterior  tokens sao  pipes
+                        {
+                            printf("DEBUG: LOGICA DO PIPE para '| %s |'\n", cmd->array[pos]);
+                            execute_pipe_middle(pos, cmd);
+                            close(cmd->pipefd[0]);
+                            close(cmd->pipefd[1]);
+                            return ;
+                        }
+                printf("DEBUG: LOGICA DO PIPE para '%s |'\n", cmd->array[pos]);        
+                execute_pipe_right(pos, cmd);
+                return ;
+            }    
+            // Se o próximo token é um redirecionamento
+            else if (ft_strcmp(cmd->array[pos + 1], ">") == 0 ||
+                     ft_strcmp(cmd->array[pos + 1], "<") == 0 ||
+                     ft_strcmp(cmd->array[pos + 1], ">>") == 0)
+            {
+                printf("DEBUG: LOGICA DOS REDIRECIONAMENTOS para '%s %s %s'\n", 
+                       cmd->array[pos],
+                       cmd->array[pos + 1],
+                       cmd->array[pos + 2]);
+                // execute_redirect(pos + 1, cmd);
+                //execute_commands(pos + 2, cmd);  // Pula o operador e o arquivo
+                return;
+            }
+            printf("DEBUG: ANTES DO %s É NULL\n", cmd->array[pos]);
+        }
+        else if (cmd->array[pos - 1])// Se o anterior(left) token é um pipe
+        {   
+            if (ft_strcmp(cmd->array[pos - 1], "|") == 0)
+            {
+                printf("DEBUG: LOGICA DO PIPE para '| %s'\n", cmd->array[pos]);
+                execute_pipe_left(pos, cmd);
+                return ;
+            }
+        }
+        //fork_exec_cmd_(cmd, cmd->array[pos]);
+        return ;
+    }
+    else if (cmd->array[pos])
+    {
+        printf("DEBUG: É UM OPERADOR(%s) NAO FACA NADA\n", cmd->array[pos]);
+		return ;
+    }
 }
 
 void    exec(t_cmd *cmd)
 {
 	t_node	*tmp_root = cmd->root;
-
-	// (void)env;
-	// fprintf(stderr, "Debug: root: %s\n", cmd->root->operator);
-	execute_tree(tmp_root, cmd);
+	(void) tmp_root;
+    pipe(cmd->pipefd);
+	execute_commands(cmd->size, cmd);
 	// printf("Debug: root: %d\n", cmd->pid_count);
+    close(cmd->pipefd[0]);
+	close(cmd->pipefd[1]);
 	wait_forks(cmd);
 }
