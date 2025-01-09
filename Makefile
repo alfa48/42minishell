@@ -28,7 +28,8 @@ SRC = $(RSC_DIR)/cmd_cepeu.c \
 	$(RSC_DIR)/parsers_cmd.c \
 	$(RSC_DIR)/mini_expand.c \
 	$(RSC_DIR)/signals/cmd_signal.c \
-	$(RSC_DIR)/path/path_utils.c
+	$(RSC_DIR)/path/path_utils.c \
+	$(RSC_DIR)/forks/cmd_forks.c
 	
 OBJ = $(SRC:.c=.o)
 

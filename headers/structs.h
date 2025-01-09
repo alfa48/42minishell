@@ -17,7 +17,6 @@ typedef struct	s_token
 {
 	t_type_token type;
 	char *lexema;
-	
 }	t_token;
 
 typedef struct s_token_map
@@ -63,6 +62,7 @@ typedef	struct s_cmd
 	char	**array;
 	char	*line;
 	char	**arg;
+	char	**envl;
 	int		index;
 	int		nl;
 	int		ncmd;

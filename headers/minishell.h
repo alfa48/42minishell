@@ -102,7 +102,9 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list);
 
 //resources/init/init_vars
 int calc_tree_size(t_node *root);
-void    init_args(t_cmd  *cmd);
+//void    init_args(t_cmd  *cmd);
+void    init_args_ofen(t_cmd  *cmd);
+void    init_args(t_cmd  *cmd, char **environ);
 void    init_args_next(t_cmd  *cmd);
 void	fill_array_cmd(t_node *root, char **array, int *index);
 
@@ -114,11 +116,11 @@ void	execute_pipe(t_node *node, char **env, t_cmd *cmd);
 void	execute_redirect(t_node *node, char **env,  t_cmd *cmd);
 
 //resources/utils/mini_utils.c
-void	execute_tree(t_node *root, char **env, t_cmd *cmd);
+void	execute_tree(t_node *root, t_cmd *cmd);
 void	exec_redin(t_node *node, char **env, t_cmd *cmd);
 char    **get_args(char *cmd);
 char    *mini_strcat(char* dest, const char* src);
-void    exec(t_cmd *cmd, char **env);
+void    exec(t_cmd *cmd);
 void	traverse_tree(t_node *root, char **array, int size, t_env_var *g_env_list);
 void	*ft_memset_space(void *ptr, int value, size_t num);
 
@@ -184,6 +186,11 @@ void    sigint_handler(int signum);
 
 //resources/path/path_utils.c
 char *find_executable(const char *command, t_env_var **g_env_list);
+
+//resources/forks/cmd_forks.c
+void fork_crt_env_vars(t_cmd *cmd);
+void	wait_forks(t_cmd *cmd);
+void    fork_exec_cmd(t_cmd *cmd, t_node *node);
 
 
 # endif

@@ -115,19 +115,10 @@ char    *get_word(char *line, int *sig)
 	return (start);
 }
 
-void mini_status(t_cmd *cmd)
-{
-   printf("%d\n", cmd->status_cmd);
-}
-
 void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 {
-	pid_t   p;
-	char	*str_p;
-	(void) str_p;
-
+	cmd->status_cmd = 0;
 	cmd->arg = ft_split(cmd->root->command, ' ');
-	//str_p = process_cmd(cmd->arg[0]);//paraste aqui?
 	if (!cmd)
 		return ;
 	if (ft_strcmp("cd", cmd->arg[0]) == 0)
@@ -144,51 +135,13 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 		mini_unset(cmd->arg, g_env_list);
 	else if (ft_strcmp("echo", cmd->arg[0]) == 0)
 		mini_echo(cmd->line);
-	else if (ft_strcmp("$?", cmd->arg[0]) == 0) //retirar daaqui, colocar na sub de variavel antes de processar o cmd
-		mini_status(cmd);
 	else if (ft_strchr(cmd->line, '='))
-	{
-		p = fork();
-		if (p == 0)
-		{
-		    mini_val(cmd->line, cmd);
-		    list_env_vars(cmd->val_only);
-		}
-		waitpid(p, NULL, 0);
-		return ;
-	}
+		fork_crt_env_vars(cmd);
 	else
 	{
-		p = fork();
-		if (p == 0)
-		{
-			char *path = find_executable(get_first_word(cmd->root->command), g_env_list);
-            		char **args = get_args(cmd->line);
-			// get_first_word(cmd->root->command), NULL };
-            		execute_in_child(path, args);
-		}
-		else
-		{
-        // Processo pai: aguarda o término do processo filho
-        int status;
-        waitpid(-1, &status, 0);
-        if (WIFEXITED(status)) {
-            int exit_status = WEXITSTATUS(status);
-            if (exit_status == 1)
-			{
-                printf("%s: command not found\n",get_first_word(cmd->root->command));
-				cmd->status_cmd = 127;
-			}
-			else if (exit_status == 0)
-				cmd->status_cmd = 0;
-			else
-				cmd->status_cmd = 126;
-          } 
-       }
-		waitpid(p, NULL, 0);
-		return ;
+		fork_exec_cmd(cmd, cmd->root);
+		wait_forks(cmd);
 	}
-	cmd->status_cmd = 0;
 }
 
 void	list_env_vars(t_env_var *g_env_list)
@@ -206,10 +159,10 @@ static int compare_env_vars(const void *a, const void *b)
 	t_env_var *varA = *(t_env_var **)a;
 	t_env_var *varB = *(t_env_var **)b;
 	return (strcmp(varA->name, varB->name));
-}  
+}
 
 void	only_expor_cmd(t_env_var *g_env_list)
-{  
+{
     // Contar o número de variáveis de ambiente  
     int count = 0;  
     t_env_var *current = g_env_list;  

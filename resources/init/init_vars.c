@@ -19,17 +19,31 @@ int	calc_tree_size(t_node *root)
     return (1 + calc_tree_size(root->left) + calc_tree_size(root->right));
 }
 
-void    init_args(t_cmd  *cmd)
+void    init_args_ofen(t_cmd  *cmd)
 {
 	cmd->root = NULL;
 	cmd->line = NULL;
 	cmd->arg = NULL;
 	cmd->nl = 0;
 	cmd->ncmd = 0;
-	cmd->val_only = NULL;
-	cmd->g_env_list->counter_exp = 0;
 	cmd->pid_count = 0;
+	cmd->index = 0;
+}
+
+void    init_args(t_cmd  *cmd, char **environ)
+{
+	cmd->envl = NULL;
+	cmd->g_env_list = NULL;
+	cmd->val_only = NULL;
 	cmd->status_cmd = 0;
+	cmd->envl = environ;
+	initialize_env_list(&(cmd->g_env_list), environ);
+	if (!cmd->g_env_list)
+	{
+		//geral_free(cmd);
+		exit(EXIT_FAILURE);
+	}
+	cmd->g_env_list->counter_exp = 0;
 }
 
 void    init_args_next(t_cmd  *cmd)

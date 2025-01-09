@@ -26,11 +26,13 @@ void	inorder_traversal(t_node *root)
 
 int is_only_spaces(char *str)
 {
-	while (*str)
+	int	i;
+
+	i = -1;
+	while (str[++i])
 	{
-		if (*str != ' ' && *str != '\t')
+		if (str[i] > 32)//(str[i] != ' ' && str[i] != '\t')
 			return (0);
-		str ++;
 	}
 	return (1);
 }
@@ -41,20 +43,14 @@ int	main(void)
 	extern char	**environ;
 
 	cmd = malloc(sizeof(t_cmd));
-	cmd->g_env_list = NULL;
-	initialize_env_list(&(cmd->g_env_list), environ);
-	init_args(cmd);
-	if (!cmd->g_env_list)
-		return (0 * printf("Error in create env list!\n"));
 	handle_signals();
+	init_args(cmd, environ);
 	while (1)
 	{
+		init_args_ofen(cmd);
 		cmd->line = readline("minishell$> ");
 		if (!cmd->line)
-		{
-			printf("exit\n");
-			break ;
-		}
+			return (0*printf("exit\n"));
 		if (!is_only_spaces(cmd->line))
 		{
 			add_history(cmd->line);
@@ -67,11 +63,9 @@ int	main(void)
 				if (cmd->size == 1)
 					mini_built_in(cmd, &(cmd->g_env_list));
 				else
-					exec(cmd, environ);
+					exec(cmd);
 				free_tree(cmd->root);
 			}
-			cmd->index = 0;
-			cmd->g_env_list->counter_exp = 0;
 			free_ms(cmd);
 		}
 		free(cmd->line);

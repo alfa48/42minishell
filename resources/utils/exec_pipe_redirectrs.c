@@ -2,6 +2,7 @@
 
 void	execute_pipe(t_node *node, char **env, t_cmd *cmd)
 {
+	(void) env;
 	int	pipefd[2];
 
 	if (pipe(pipefd) == -1)
@@ -17,7 +18,8 @@ void	execute_pipe(t_node *node, char **env, t_cmd *cmd)
 		close(pipefd[0]);
 		close(pipefd[1]);
 		fprintf(stderr, "Debug: Executando comando da esquerda: %s\n", node->left->command);
-		execute_tree(node->left, env, cmd);
+		fork_exec_cmd(cmd, node->left);
+		//execute_tree(node->left, cmd);
 		exit(0);
 	}
 	waitpid(pid1, NULL, 0);
@@ -29,7 +31,8 @@ void	execute_pipe(t_node *node, char **env, t_cmd *cmd)
 		close(pipefd[0]);
 		close(pipefd[1]);
 		fprintf(stderr, "Debug: Executando comando da direita: %s\n", node->right->command);
-		execute_tree(node->right, env, cmd);
+		fork_exec_cmd(cmd, node->left);
+		//execute_tree(node->right, cmd);
 		exit(0);
 	}
 	close(pipefd[0]);
@@ -40,6 +43,7 @@ void	execute_pipe(t_node *node, char **env, t_cmd *cmd)
 void	exec_redout(t_node *node, char **env, t_cmd *cmd)
 {
 	int	fd;
+	(void)env;
 
 	pid_t	pid = fork();
 	if (pid == 0)
@@ -52,7 +56,7 @@ void	exec_redout(t_node *node, char **env, t_cmd *cmd)
 		}
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
-		execute_tree(node->left, env, cmd);
+		execute_tree(node->left, cmd);
 		exit(0);
 	}
 	waitpid(pid, NULL, 0);
@@ -61,6 +65,7 @@ void	exec_redout(t_node *node, char **env, t_cmd *cmd)
 void	exec_redin(t_node *node, char **env, t_cmd *cmd)
 {
 	int	fd;
+	(void)env;
 
 	pid_t	pid = fork();
 	if (pid == 0)
@@ -73,7 +78,7 @@ void	exec_redin(t_node *node, char **env, t_cmd *cmd)
 		}
 		dup2(fd, STDIN_FILENO);
 		close(fd);
-		execute_tree(node->left, env, cmd);
+		execute_tree(node->left, cmd);
 		exit(0);
 	}
 	waitpid(pid, NULL, 0);
@@ -82,6 +87,7 @@ void	exec_redin(t_node *node, char **env, t_cmd *cmd)
 void	exec_redout_append(t_node *node, char **env, t_cmd *cmd)
 {
 	int	fd;
+	(void)env;
 
 	pid_t	pid = fork();
 	if (pid == 0)
@@ -97,7 +103,7 @@ void	exec_redout_append(t_node *node, char **env, t_cmd *cmd)
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 		// Executa o comando na subárvore esquerda
-		execute_tree(node->left, env, cmd);
+		execute_tree(node->left, cmd);
 		exit(0);
 	}
 	// Processo pai: espera o término do processo filho

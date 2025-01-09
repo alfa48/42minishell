@@ -56,57 +56,51 @@ char	**get_args(char *cmd)
 	return (execve_args);
 }
 
-void	execute_command( t_cmd *cmd, t_node *node, char **env)
+void	execute_command( t_cmd *cmd, t_node *node)
 {
-	char	**execve_args;
+		char	**execve_args;
 
-	pid_t pid = fork();
-	if (pid == 0)
-	{
-		execve_args = get_args(node->command);
-		fprintf(stderr, "Debug: Comando full %s\n", execve_args[0]);
-		execve(execve_args[0], execve_args, env);
-		perror("execve failed");
-		exit(1);
-	}
-	else if (pid > 0)
-	{
-		cmd->pid_count ++;
-		printf("Um pid adicionado %d\n",cmd->pid_count);
-	}
-	else
-		perror("fork failed");
+		pid_t pid = fork();
+		if (pid == 0)
+		{
+			execve_args = get_args(node->command);
+			fprintf(stderr, "Debug: Comando full %s\n", execve_args[0]);
+			execve(execve_args[0], execve_args, cmd->envl);
+			perror("execve failed");
+			exit(1);
+		}
+		else if (pid > 0)
+		{
+			cmd->pid_count ++;
+			printf("Um pid adicionado %d\n",cmd->pid_count);
+		}
+		else
+			perror("fork failed");
 }
 
-void	execute_tree(t_node *root, char **env, t_cmd *cmd)
+void	execute_tree(t_node *root, t_cmd *cmd)
 {
-	if (!root)
+	if (!root && !root->right)
 		return ;
-	fprintf(stderr, "Debug: Executando comando %s\n", root->command ? root->command : root->operator);
-	if (root->command != NULL)
-		execute_command(cmd, root, env);
-	else if (root->operator && ft_strcmp(root->operator, "|") == 0)
-		execute_pipe(root, env, cmd);
+
+	execute_tree(root->left, cmd);
+	// if (root->command != NULL)
+	if (root->command != NULL && !root->right->operator)
+		fork_exec_cmd(cmd, root);// execute_command(cmd, root);
+	else if (root->right->operator && ft_strcmp(root->right->operator, "|") == 0)
+		execute_pipe(root, cmd->envl, cmd);
 	else if (root->operator != NULL)
-		execute_redirect(root, env, cmd);	
+		execute_redirect(root, cmd->envl, cmd);
+	execute_tree(root->right, cmd);
 }
 
-void	wait_all_pids(t_cmd *cmd)
-{
-	int i = 0;
-	while (i < cmd->pid_count)
-	{
-		waitpid(-1, NULL, 0);
-		i ++;
-	}
-}
-
-void    exec(t_cmd *cmd, char **env)
+void    exec(t_cmd *cmd)
 {
 	t_node	*tmp_root = cmd->root;
-	(void)env;
-	fprintf(stderr, "Debug: root: %s\n", cmd->root->operator);
-	execute_tree(tmp_root, env, cmd);
-	printf("Debug: root: %d\n", cmd->pid_count);
-	wait_all_pids(cmd);
+
+	// (void)env;
+	// fprintf(stderr, "Debug: root: %s\n", cmd->root->operator);
+	execute_tree(tmp_root, cmd);
+	// printf("Debug: root: %d\n", cmd->pid_count);
+	wait_forks(cmd);
 }

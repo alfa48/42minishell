@@ -29,29 +29,14 @@ char *get_env_var(const char *name, t_env_var *env_list)
 
 char *get_first_word(char *line)
 {
-    // Ponteiro para o início da palavra
-    char *start = line;
-
-    // Ignora espaços iniciais
-    while (*start && isspace(*start)) {
-        start++;
-    }
-
-    // Se a string estiver vazia ou composta apenas por espaços, retorna NULL
-    if (*start == '\0') {
+    while (*line && isspace(*line))
+        line++;
+    if (*line == '\0')
         return NULL;
-    }
-
-    // Ponteiro para o final da palavra
-    char *end = start;
-
-    // Avança até o primeiro espaço, tabulação ou fim da string
+    char *end = line;
     while (*end && !isspace(*end)) {
         end++;
     }
-
-    // Adiciona o terminador nulo à palavra
     *end = '\0';
-
-    return start;
+    return line;
 }
