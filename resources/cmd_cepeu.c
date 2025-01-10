@@ -113,17 +113,12 @@ void	mini_echo(char *arg)
 {
     int		new_line;
 	char	*init;
-	char	*print;
 
     new_line = 0;
     if (!(init = get_word(arg, &new_line)))
         return ;
 	else
-	{
-		print = process_cmd(init);
-		write(1, print, ft_strlen(print));
-	}
-	free(print);
+		write(1, init, ft_strlen(init));
     if (new_line)
         write(1, "\n", 1);
 }

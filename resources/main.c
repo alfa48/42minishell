@@ -54,7 +54,6 @@ int	main(void)
 		if (!is_only_spaces(cmd->line))
 		{
 			add_history(cmd->line);
-			cmd->line = process_cmd(cmd->line);
 			cmd->line = expanding(cmd->line, cmd);
 			cmd->root = init_shell(cmd->line);
 			if (cmd->root)

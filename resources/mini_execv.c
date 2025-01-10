@@ -134,7 +134,7 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 	else if (strcmp(cmd->arg[0], "unset") == 0)
 		mini_unset(cmd->arg, g_env_list);
 	else if (ft_strcmp("echo", cmd->arg[0]) == 0)
-		mini_echo(cmd->line);
+		mini_echo(process_cmd(cmd->line));
 	else if (ft_strchr(cmd->line, '='))
 		fork_crt_env_vars(cmd);
 	else

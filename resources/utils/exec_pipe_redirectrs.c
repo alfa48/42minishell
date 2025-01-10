@@ -84,7 +84,7 @@ void	execute_pipe_left(int pos, t_cmd *cmd)
 		close(cmd->pipefd[1]);
 		close(cmd->pipefd[0]);
 		path = find_executable(get_first_word(ft_strdup(cmd->array[pos])), &(cmd->g_env_list));
-			args = get_args(cmd->array[pos]);
+		args = get_args(cmd->array[pos]);
 		if (execve(path, args, cmd->envl) == -1)
 		{
 			free(path);
@@ -105,6 +105,14 @@ void execute_pipe_middle(int pos, t_cmd *cmd)
     char **args;
 
     cmd->pid_count++;
+	// Primeiro, salvamos o pipe atual como anterior
+	ft_memcpy(cmd->prev_pipe, cmd->pipefd, 2 * sizeof(int));
+	// Depois criamos o novo pipe
+	if (pipe(cmd->pipefd) == -1)
+	{
+		perror("pipe failed");
+		return;
+	}
     pid = fork();
     if (pid == -1)
     {
@@ -115,12 +123,15 @@ void execute_pipe_middle(int pos, t_cmd *cmd)
     if (pid == 0) // Processo filho
     {
         // Redireciona entrada padrão para o pipe de leitura
-        dup2(cmd->pipefd[0], STDIN_FILENO);
+        dup2(cmd->prev_pipe[0], STDIN_FILENO);
 
         // Redireciona saída padrão para o pipe de escrita
         dup2(cmd->pipefd[1], STDOUT_FILENO);
         // Fecha os descritores do pipe (já redirecionados)
-		close(cmd->pipefd[0]);
+        // Fecha todos os descritores de pipe
+        close(cmd->prev_pipe[0]);
+        close(cmd->prev_pipe[1]);
+        close(cmd->pipefd[0]);
         close(cmd->pipefd[1]);
 
 
@@ -137,8 +148,10 @@ void execute_pipe_middle(int pos, t_cmd *cmd)
     }
 	else{
 		// Processo pai: fecha os descritores do pipe
-		//close(cmd->pipefd[0]);
-        //close(cmd->pipefd[1]);
+//		close(cmd->pipefd[0]);
+ //       close(cmd->pipefd[1]);
+         close(cmd->prev_pipe[0]);
+         close(cmd->prev_pipe[1]);
 	}
 
 }
