@@ -1,44 +1,44 @@
 #include "minishell.h"
 
-void	execute_pipe(t_node *node, char **env, t_cmd *cmd)
-{
-	(void) env;
-	int	pipefd[2];
+// void	execute_pipe(t_node *node, char **env, t_cmd *cmd)
+// {
+// 	(void) env;
+// 	int	pipefd[2];
 
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe failed");
-		return ;
-	}
-	pid_t	pid1 = fork();
-	if (pid1 == 0)
-	{
-		// Processo filho para o comando da esquerda
-		dup2(pipefd[1], STDOUT_FILENO);  // Redireciona stdout para o pipe
-		close(pipefd[0]);
-		close(pipefd[1]);
-		fprintf(stderr, "Debug: Executando comando da esquerda: %s\n", node->left->command);
-		fork_exec_cmd(cmd, node->left);
-		//execute_tree(node->left, cmd);
-		exit(0);
-	}
-	waitpid(pid1, NULL, 0);
-	pid_t	pid2 = fork();
-	if (pid2 == 0)
-	{
-		// Processo filho para o comando da direita
-		dup2(pipefd[0], STDIN_FILENO);   // Redireciona stdin para o pipe
-		close(pipefd[0]);
-		close(pipefd[1]);
-		fprintf(stderr, "Debug: Executando comando da direita: %s\n", node->right->command);
-		fork_exec_cmd(cmd, node->left);
-		//execute_tree(node->right, cmd);
-		exit(0);
-	}
-	close(pipefd[0]);
-	close(pipefd[1]);
-	waitpid(pid2, NULL, 0);
-}
+// 	if (pipe(pipefd) == -1)
+// 	{
+// 		perror("pipe failed");
+// 		return ;
+// 	}
+// 	pid_t	pid1 = fork();
+// 	if (pid1 == 0)
+// 	{
+// 		// Processo filho para o comando da esquerda
+// 		dup2(pipefd[1], STDOUT_FILENO);  // Redireciona stdout para o pipe
+// 		close(pipefd[0]);
+// 		close(pipefd[1]);
+// 		fprintf(stderr, "Debug: Executando comando da esquerda: %s\n", node->left->command);
+// 		fork_exec_cmd(cmd, node->left);
+// 		//execute_tree(node->left, cmd);
+// 		exit(0);
+// 	}
+// 	waitpid(pid1, NULL, 0);
+// 	pid_t	pid2 = fork();
+// 	if (pid2 == 0)
+// 	{
+// 		// Processo filho para o comando da direita
+// 		dup2(pipefd[0], STDIN_FILENO);   // Redireciona stdin para o pipe
+// 		close(pipefd[0]);
+// 		close(pipefd[1]);
+// 		fprintf(stderr, "Debug: Executando comando da direita: %s\n", node->right->command);
+// 		fork_exec_cmd(cmd, node->left);
+// 		//execute_tree(node->right, cmd);
+// 		exit(0);
+// 	}
+// 	close(pipefd[0]);
+// 	close(pipefd[1]);
+// 	waitpid(pid2, NULL, 0);
+// }
 
 void	execute_pipe_right(int pos, t_cmd *cmd)
 {
@@ -51,15 +51,19 @@ void	execute_pipe_right(int pos, t_cmd *cmd)
 	if (pid == 0)
 	{
 //		cmd -> | 
+		path = find_executable(get_first_word(ft_strdup(cmd->array[pos])), &(cmd->g_env_list));
+		
+		args = get_args(cmd->array[pos]);
+
 		dup2(cmd->pipefd[1], STDOUT_FILENO);  // Redireciona stdout para o pipe
 		close(cmd->pipefd[0]);
 		close(cmd->pipefd[1]);
-		path = find_executable(get_first_word(ft_strdup(cmd->array[pos])), &(cmd->g_env_list));
-			args = get_args(cmd->array[pos]);
+
 		if (execve(path, args, cmd->envl) == -1)
 		{
+			cmd_not_found(get_first_word(ft_strdup(cmd->array[pos])));
 			free(path);
-			exit(EXIT_FAILURE);
+			exit(1);
 		}
 	}
 	//  else{
@@ -87,6 +91,7 @@ void	execute_pipe_left(int pos, t_cmd *cmd)
 		args = get_args(cmd->array[pos]);
 		if (execve(path, args, cmd->envl) == -1)
 		{
+			cmd_not_found(get_first_word(ft_strdup(cmd->array[pos])));
 			free(path);
 			exit(EXIT_FAILURE);
 		}
@@ -141,15 +146,13 @@ void execute_pipe_middle(int pos, t_cmd *cmd)
         // Executa o comando
         if (execve(path, args, cmd->envl) == -1)
         {
-            perror("execve failed");
+            cmd_not_found(get_first_word(ft_strdup(cmd->array[pos])));
             free(path);
             exit(EXIT_FAILURE);
         }
     }
 	else{
-		// Processo pai: fecha os descritores do pipe
-//		close(cmd->pipefd[0]);
- //       close(cmd->pipefd[1]);
+
          close(cmd->prev_pipe[0]);
          close(cmd->prev_pipe[1]);
 	}

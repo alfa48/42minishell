@@ -111,7 +111,7 @@ void execute_commands(int pos, t_cmd *cmd)
     if (!cmd->array[pos])
 		return;
     execute_commands(pos - 1, cmd);
-    // printf("DEBUG: Analisando token '%s'\n", cmd->array[pos]);
+    printf("DEBUG: Analisando token '%s'\n", cmd->array[pos]);
     
     // Se é um comando (não um operador)
     if (cmd->array[pos] && !is_operator(cmd->array[pos]))
@@ -125,12 +125,12 @@ void execute_commands(int pos, t_cmd *cmd)
                 if (cmd->array[pos - 1])
                     if (ft_strcmp(cmd->array[pos - 1], "|") == 0)// Se o próximo(right) e o anterior  tokens sao  pipes
                     {
-                        // printf("DEBUG: LOGICA DO PIPE MIDDLE para '| %s |'\n", cmd->array[pos]);
+                        printf("DEBUG: LOGICA DO PIPE MIDDLE para '| %s |'\n", cmd->array[pos]);
 
                         execute_pipe_middle(pos, cmd);
                         return ;
                     }
-                // printf("DEBUG: LOGICA DO PIPE RIGHT para '%s |'\n", cmd->array[pos]);
+                printf("DEBUG: LOGICA DO PIPE RIGHT para '%s |'\n", cmd->array[pos]);
                // Criamos o primeiro pipe
                 if (pipe(cmd->pipefd) == -1)
                 {
@@ -145,10 +145,10 @@ void execute_commands(int pos, t_cmd *cmd)
                      ft_strcmp(cmd->array[pos + 1], "<") == 0 ||
                      ft_strcmp(cmd->array[pos + 1], ">>") == 0)
             {
-                // printf("DEBUG: LOGICA DOS REDIRECIONAMENTOS para '%s %s %s'\n", 
-                    //    cmd->array[pos],
-                    //    cmd->array[pos + 1],
-                    //    cmd->array[pos + 2]);
+                printf("DEBUG: LOGICA DOS REDIRECIONAMENTOS para '%s %s %s'\n", 
+                        cmd->array[pos],
+                        cmd->array[pos + 1],
+                        cmd->array[pos + 2]);
                 // execute_redirect(pos + 1, cmd);
                 //execute_commands(pos + 2, cmd);  // Pula o operador e o arquivo
                 return;
@@ -160,7 +160,7 @@ void execute_commands(int pos, t_cmd *cmd)
         {   
             if (ft_strcmp(cmd->array[pos - 1], "|") == 0)// Se o anterior(left) token é um pipe
             {
-                // printf("DEBUG: LOGICA DO PIPE LEFT para '| %s'\n", cmd->array[pos]);
+                printf("DEBUG: LOGICA DO PIPE LEFT para '| %s'\n", cmd->array[pos]);
                 execute_pipe_left(pos, cmd);
                  // Fecha pipes após último comando
                 close(cmd->pipefd[0]);
@@ -174,7 +174,7 @@ void execute_commands(int pos, t_cmd *cmd)
     }
     else if (cmd->array[pos])
     {
-        // printf("DEBUG: É UM OPERADOR(%s) NAO FACA NADA\n", cmd->array[pos]);
+        printf("DEBUG: É UM OPERADOR(%s) NAO FACA NADA\n", cmd->array[pos]);
 		return ;
     }
 }
@@ -186,9 +186,9 @@ void    exec(t_cmd *cmd)
 	(void) tmp_root;
     pipe(cmd->pipefd);
 	execute_commands(cmd->size, cmd);
-	// printf("Debug: root: %d\n", cmd->pid_count);
-     close(cmd->pipefd[0]);
-	 close(cmd->pipefd[1]);
+	printf("Debug: root: %d\n", cmd->pid_count);
+    close(cmd->pipefd[0]);
+	close(cmd->pipefd[1]);
 
 	wait_forks(cmd);
 }

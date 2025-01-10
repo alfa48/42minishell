@@ -144,6 +144,7 @@ int	set_it(char *name, const char *value, t_env_var **g_env_list);
 //resources/utils/mini_utils_4.c
 char *get_env_var(const char *name, t_env_var *env_list);
 char *get_first_word(char *line);
+void cmd_not_found(char *str);
 
 //resources/mini_expand.c
 char *concat_strings(char **str_array);

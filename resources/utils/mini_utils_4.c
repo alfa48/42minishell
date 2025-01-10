@@ -40,3 +40,9 @@ char *get_first_word(char *line)
     *end = '\0';
     return line;
 }
+
+void cmd_not_found(char *str)
+{
+    printf("%s: command not found\n", str);
+}
+
