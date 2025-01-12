@@ -1,0 +1,5 @@
+Problema do grep:
+	O o argumeto do grep e' pego com as aspas.
+
+EXECUTA ESTE COMANDO NO BASH E NO SHELL
+cat < aqui.txt | cat | grep c

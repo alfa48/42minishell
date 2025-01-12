@@ -43,6 +43,6 @@ char *get_first_word(char *line)
 
 void cmd_not_found(char *str)
 {
-    printf("%s: command not found\n", str);
+    ft_putstr_fd(str, 2);
+    ft_putstr_fd(": command not found\n", 2);
 }
-

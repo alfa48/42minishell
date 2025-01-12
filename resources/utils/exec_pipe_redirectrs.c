@@ -50,9 +50,9 @@ void	execute_pipe_right(int pos, t_cmd *cmd)
 	pid = fork();
 	if (pid == 0)
 	{
-//		cmd -> | 
+//		cmd -> |
 		path = find_executable(get_first_word(ft_strdup(cmd->array[pos])), &(cmd->g_env_list));
-		
+
 		args = get_args(cmd->array[pos]);
 
 		dup2(cmd->pipefd[1], STDOUT_FILENO);  // Redireciona stdout para o pipe
@@ -244,5 +244,153 @@ void	execute_redirect(t_node *node, char **env,  t_cmd *cmd)
 			exec_heredoc(node, env, cmd);
 		else
 			fprintf(stderr, "Erro: Operador desconhecido '%s'\n", node->operator);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void	exec_redout_(int pos, t_cmd *cmd)
+{
+	int	fd;
+	int status;
+
+    cmd->pid_count++;
+	pid_t	pid = fork();
+	if (pid == 0)
+	{
+		fd = open(cmd->array[pos + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fd == -1)
+		{
+			perror("open failed for output file");
+			exit(1);
+		}
+		dup2(fd, STDOUT_FILENO);// e' mesmo necessario usar o dup2 ou posso usar o dup
+		close(fd);
+		fork_exec_cmd_(pos - 1, cmd);
+		waitpid(-1, &status, 0);
+        if (WIFEXITED(status))
+		{
+			if (WEXITSTATUS(status) == 1)
+					cmd_not_found(get_first_word(ft_strdup(cmd->array[pos - 1])));
+            exit(WEXITSTATUS(status));
+		}
+		exit(-1);
+	}
+}
+
+void	exec_redin_(int pos, t_cmd *cmd)
+{
+	int	fd;
+	int status;
+
+    cmd->pid_count++;
+	pid_t	pid = fork();
+	if (pid == 0)
+	{
+		fd = open(cmd->array[pos + 1], O_RDONLY);
+		if (fd == -1)
+		{
+			perror("open failed for input file");
+			exit(1);
+		}
+		dup2(fd, STDIN_FILENO);
+		close(fd);
+		fork_exec_cmd_(pos - 1, cmd);
+		waitpid(-1, &status, 0);
+        if (WIFEXITED(status))
+		{
+			if (WEXITSTATUS(status) == 1)
+					cmd_not_found(get_first_word(ft_strdup(cmd->array[pos - 1])));
+            exit(WEXITSTATUS(status));
+		}
+		exit(-1);
+	}
+}
+/*
+void	exec_redout_append_(int pos, t_cmd *cmd)
+{
+	int	fd;
+
+	pid_t	pid = fork();
+	if (pid == 0)
+	{
+		// Processo filho: abre o arquivo em modo de anexar
+		fd = open(cmd->array[pos + 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (fd == -1)
+		{
+			perror("open failed for output file");
+			exit(1);
+		}
+		// Redireciona stdout para o descritor de arquivo
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+		// Executa o comando na subárvore esquerda
+		execute_tree(node->left, cmd);
+		exit(0);
+	}
+	// Processo pai: espera o término do processo filho
+	waitpid(pid, NULL, 0);
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void	execute_redirect_(int pos,  t_cmd *cmd)
+{
+	if (cmd->array[pos])
+	{
+		if (ft_strcmp(cmd->array[pos], ">") == 0)
+			exec_redout_(pos, cmd);
+		else if (ft_strcmp(cmd->array[pos], "<") == 0)
+			exec_redin_(pos, cmd);
+/*		else if (ft_strcmp(node->operator, ">>") == 0)
+			exec_redout_append_(node, env, cmd);
+		else if (ft_strcmp(node->operator, "<<") == 0)
+			exec_heredoc_(node, env, cmd);
+		else
+			fprintf(stderr, "Erro: Operador desconhecido '%s'\n", node->operator);
+	*/
 	}
 }

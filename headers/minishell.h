@@ -118,6 +118,8 @@ void	execute_pipe_left(int pos, t_cmd *cmd);
 void execute_pipe_middle(int pos, t_cmd *cmd);
 void	execute_redirect(t_node *node, char **env,  t_cmd *cmd);
 
+void	execute_redirect_(int pos,  t_cmd *cmd);
+
 //resources/utils/mini_utils.c
 void	execute_tree(t_node *root, t_cmd *cmd);
 void	exec_redin(t_node *node, char **env, t_cmd *cmd);
@@ -195,7 +197,7 @@ char *find_executable(const char *command, t_env_var **g_env_list);
 void fork_crt_env_vars(t_cmd *cmd);
 void	wait_forks(t_cmd *cmd);
 void    fork_exec_cmd(t_cmd *cmd, t_node *node);
-void    fork_exec_cmd_(t_cmd *cmd, char *command);
+void    fork_exec_cmd_(int pos, t_cmd *cmd);
 
 
 # endif

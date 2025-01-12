@@ -21,11 +21,11 @@ void fork_crt_env_vars(t_cmd *cmd)
 void	wait_forks(t_cmd *cmd)
 {
 	int i = 0;
-    printf("DEBUG: command not found\n");
+    int status;
+    // printf("DEBUG: command not found\n");
 	while (i < cmd->pid_count)
 	{
     // Processo pai: aguarda os do processos filhos
-        int status;
         waitpid(-1, &status, 0);
         if (WIFEXITED(status))
         {
@@ -52,8 +52,7 @@ void    fork_exec_cmd(t_cmd *cmd, t_node *node)
 		{
 			path = find_executable(get_first_word(ft_strdup(node->command)), &(cmd->g_env_list));
             args = get_args(node->command);
-   
-           
+
 			if (execve(path, args, cmd->envl) == -1)
 			{
                 cmd_not_found(get_first_word(ft_strdup(node->command)));
@@ -62,19 +61,19 @@ void    fork_exec_cmd(t_cmd *cmd, t_node *node)
         	}
 		}
 }
-/*APAGAR */
-void    fork_exec_cmd_(t_cmd *cmd, char *command)
+/*RECONSIDERAR*/
+void    fork_exec_cmd_(int pos, t_cmd *cmd)
 {
         int pid;
         char *path;
         char **args;
 
-		pid = fork();
         cmd->pid_count++;
+		pid = fork();
 		if (pid == 0)
 		{
-			path = find_executable(get_first_word(ft_strdup(command)), &(cmd->g_env_list));
-                args = get_args(command);
+			path = find_executable(get_first_word(ft_strdup(cmd->array[pos])), &(cmd->g_env_list));
+            args = get_args(cmd->array[pos]);
 			if (execve(path, args, cmd->envl) == -1)
 			{
 				free(path);

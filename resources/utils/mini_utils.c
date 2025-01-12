@@ -111,12 +111,12 @@ void execute_commands(int pos, t_cmd *cmd)
     if (!cmd->array[pos])
 		return;
     execute_commands(pos - 1, cmd);
-    printf("DEBUG: Analisando token '%s'\n", cmd->array[pos]);
-    
+    // printf("DEBUG: Analisando token '%s'\n", cmd->array[pos]);
+
     // Se é um comando (não um operador)
     if (cmd->array[pos] && !is_operator(cmd->array[pos]))
     {
-        // Verifica o próximo token no array    
+        // Verifica o próximo token no array
         if (cmd->array[pos + 1])
         {
             // Se o próximo(right) token é um pipe
@@ -139,25 +139,24 @@ void execute_commands(int pos, t_cmd *cmd)
                 }
                 execute_pipe_right(pos, cmd);
                 return ;
-            }    
+            }
             // Se o próximo token é um redirecionamento
             else if (ft_strcmp(cmd->array[pos + 1], ">") == 0 ||
                      ft_strcmp(cmd->array[pos + 1], "<") == 0 ||
                      ft_strcmp(cmd->array[pos + 1], ">>") == 0)
             {
-                printf("DEBUG: LOGICA DOS REDIRECIONAMENTOS para '%s %s %s'\n", 
-                        cmd->array[pos],
-                        cmd->array[pos + 1],
-                        cmd->array[pos + 2]);
-                // execute_redirect(pos + 1, cmd);
+                printf("DEBUG: LOGICA DOS REDIRECIONAMENTOS para '%s %s %s'\n",
+                         cmd->array[pos],
+                         cmd->array[pos + 1],
+                         cmd->array[pos + 2]);
+                execute_redirect_(pos + 1, cmd);
                 //execute_commands(pos + 2, cmd);  // Pula o operador e o arquivo
                 return;
             }
             printf("DEBUG: ANTES DO %s É NULL\n", cmd->array[pos]);
-
         }
-        else if (cmd->array[pos - 1])// Se o anterior existir 
-        {   
+        else if (cmd->array[pos - 1])// Se o anterior existir
+        {
             if (ft_strcmp(cmd->array[pos - 1], "|") == 0)// Se o anterior(left) token é um pipe
             {
                 printf("DEBUG: LOGICA DO PIPE LEFT para '| %s'\n", cmd->array[pos]);
