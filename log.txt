@@ -1,0 +1,15 @@
+[?2004hminishell$> [?2004l
+exit
+[?2004hminishell$> 
+[?2004l[?2004hminishell$> ds
+[?2004lCommand:ds$
+[?2004hminishell$> dasd
+[?2004lCommand:dasd$
+[?2004hminishell$> aadafq
+[?2004lCommand:aadafq$
+[?2004hminishell$> dqdqd
+[?2004lCommand:dqdqd$
+[?2004hminishell$> fqfdq
+[?2004lCommand:fqfdq$
+[?2004hminishell$> ^C[?2004l
+minishell$> [?2004h^Z[?2004l

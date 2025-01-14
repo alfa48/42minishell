@@ -158,17 +158,6 @@ void execute_commands(int pos, t_cmd *cmd)
                 execute_pipe_right(pos, cmd);
                 return ;
             }
-            // Se o próximo token é um redirecionamento
-        //   else if (is_redirect(cmd->array[pos + 1]))
-        //     {
-        //         printf("DEBUG: LOGICA DOS REDIRECIONAMENTOS para '%s %s %s'\n",
-        //                  cmd->array[pos],
-        //                  cmd->array[pos + 1],
-        //                  cmd->array[pos + 2]);
-        //         execute_redirect_(pos + 1, cmd);
-        //         //execute_commands(pos + 2, cmd);  // Pula o operador e o arquivo
-        //         return;
-        //     }
             printf("DEBUG: ANTES DO %s É NULL\n", cmd->array[pos]);
         }
         else if (pos > 0 && cmd->array[pos - 1])// Se o anterior existir
@@ -194,22 +183,199 @@ void execute_commands(int pos, t_cmd *cmd)
     }
 }
 
+// Função auxiliar para verificar precedência de redirecionamentos
+int get_redirect_priority(char *type) {
+    if (ft_strcmp(type, "<") == 0) return 1;  // Input tem prioridade mais alta
+    if (ft_strcmp(type, ">") == 0) return 2;  // Output normal
+    if (ft_strcmp(type, ">>") == 0) return 2; // Append tem mesma prioridade que output
+    return 0;
+}
+
+// Função para ordenar redirecionamentos por precedência
+void sort_redirects(t_redirect **redirects) {
+    int i, j;
+    t_redirect *temp;
+    
+    if (!redirects) return;
+    
+    for (i = 0; redirects[i] && redirects[i + 1]; i++) {
+        for (j = 0; redirects[j] && redirects[j + 1]; j++) {
+            if (get_redirect_priority(redirects[j]->type) > 
+                get_redirect_priority(redirects[j + 1]->type)) {
+                temp = redirects[j];
+                redirects[j] = redirects[j + 1];
+                redirects[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void execute_single_command(char *cmd_str, t_cmd *cmd)
+{
+    int pid;
+    char *path = NULL;
+    char **args = NULL;
+    t_redirect **redirects = NULL;
+    char *clean_cmd = NULL;
+    int saved_stdin = dup(STDIN_FILENO);
+    int saved_stdout = dup(STDOUT_FILENO);
+
+    if (!cmd_str || !cmd)
+    {
+        if (saved_stdin != -1) close(saved_stdin);
+        if (saved_stdout != -1) close(saved_stdout);
+        return;
+    }
+
+    // Parse os redirecionamentos do comando
+    redirects = parse_redirects(cmd_str);
+    if (!redirects)
+    {
+        close(saved_stdin);
+        close(saved_stdout);
+        return;
+    }
+
+    // Obtém o comando limpo antes do fork
+    clean_cmd = remove_redirects(cmd_str);
+    if (!clean_cmd)
+    {
+        free_redirects(redirects);
+        close(saved_stdin);
+        close(saved_stdout);
+        return;
+    }
+
+    pid = fork();
+    if (pid == -1)
+    {
+        perror("fork failed");
+        free(clean_cmd);
+        free_redirects(redirects);
+        close(saved_stdin);
+        close(saved_stdout);
+        return;
+    }
+    
+    if (pid == 0) // Processo filho
+    {
+        int opened_fds[MAX_REDIRECTS * 2];
+        int fd_count = 0;
+        
+        // Aplica os redirecionamentos na ordem correta
+        for (int i = 0; redirects[i]; i++)
+        {
+            int new_fd = -1;
+            
+            if (ft_strcmp(redirects[i]->type, "<") == 0)
+                new_fd = open(redirects[i]->file, O_RDONLY);
+            else if (ft_strcmp(redirects[i]->type, ">") == 0)
+                new_fd = open(redirects[i]->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            else if (ft_strcmp(redirects[i]->type, ">>") == 0)
+                new_fd = open(redirects[i]->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+
+            if (new_fd == -1)
+            {
+                perror("open failed");
+                goto cleanup_child;
+            }
+            
+            opened_fds[fd_count++] = new_fd;
+            
+            if (ft_strcmp(redirects[i]->type, "<") == 0)
+            {
+                if (dup2(new_fd, STDIN_FILENO) == -1)
+                {
+                    perror("dup2 failed");
+                    goto cleanup_child;
+                }
+            }
+            else
+            {
+                if (dup2(new_fd, STDOUT_FILENO) == -1)
+                {
+                    perror("dup2 failed");
+                    goto cleanup_child;
+                }
+            }
+        }
+
+        // Prepara argumentos e executa
+        path = find_executable(get_first_word(ft_strdup(clean_cmd)), &(cmd->g_env_list));
+        if (!path)
+        {
+            cmd_not_found(get_first_word(ft_strdup(clean_cmd)));
+            goto cleanup_child;
+        }
+
+        args = get_args(clean_cmd);
+        if (!args)
+            goto cleanup_child;
+
+        execve(path, args, cmd->envl);
+        perror("execve failed");
+
+cleanup_child:
+        // Limpa recursos no processo filho
+        for (int i = 0; i < fd_count; i++)
+            if (opened_fds[i] != -1)
+                close(opened_fds[i]);
+        free(clean_cmd);
+        free(path);
+        if (args)
+            free_array(args);
+        free_redirects(redirects);
+        exit(EXIT_FAILURE);
+    }
+    else // Processo pai
+    {
+        int status;
+        
+        // Espera o filho terminar
+        waitpid(pid, &status, 0);
+        
+        // Restaura os file descriptors
+        if (saved_stdin != -1)
+        {
+            dup2(saved_stdin, STDIN_FILENO);
+            close(saved_stdin);
+        }
+        if (saved_stdout != -1)
+        {
+            dup2(saved_stdout, STDOUT_FILENO);
+            close(saved_stdout);
+        }
+        
+        // Limpa recursos
+        free(clean_cmd);
+        free_redirects(redirects);
+        
+        if (WIFEXITED(status))
+        {
+            cmd->status_cmd = WEXITSTATUS(status);
+        }
+    }
+}
+
+
 
 void    exec(t_cmd *cmd)
 {
 	t_node	*tmp_root = cmd->root;
 	(void) tmp_root;
+
     pipe(cmd->pipefd);
-    //if (ft_strchr(cmd->line, '|'))//Forma de saber se tem pipe
-    //{
-	 //   printf("Debug: TTTTT PIPE\n");
+    if (ft_strchr(cmd->line1, '|'))//Forma de saber se tem pipe
+    {
+	    printf("Debug: ROOT PIPE: %s\n", cmd->line);
 	    execute_commands(cmd->size, cmd);// se tem pipe
-    //}
-    //else{
-	  //  printf("Debug: NNNN TTTTT PIPE: %s\n", cmd->line);
-        
+    }
+    else{
+	    printf("Debug: ROOT REDIRECT apagar: %s\n", cmd->line);
+        execute_single_command(cmd->line1, cmd);
+
         //exec_command_redirect(1, cmd);//se nao tem pipe mas tem red
-    //}
+    }
 	//printf("Debug: root: %d\n", cmd->pid_count);
     close(cmd->pipefd[0]);
 	close(cmd->pipefd[1]);

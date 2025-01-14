@@ -23,6 +23,7 @@ void    init_args_ofen(t_cmd  *cmd)
 {
 	cmd->root = NULL;
 	cmd->line = NULL;
+	cmd->line1 = NULL;
 	cmd->arg = NULL;
 	cmd->nl = 0;
 	cmd->ncmd = 0;

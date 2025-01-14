@@ -26,9 +26,10 @@
 # include "structs.h"
 # include "libft.h"
 
-# define BUFFER_SIZE 3
+# define BUFFER_SIZE 5
 # define FILE_MODE_WRITE O_WRONLY | O_CREAT | O_TRUNC
 # define FILE_MODE_READ O_RDONLY
+# define MAX_REDIRECTS 3 
 
 //function_one.c
 char	*ft_concat_char(char *str, char c);
@@ -112,6 +113,11 @@ void	fill_array_cmd(t_node *root, char **array, int *index);
 void	exec_heredoc(t_node *node, char **env, t_cmd *cmd);
 
 //resources/utils/exec_pipe_redirectrs.c
+void free_array(char **array);
+void free_redirects(t_redirect **redirects);
+char *remove_redirects(const char *cmd);
+t_redirect **parse_redirects(char *cmd_str);
+void apply_redirects(t_redirect **redirects, int prev_pipe[2], int next_pipe[2]);
 void	execute_pipe(t_node *node, char **env, t_cmd *cmd);
 void	execute_pipe_right(int pos, t_cmd *cmd);
 void	execute_pipe_left(int pos, t_cmd *cmd);

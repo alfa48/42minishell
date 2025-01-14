@@ -62,6 +62,7 @@ typedef	struct s_cmd
 	char	**array;
 	char    **array_redirect;
 	char	*line;
+	char	*line1;
 	char	**arg;
 	char	**envl;
 	int		index;
@@ -87,5 +88,11 @@ typedef struct s_parseFuncs
 {
 	t_node *(*parsers[5])(char *, t_node *, int);
 }	t_parseFuncs;
+
+typedef struct s_redirect {
+    char *type;      // "<", ">", or ">>"
+    char *file;      // Nome do arquivo
+    int fd;          // File descriptor
+} t_redirect;
 
 #endif

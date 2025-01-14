@@ -1,0 +1,10 @@
+'
+aqui1.txt
+aqui.txt
+headers
+libft
+mais.txt
+Makefile
+minishell
+README.md
+resources

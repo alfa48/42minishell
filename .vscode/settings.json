@@ -4,7 +4,8 @@
     "cstdlib": "cpp",
     "new": "cpp",
     "minishell.h": "c",
-    "libft.h": "c"
+    "libft.h": "c",
+    "stdio.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
