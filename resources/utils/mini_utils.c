@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:24:48 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/07 10:47:28 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:48:08 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -370,7 +370,8 @@ void    exec(t_cmd *cmd)
 	    printf("Debug: ROOT PIPE: %s\n", cmd->line);
 	    execute_commands(cmd->size, cmd);// se tem pipe
     }
-    else{
+    else
+    {
 	    printf("Debug: ROOT REDIRECT apagar: %s\n", cmd->line);
         execute_single_command(cmd->line1, cmd);
 

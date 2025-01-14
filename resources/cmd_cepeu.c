@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/07 10:49:14 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:49:14 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ void	mini_export(char **args, t_env_var **g_env_list)
 		return ;
 	}
 	i = 1;
-	set_or_add_env_var(args[i], g_env_list);
+	set_or_add_env_var(process_cmd(args[i]), g_env_list);
 }
 
 void	mini_unset(char **args, t_env_var **g_env_list)
