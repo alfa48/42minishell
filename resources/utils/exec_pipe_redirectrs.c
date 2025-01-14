@@ -40,7 +40,7 @@
 // 	waitpid(pid2, NULL, 0);
 // }
 
-void	execute_pipe_right(int pos, t_cmd *cmd)
+void		execute_pipe_right(int pos, t_cmd *cmd)
 {
 	int pid;
 	char *path;

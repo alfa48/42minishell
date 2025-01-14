@@ -47,7 +47,7 @@ void    fork_exec_cmd(t_cmd *cmd, t_node *node)
 			{
                 cmd_not_found(get_first_word(ft_strdup(node->command)));
 				free(path);
-				exit(EXIT_FAILURE);
+				exit(1);//exit(errno);
         	}
 		}
 }
