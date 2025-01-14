@@ -50,12 +50,13 @@ int	main(void)
 		init_args_ofen(cmd);
 		cmd->line = readline("minishell$> ");
 		if (!cmd->line)
-			return (0*printf("exit\n"));
+			return (0*printf("exit\n") + 1);
 		if (!is_only_spaces(cmd->line))
 		{
 			add_history(cmd->line);
 			cmd->line = expanding(cmd->line, cmd);
 			cmd->root = init_shell(cmd->line);
+			inorder_traversal(cmd->root);
 			if (cmd->root)
 			{
 				init_args_next(cmd);

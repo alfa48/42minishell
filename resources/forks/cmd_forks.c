@@ -2,20 +2,10 @@
 
 #include "minishell.h"
 
-void fork_crt_env_vars(t_cmd *cmd)
+void fork_crt_env_vars(t_cmd *cmd) // alterar o nome da funcao, nao tem nenhum processo criando
 {
-    int     pid;
-
-    pid = fork();
-    if (pid == 0)
-    {
         mini_val(cmd->line, cmd);
         list_env_vars(cmd->val_only);
-        //geral_free(cmd);// TODO
-        exit(EXIT_SUCCESS);
-    }
-    waitpid(pid, NULL, 0);
-    cmd->status_cmd = 0;
 }
 
 void	wait_forks(t_cmd *cmd)

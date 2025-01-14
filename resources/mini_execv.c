@@ -126,7 +126,9 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 	else if (ft_strcmp("pwd", cmd->arg[0]) == 0)
 		mini_pwd();
 	else if (ft_strcmp("exit", cmd->arg[0]) == 0)
-		mini_exit();
+	{
+		mini_exit(cmd);
+	}
 	else if (ft_strcmp("export", cmd->arg[0]) == 0)
 		mini_export(cmd->arg, g_env_list);
 	else if (strcmp(cmd->arg[0], "env") == 0)

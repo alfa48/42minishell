@@ -91,12 +91,27 @@ int is_operator(char *str)
     if (!str)
         return 0;
 
-    // Lista de operadores válidos
     char *operators[] = {">", "<", ">>", "<<", "|"};
     size_t num_operators = sizeof(operators) / sizeof(operators[0]);
     size_t i = 0;
 
-    // Percorre a lista de operadores usando while
+    while (i < num_operators) {
+        if (ft_strcmp(str, operators[i]) == 0)
+            return 1;
+        i++;
+    }
+
+    return 0;
+}
+
+int is_redirect(char *str)
+{
+    if (!str)
+        return 0;
+
+    char *operators[] = {">", "<", ">>", "<<"};
+    size_t num_operators = sizeof(operators) / sizeof(operators[0]);
+    size_t i = 0;
     while (i < num_operators) {
         if (ft_strcmp(str, operators[i]) == 0)
             return 1;
@@ -109,20 +124,23 @@ int is_operator(char *str)
 void execute_commands(int pos, t_cmd *cmd)
 {
     if (!cmd->array[pos])
-		return;
+		return ;
     execute_commands(pos - 1, cmd);
+      if (pos > 0 && cmd->array[pos - 1])
+          if (is_redirect(cmd->array[pos - 1]))
+              return ;
     // printf("DEBUG: Analisando token '%s'\n", cmd->array[pos]);
 
     // Se é um comando (não um operador)
     if (cmd->array[pos] && !is_operator(cmd->array[pos]))
     {
         // Verifica o próximo token no array
-        if (cmd->array[pos + 1])
+        if (pos < cmd->size && cmd->array[pos + 1])
         {
             // Se o próximo(right) token é um pipe
             if (ft_strcmp(cmd->array[pos + 1], "|") == 0)
             {
-                if (cmd->array[pos - 1])
+                if (pos > 0 && cmd->array[pos - 1])
                     if (ft_strcmp(cmd->array[pos - 1], "|") == 0)// Se o próximo(right) e o anterior  tokens sao  pipes
                     {
                         printf("DEBUG: LOGICA DO PIPE MIDDLE para '| %s |'\n", cmd->array[pos]);
@@ -141,21 +159,19 @@ void execute_commands(int pos, t_cmd *cmd)
                 return ;
             }
             // Se o próximo token é um redirecionamento
-            else if (ft_strcmp(cmd->array[pos + 1], ">") == 0 ||
-                     ft_strcmp(cmd->array[pos + 1], "<") == 0 ||
-                     ft_strcmp(cmd->array[pos + 1], ">>") == 0)
-            {
-                printf("DEBUG: LOGICA DOS REDIRECIONAMENTOS para '%s %s %s'\n",
-                         cmd->array[pos],
-                         cmd->array[pos + 1],
-                         cmd->array[pos + 2]);
-                execute_redirect_(pos + 1, cmd);
-                //execute_commands(pos + 2, cmd);  // Pula o operador e o arquivo
-                return;
-            }
+        //   else if (is_redirect(cmd->array[pos + 1]))
+        //     {
+        //         printf("DEBUG: LOGICA DOS REDIRECIONAMENTOS para '%s %s %s'\n",
+        //                  cmd->array[pos],
+        //                  cmd->array[pos + 1],
+        //                  cmd->array[pos + 2]);
+        //         execute_redirect_(pos + 1, cmd);
+        //         //execute_commands(pos + 2, cmd);  // Pula o operador e o arquivo
+        //         return;
+        //     }
             printf("DEBUG: ANTES DO %s É NULL\n", cmd->array[pos]);
         }
-        else if (cmd->array[pos - 1])// Se o anterior existir
+        else if (pos > 0 && cmd->array[pos - 1])// Se o anterior existir
         {
             if (ft_strcmp(cmd->array[pos - 1], "|") == 0)// Se o anterior(left) token é um pipe
             {
@@ -184,8 +200,17 @@ void    exec(t_cmd *cmd)
 	t_node	*tmp_root = cmd->root;
 	(void) tmp_root;
     pipe(cmd->pipefd);
-	execute_commands(cmd->size, cmd);
-	printf("Debug: root: %d\n", cmd->pid_count);
+    //if (ft_strchr(cmd->line, '|'))//Forma de saber se tem pipe
+    //{
+	 //   printf("Debug: TTTTT PIPE\n");
+	    execute_commands(cmd->size, cmd);// se tem pipe
+    //}
+    //else{
+	  //  printf("Debug: NNNN TTTTT PIPE: %s\n", cmd->line);
+        
+        //exec_command_redirect(1, cmd);//se nao tem pipe mas tem red
+    //}
+	//printf("Debug: root: %d\n", cmd->pid_count);
     close(cmd->pipefd[0]);
 	close(cmd->pipefd[1]);
 

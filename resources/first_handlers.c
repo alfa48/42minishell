@@ -20,8 +20,8 @@ t_node	*handle_pipe(char *command_line)
 	sep = ft_strchr(command_line, '|');
 	root = create_node("|", NULL, 0);
 	*sep = '\0';
-	parse_command(command_line, root, 0);
-	parse_command(sep + 1, root, 1);
+	parse_command_(command_line, root, 0);
+	parse_command_(sep + 1, root, 1);
 	return (root);
 }
 

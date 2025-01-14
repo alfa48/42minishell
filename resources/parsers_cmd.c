@@ -19,8 +19,8 @@ t_node	*parse_pipe(char *command, t_node *root, int side)
 
 	*sep = '\0';
 	node = add_node(root, node, side);
-	parse_command(command, node, 0);
-	parse_command(sep + 1, node, 1);
+	parse_command_(command, node, 0);
+	parse_command_(sep + 1, node, 1);
 	return (node);
 }
 

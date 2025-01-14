@@ -41,7 +41,6 @@ void    init_args(t_cmd  *cmd, char **environ)
 	if (!cmd->g_env_list)
 	{
 		//geral_free(cmd);
-		exit(EXIT_FAILURE);
 	}
 	cmd->g_env_list->counter_exp = 0;
 }

@@ -45,26 +45,63 @@ void	execute_pipe_right(int pos, t_cmd *cmd)
 	int pid;
 	char *path;
 	char **args;
+	int redirect;
+	(void)redirect; //
 
 	cmd->pid_count++;
+	redirect = 0;
 	pid = fork();
 	if (pid == 0)
 	{
 //		cmd -> |
-		path = find_executable(get_first_word(ft_strdup(cmd->array[pos])), &(cmd->g_env_list));
-
-		args = get_args(cmd->array[pos]);
 
 		dup2(cmd->pipefd[1], STDOUT_FILENO);  // Redireciona stdout para o pipe
 		close(cmd->pipefd[0]);
 		close(cmd->pipefd[1]);
 
-		if (execve(path, args, cmd->envl) == -1)
+		if (has_redirect(cmd->array[pos]))
 		{
-			cmd_not_found(get_first_word(ft_strdup(cmd->array[pos])));
-			free(path);
-			exit(1);
+			ft_putstr_fd("\n\n\nSE CHEGOU ATÉ AQUI TUDO BEM!\n", 2);
+			cmd->array_redirect = ft_split_redirect(cmd->array[pos]);
+			 for (int i = 1; cmd->array_redirect[i]; i++)
+			 {
+			 	ft_putstr_fd("Token[-]: ", 2);
+			 	ft_putstr_fd(cmd->array_redirect[i], 2);
+			 	ft_putstr_fd("\n", 2);
+			 }
+			exec_command_redirect(pos, cmd);
+			redirect = 1;
 		}
+
+//		verificar se tem redireicionador( somente se o caracter nao estiver entre aspas, caso contrario nao é um redirect)
+//		dividir a string em tres(comando() redirec e arquivo ou outra coisa)
+//		logica doo redireicionador e executar quem tenho que executar
+
+       if (redirect == 0)
+		{
+			ft_putstr_fd("EXEC SEM REDI !\n", 2);
+			path = find_executable(get_first_word(ft_strdup(cmd->array[pos])), &(cmd->g_env_list));
+			args = get_args(cmd->array[pos]);
+			if (execve(path, args, cmd->envl) == -1)
+			{
+				cmd_not_found(get_first_word(ft_strdup(cmd->array[pos])));
+				free(path);
+				exit(1);
+			}
+		}
+		 else
+		 {
+			ft_putstr_fd("EXEC COM REDI !\n", 2);
+
+		 	path = find_executable(get_first_word(ft_strdup(cmd->array_redirect[pos - 1])), &(cmd->g_env_list));
+		 	args = get_args(cmd->array[pos]);
+            if (execve(path, args, cmd->envl) == -1)
+			{
+				cmd_not_found(get_first_word(ft_strdup(cmd->array_redirect[pos - 1])));
+				free(path);
+				exit(1);
+			}
+         }
 	}
 	//  else{
 	//  	// Processo pai: fecha os descritores do pipe
@@ -274,16 +311,24 @@ void	execute_redirect(t_node *node, char **env,  t_cmd *cmd)
 
 
 
+
 void	exec_redout_(int pos, t_cmd *cmd)
 {
 	int	fd;
-	int status;
+	char *path;
+	char **args;
+	(void)path;
+	(void)cmd;
+	(void)args;
 
     cmd->pid_count++;
+
 	pid_t	pid = fork();
 	if (pid == 0)
 	{
-		fd = open(cmd->array[pos + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (!cmd->array_redirect[pos + 1] || !cmd->array_redirect[pos + 1])
+			exit(1);
+		fd = open(cmd->array_redirect[pos + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
 		{
 			perror("open failed for output file");
@@ -291,22 +336,26 @@ void	exec_redout_(int pos, t_cmd *cmd)
 		}
 		dup2(fd, STDOUT_FILENO);// e' mesmo necessario usar o dup2 ou posso usar o dup
 		close(fd);
-		fork_exec_cmd_(pos - 1, cmd);
-		waitpid(-1, &status, 0);
-        if (WIFEXITED(status))
-		{
-			if (WEXITSTATUS(status) == 1)
-					cmd_not_found(get_first_word(ft_strdup(cmd->array[pos - 1])));
-            exit(WEXITSTATUS(status));
-		}
-		exit(-1);
+		//fork_exec_cmd_(pos - 1, cmd);
+
+		//path = find_executable(get_first_word(ft_strdup(cmd->array_redirect[pos - 1])), &(cmd->g_env_list));
+		//args = get_args(cmd->array_redirect[pos - 1]);
+		// ft_putstr_fd("Executa o comando: ", 2);
+		// ft_putstr_fd(cmd->array_redirect[pos - 1], 2);
+		// ft_putchar_fd('\n', 2);
+		// if (execve(path, args, cmd->envl) == -1)
+		// {
+		// 	free(path);
+		// 	exit(EXIT_FAILURE);
+		// }
 	}
 }
 
 void	exec_redin_(int pos, t_cmd *cmd)
 {
 	int	fd;
-	int status;
+	char *path;
+	char **args;
 
     cmd->pid_count++;
 	pid_t	pid = fork();
@@ -320,15 +369,15 @@ void	exec_redin_(int pos, t_cmd *cmd)
 		}
 		dup2(fd, STDIN_FILENO);
 		close(fd);
-		fork_exec_cmd_(pos - 1, cmd);
-		waitpid(-1, &status, 0);
-        if (WIFEXITED(status))
+		
+		path = find_executable(get_first_word(ft_strdup(cmd->array_redirect[pos])), &(cmd->g_env_list));
+		args = get_args(cmd->array_redirect[pos]);
+		if (execve(path, args, cmd->envl) == -1)
 		{
-			if (WEXITSTATUS(status) == 1)
-					cmd_not_found(get_first_word(ft_strdup(cmd->array[pos - 1])));
-            exit(WEXITSTATUS(status));
+			free(path);
+			exit(EXIT_FAILURE);
 		}
-		exit(-1);
+		
 	}
 }
 /*
@@ -381,11 +430,16 @@ void	execute_redirect_(int pos,  t_cmd *cmd)
 {
 	if (cmd->array[pos])
 	{
-		if (ft_strcmp(cmd->array[pos], ">") == 0)
+		if (ft_strcmp(cmd->array_redirect[pos], ">") == 0)
+		{
+			ft_putstr_fd("AQUI executa: ", 2);
+			ft_putstr_fd(cmd->array_redirect[pos], 2);
+			ft_putchar_fd('\n', 2);
 			exec_redout_(pos, cmd);
-		else if (ft_strcmp(cmd->array[pos], "<") == 0)
+		}
+/*		else if (ft_strcmp(cmd->array_redirect[pos], "<") == 0)
 			exec_redin_(pos, cmd);
-/*		else if (ft_strcmp(node->operator, ">>") == 0)
+		else if (ft_strcmp(node->operator, ">>") == 0)
 			exec_redout_append_(node, env, cmd);
 		else if (ft_strcmp(node->operator, "<<") == 0)
 			exec_heredoc_(node, env, cmd);

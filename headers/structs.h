@@ -60,6 +60,7 @@ typedef	struct s_cmd
 	struct s_node	*root;
 	int		size;
 	char	**array;
+	char    **array_redirect;
 	char	*line;
 	char	**arg;
 	char	**envl;
