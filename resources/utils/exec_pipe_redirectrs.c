@@ -354,36 +354,11 @@ void execute_pipe_left(int pos, t_cmd *cmd)
     }
     if (pid == 0)
     {
-        // Parse redirecionamentos e guarda o início do array
-        redirects = parse_redirects(cmd->array[pos]);
-        redirects_head = redirects; // Guarda o início para liberar depois
         
         // Aplica redirecionamentos de arquivo primeiro
-		//ALTERAR PARA A FUNCAO APLY
-        while (redirects && *redirects)
-        {
-            if (ft_strcmp((*redirects)->type, ">") == 0)
-            {
-                (*redirects)->fd = open((*redirects)->file, 
-                    O_WRONLY | O_CREAT | O_TRUNC, 0644);
-                if ((*redirects)->fd != -1)
-                {
-                    dup2((*redirects)->fd, STDOUT_FILENO);
-                    close((*redirects)->fd); // Fecha após o dup2
-                }
-            }
-            else if (ft_strcmp((*redirects)->type, ">>") == 0)
-            {
-                (*redirects)->fd = open((*redirects)->file, 
-                    O_WRONLY | O_CREAT | O_APPEND, 0644);
-                if ((*redirects)->fd != -1)
-                {
-                    dup2((*redirects)->fd, STDOUT_FILENO);
-                    close((*redirects)->fd); // Fecha após o dup2
-                }
-            }
-            redirects++;
-        }
+        redirects = parse_redirects(cmd->array[pos]);
+        redirects_head = redirects; // Guarda o início para liberar depois
+        apply_redirects(redirects, cmd->prev_pipe, cmd->pipefd);
         
         // Se não tiver redirecionamento de entrada, usa o pipe
         if (!has_input_redirect(redirects_head))
@@ -486,6 +461,251 @@ void execute_pipe_middle(int pos, t_cmd *cmd)
 	}
 
 }
+
+// Função auxiliar para obter o delimitador do heredoc
+char *get_heredoc_delimiter(char *cmd)
+{
+    char *start = mini_strstr(cmd, "<<");
+    if (!start)
+        return NULL;
+    
+    start += 2;  // Pula o "<<"
+    while (*start && *start <= 32)
+        start++;
+    
+    char *end = start;
+    while (*end && *end > 32)
+        end++;
+    
+    return ft_substr(start, 0, end - start);
+}
+
+// Função para remover o heredoc do comando
+char *remove_heredoc(char *cmd)
+{
+    char *heredoc_pos = mini_strstr(cmd, "<<");
+    if (!heredoc_pos)
+        return ft_strdup(cmd);
+    
+    // Aloca espaço para o comando sem o heredoc
+    char *clean_cmd = malloc(sizeof(char) * (heredoc_pos - cmd + 1));
+    if (!clean_cmd)
+        return NULL;
+    
+    // Copia apenas a parte antes do heredoc
+    ft_strlcpy(clean_cmd, cmd, heredoc_pos - cmd + 1);
+    
+    return clean_cmd;
+}
+
+// Função principal para lidar com heredoc no meio do pipe
+void handle_heredoc(char *delimiter, int fd_destino)
+{
+    int     pipe_heredoc[2];
+    pid_t   pid;
+    char    buffer[1024];
+    ssize_t bytes_read;
+
+    if (pipe(pipe_heredoc) == -1)
+    {
+        perror("heredoc pipe failed");
+        return;
+    }
+
+    pid = fork();
+    if (pid == -1)
+    {
+        perror("heredoc fork failed");
+        close(pipe_heredoc[0]);
+        close(pipe_heredoc[1]);
+        return;
+    }
+
+    if (pid == 0)
+    {
+        // Processo filho para ler o heredoc
+        close(pipe_heredoc[0]);
+
+        while (1)
+        {
+            // Mostra o prompt do heredoc
+            ft_putstr_fd("> ", 1);
+            
+            // Lê uma linha do stdin
+            bytes_read = read(STDIN_FILENO, buffer, 1023);
+            if (bytes_read <= 0)
+                break;
+                
+            buffer[bytes_read] = '\0';
+            
+            // Remove o \n do final se existir
+            if (buffer[bytes_read - 1] == '\n')
+                buffer[bytes_read - 1] = '\0';
+            
+            // Verifica se é o delimitador
+            if (ft_strcmp(buffer, delimiter) == 0)
+                break;
+                
+            // Adiciona o \n de volta para a escrita
+            buffer[bytes_read - 1] = '\n';
+            write(pipe_heredoc[1], buffer, bytes_read);
+        }
+        
+        close(pipe_heredoc[1]);
+        exit(EXIT_SUCCESS);
+    }
+    else
+    {
+        // Processo pai
+        close(pipe_heredoc[1]);
+        
+        // Redireciona a leitura do heredoc para o fd_destino
+        dup2(pipe_heredoc[0], fd_destino);
+        close(pipe_heredoc[0]);
+        
+        // Espera o processo do heredoc terminar
+        waitpid(pid, NULL, 0);
+    }
+}
+
+// Helper function to apply redirections consistently across all pipe functions
+void apply_redirections(t_redirect **redirects, int read_fd, int write_fd)
+{
+    t_redirect **redirects_head = redirects;
+    
+    // Handle file redirections first
+    while (redirects && *redirects)
+    {
+        if (ft_strcmp((*redirects)->type, ">") == 0)
+        {
+            (*redirects)->fd = open((*redirects)->file, 
+                O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if ((*redirects)->fd != -1)
+            {
+                dup2((*redirects)->fd, STDOUT_FILENO);
+                close((*redirects)->fd);
+            }
+        }
+        else if (ft_strcmp((*redirects)->type, ">>") == 0)
+        {
+            (*redirects)->fd = open((*redirects)->file, 
+                O_WRONLY | O_CREAT | O_APPEND, 0644);
+            if ((*redirects)->fd != -1)
+            {
+                dup2((*redirects)->fd, STDOUT_FILENO);
+                close((*redirects)->fd);
+            }
+        }
+        else if (ft_strcmp((*redirects)->type, "<") == 0)
+        {
+            (*redirects)->fd = open((*redirects)->file, O_RDONLY);
+            if ((*redirects)->fd != -1)
+            {
+                dup2((*redirects)->fd, STDIN_FILENO);
+                close((*redirects)->fd);
+            }
+        }
+        else if (ft_strcmp((*redirects)->type, "<<") == 0)
+        {
+            // Handle heredoc - you'll need to implement heredoc functionality
+            // This should create a temporary file or pipe for the heredoc content
+            handle_heredoc((*redirects)->file, STDIN_FILENO);
+        }
+        redirects++;
+    }
+    
+    // Apply pipe redirections if no file redirections override them
+    if (!has_input_redirect(redirects_head) && read_fd != -1)
+        dup2(read_fd, STDIN_FILENO);
+    if (!has_output_redirect(redirects_head) && write_fd != -1)
+        dup2(write_fd, STDOUT_FILENO);
+        
+    // Free resources
+    if (redirects_head)
+        free_redirects(redirects_head);
+}
+
+// Função modificada para executar comando do meio com heredoc
+void execute_pipe_middle_(int pos, t_cmd *cmd)
+{
+    int pid;
+    char *path;
+    char **args;
+    t_redirect **redirects;
+    (void)redirects;
+
+    cmd->pid_count++;
+    ft_memcpy(cmd->prev_pipe, cmd->pipefd, 2 * sizeof(int));
+    
+    if (pipe(cmd->pipefd) == -1)
+    {
+        perror("pipe failed");
+        return;
+    }
+
+    pid = fork();
+    if (pid == -1)
+    {
+        perror("fork failed");
+        return;
+    }
+
+    if (pid == 0)
+    {
+        // Verifica se tem heredoc
+        char *heredoc_delim = get_heredoc_delimiter(cmd->array[pos]);
+        if (heredoc_delim)
+        {
+            // Se tem heredoc, configura ele primeiro
+            handle_heredoc(heredoc_delim, STDIN_FILENO);
+            free(heredoc_delim);
+        }
+        else
+        {
+            redirects = parse_redirects(cmd->array[pos]);
+            apply_redirects(redirects, cmd->prev_pipe, cmd->pipefd);
+            // Se não tem heredoc, usa o pipe anterior
+            dup2(cmd->prev_pipe[0], STDIN_FILENO);
+        }
+
+        // Configura a saída para o próximo comando
+        dup2(cmd->pipefd[1], STDOUT_FILENO);
+
+        // Fecha todos os pipes não utilizados
+        close(cmd->prev_pipe[0]);
+        close(cmd->prev_pipe[1]);
+        close(cmd->pipefd[0]);
+        close(cmd->pipefd[1]);
+
+        // Executa o comando (limpo, sem o heredoc se houver)
+        char *clean_cmd = remove_heredoc(cmd->array[pos]);
+        path = find_executable(get_first_word(ft_strdup(clean_cmd)), 
+            &(cmd->g_env_list));
+        args = get_args(clean_cmd);
+
+        free(clean_cmd);
+
+        if (execve(path, args, cmd->envl) == -1)
+        {
+            cmd_not_found(get_first_word(ft_strdup(cmd->array[pos])));
+            free(path);
+            free_array(args);
+            exit(EXIT_FAILURE);
+        }
+    }
+    else
+    {
+        close(cmd->prev_pipe[0]);
+        close(cmd->prev_pipe[1]);
+    }
+}
+
+
+
+
+
+
+
 
 
 void	exec_redout(t_node *node, char **env, t_cmd *cmd)

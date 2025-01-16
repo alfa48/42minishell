@@ -26,7 +26,8 @@
 # include "structs.h"
 # include "libft.h"
 
-# define BUFFER_SIZE 5
+# define BUFFER_SIZE 42
+
 # define FILE_MODE_WRITE O_WRONLY | O_CREAT | O_TRUNC
 # define FILE_MODE_READ O_RDONLY
 # define MAX_REDIRECTS 3 
@@ -122,6 +123,7 @@ void	execute_pipe(t_node *node, char **env, t_cmd *cmd);
 void	execute_pipe_right(int pos, t_cmd *cmd);
 void	execute_pipe_left(int pos, t_cmd *cmd);
 void execute_pipe_middle(int pos, t_cmd *cmd);
+void execute_pipe_middle_(int pos, t_cmd *cmd);
 void	execute_redirect(t_node *node, char **env,  t_cmd *cmd);
 
 void	execute_redirect_(int pos,  t_cmd *cmd);
@@ -214,6 +216,9 @@ void    fork_exec_cmd_(int pos, t_cmd *cmd);
 //resources/redirect/redirect.c
 char **ft_split_redirect(const char *str);
 void exec_command_redirect(int pos, t_cmd *cmd);
+
+//resources/heredoc/util.c
+char *get_next_line(int fd);
 
 
 # endif

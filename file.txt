@@ -1,0 +1,8 @@
+file.txt
+headers
+libft
+Makefile
+minishell
+olee.txt
+README.md
+resources

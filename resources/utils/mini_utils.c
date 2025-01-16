@@ -145,7 +145,7 @@ void execute_commands(int pos, t_cmd *cmd)
                     {
                         printf("DEBUG: LOGICA DO PIPE MIDDLE para '| %s |'\n", cmd->array[pos]);
 
-                        execute_pipe_middle(pos, cmd);
+                        execute_pipe_middle_(pos, cmd);
                         return ;
                     }
                 printf("DEBUG: LOGICA DO PIPE RIGHT para '%s |'\n", cmd->array[pos]);
