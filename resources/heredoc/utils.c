@@ -12,125 +12,109 @@
 
 #include "minishell.h"
 
-static char *ft_strjoin_gnl(char *s1, char *s2)
-{
-    char    *str;
-    int     i;
-    int     j;
 
-    if (!s1)
-    {
-        s1 = malloc(sizeof(char) * 1);
-        if (!s1)
-            return (NULL);
-        s1[0] = '\0';
-    }
-    if (!s2)
-        return (NULL);
-    str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-    if (!str)
-        return (NULL);
-    i = -1;
-    j = 0;
-    while (s1[++i])
-        str[i] = s1[i];
-    while (s2[j])
-        str[i++] = s2[j++];
-    str[i] = '\0';
-    free(s1);
-    return (str);
+// Função auxiliar para obter o delimitador do heredoc
+char *get_heredoc_delimiter(char *cmd)
+{
+    char *start = mini_strstr(cmd, "<<");
+    if (!start)
+        return NULL;
+    
+    start += 2;  // Pula o "<<"
+    while (*start && *start <= 32)
+        start++;
+    
+    char *end = start;
+    while (*end && *end > 32)
+        end++;
+    
+    return ft_substr(start, 0, end - start);
 }
 
-static char *get_line(char *saved)
+// Função para remover o heredoc do comando
+char *remove_heredoc(char *cmd)
 {
-    int     i;
-    char    *str;
-
-    i = 0;
-    if (!saved[i])
-        return (NULL);
-    while (saved[i] && saved[i] != '\n')
-        i++;
-    str = malloc(sizeof(char) * (i + 2));
-    if (!str)
-        return (NULL);
-    i = 0;
-    while (saved[i] && saved[i] != '\n')
-    {
-        str[i] = saved[i];
-        i++;
-    }
-    if (saved[i] == '\n')
-    {
-        str[i] = saved[i];
-        i++;
-    }
-    str[i] = '\0';
-    return (str);
+    char *heredoc_pos = mini_strstr(cmd, "<<");
+    if (!heredoc_pos)
+        return ft_strdup(cmd);
+    
+    // Aloca espaço para o comando sem o heredoc
+    char *clean_cmd = malloc(sizeof(char) * (heredoc_pos - cmd + 1));
+    if (!clean_cmd)
+        return NULL;
+    
+    // Copia apenas a parte antes do heredoc
+    ft_strlcpy(clean_cmd, cmd, heredoc_pos - cmd + 1);
+    
+    return clean_cmd;
 }
 
-static char *save_next(char *saved)
+// Função principal para lidar com heredoc no meio do pipe
+void handle_heredoc(char *delimiter, int fd_destino)
 {
-    int     i;
-    int     j;
-    char    *str;
+    int     pipe_heredoc[2];
+    pid_t   pid;
+    char    buffer[1024];
+    ssize_t bytes_read;
 
-    i = 0;
-    while (saved[i] && saved[i] != '\n')
-        i++;
-    if (!saved[i])
+    if (pipe(pipe_heredoc) == -1)
     {
-        free(saved);
-        return (NULL);
+        perror("heredoc pipe failed");
+        return;
     }
-    str = malloc(sizeof(char) * (ft_strlen(saved) - i + 1));
-    if (!str)
-        return (NULL);
-    i++;
-    j = 0;
-    while (saved[i])
-        str[j++] = saved[i++];
-    str[j] = '\0';
-    free(saved);
-    return (str);
-}
 
-static char *read_file(int fd, char *saved)
-{
-    char    *buffer;
-    int     bytes_read;
-
-    buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-    if (!buffer)
-        return (NULL);
-    bytes_read = 1;
-    while (bytes_read != 0 && !ft_strchr(saved, '\n'))
+    pid = fork();
+    if (pid == -1)
     {
-        bytes_read = read(fd, buffer, BUFFER_SIZE);
-        if (bytes_read == -1)
+        perror("heredoc fork failed");
+        close(pipe_heredoc[0]);
+        close(pipe_heredoc[1]);
+        return;
+    }
+
+    if (pid == 0)
+    {
+        // Processo filho para ler o heredoc
+        close(pipe_heredoc[0]);
+
+        while (1)
         {
-            free(buffer);
-            free(saved);
-            return (NULL);
+            // Mostra o prompt do heredoc
+            ft_putstr_fd("> ", 1);
+            
+            // Lê uma linha do stdin
+            bytes_read = read(STDIN_FILENO, buffer, 1023);
+            if (bytes_read <= 0)
+                break;
+                
+            buffer[bytes_read] = '\0';
+            
+            // Remove o \n do final se existir
+            if (buffer[bytes_read - 1] == '\n')
+                buffer[bytes_read - 1] = '\0';
+            
+            // Verifica se é o delimitador
+            if (ft_strcmp(buffer, delimiter) == 0)
+                break;
+                
+            // Adiciona o \n de volta para a escrita
+            buffer[bytes_read - 1] = '\n';
+            write(pipe_heredoc[1], buffer, bytes_read);
         }
-        buffer[bytes_read] = '\0';
-        saved = ft_strjoin_gnl(saved, buffer);
+        
+        close(pipe_heredoc[1]);
+        exit(EXIT_SUCCESS);
     }
-    free(buffer);
-    return (saved);
-}
-
-char *get_next_line(int fd)
-{
-    char        *line;
-    static char *saved;
-
-    if (fd < 0 || BUFFER_SIZE <= 0)
-        return (NULL);
-    saved = read_file(fd, saved);
-    if (!saved)
-        return (NULL);
-    line = get_line(saved);
-    saved = save_next(saved);
-    return (line);
+    else
+    {
+        // Processo pai
+        close(pipe_heredoc[1]);
+        
+        // Redireciona a leitura do heredoc para o fd_destino
+        dup2(pipe_heredoc[0], fd_destino);
+        close(pipe_heredoc[0]);
+        
+        // Espera o processo do heredoc terminar
+        waitpid(pid, NULL, 0);
+    }
 }

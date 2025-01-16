@@ -1,6 +1,8 @@
 file1.tx$
 file1.txt$
 file.txt$
+fill.txt$
+FILL.txt$
 headers$
 libft$
 Makefile$
@@ -8,3 +10,7 @@ minishell$
 olee.txt$
 README.md$
 resources$
+te.txt$
+texto$
+texto.txt$
+tex.txt$

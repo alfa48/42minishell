@@ -96,11 +96,23 @@ t_node	*init_root_pipe(char *command_line)
 	return (root);
 }
 
-int	has_redirect(char *command)
+int has_redirect(char *command)
 {
-	// Verifica se o comando contém qualquer redirecionador
-		return (ft_strchr(command, '>') || ft_strchr(command, '<'));
+    char *pos;
+
+    // Verifica se há '<' sem ser parte de '<<'
+    pos = ft_strchr(command, '<');
+    if (pos && *(pos + 1) != '<')
+        return 1;
+
+    // Verifica se há '>'
+    pos = ft_strchr(command, '>');
+    if (pos)
+        return 1;
+
+    return 0; // Não contém redirecionadores válidos
 }
+
 
 t_node	*init_root_redirec(char *command_line)
 {

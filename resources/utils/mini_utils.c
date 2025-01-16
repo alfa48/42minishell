@@ -126,6 +126,7 @@ void execute_commands(int pos, t_cmd *cmd)
     if (!cmd->array[pos])
 		return ;
     execute_commands(pos - 1, cmd);
+    
       if (pos > 0 && cmd->array[pos - 1])
           if (is_redirect(cmd->array[pos - 1]))
               return ;
@@ -370,14 +371,56 @@ void    exec(t_cmd *cmd)
 	    printf("Debug: ROOT PIPE: %s\n", cmd->line);
 	    execute_commands(cmd->size, cmd);// se tem pipe
     }
-    else
+    else if (has_redirect(cmd->line1))
     {
 	    printf("Debug: ROOT REDIRECT apagar: %s\n", cmd->line);
         execute_single_command(cmd->line1, cmd);
 
         //exec_command_redirect(1, cmd);//se nao tem pipe mas tem red
     }
-	//printf("Debug: root: %d\n", cmd->pid_count);
+    else{
+        char        *heredoc_delim;
+        char        *path;
+        char        **args;
+        char *clean_cmd;
+        (void)args;
+        (void)clean_cmd;
+        (void)path;
+        (void)heredoc_delim;
+
+          // Primeiro, verifica se tem heredoc
+        printf("Debug: get_heredoc_delimiter \n");//, heredoc_delim);
+
+        heredoc_delim = get_heredoc_delimiter(cmd->line1);
+        /* if (heredoc_delim)
+        {
+            // Se tem heredoc, fecha a leitura do pipe anterior
+            // pois vamos usar apenas o heredoc
+            close(cmd->prev_pipe[0]);
+            
+            // Configura o heredoc
+            handle_heredoc(heredoc_delim, STDIN_FILENO);
+            free(heredoc_delim);
+        }
+
+        clean_cmd = NULL;
+          if (heredoc_delim)
+            clean_cmd = remove_heredoc(clean_cmd);
+        path = find_executable(get_first_word(ft_strdup(clean_cmd)), &(cmd->g_env_list));
+        args = get_args(clean_cmd);
+
+        // Cleanup antes do exec
+        free(clean_cmd);
+         if (execve(path, args, cmd->envl) == -1)
+        {
+            cmd_not_found(get_first_word(ft_strdup(cmd->line1)));
+            free(path);
+            free_array(args);
+            exit(EXIT_FAILURE);
+        }
+        */
+    }
+	printf("Debug: root:\n");
     close(cmd->pipefd[0]);
 	close(cmd->pipefd[1]);
 

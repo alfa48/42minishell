@@ -218,7 +218,9 @@ char **ft_split_redirect(const char *str);
 void exec_command_redirect(int pos, t_cmd *cmd);
 
 //resources/heredoc/util.c
-char *get_next_line(int fd);
+char *get_heredoc_delimiter(char *cmd);
+char *remove_heredoc(char *cmd);
+void handle_heredoc(char *delimiter, int fd_destino);
 
 
 # endif
