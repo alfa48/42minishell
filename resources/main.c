@@ -54,6 +54,8 @@ int	main(void)
 		if (!is_only_spaces(cmd->line))
 		{
 			add_history(cmd->line);
+			if (checks_str(cmd))
+				continue;
 			cmd->line = expanding(cmd->line, cmd);	
 			cmd->line1 = ft_strdup(cmd->line);
 			cmd->root = init_shell(cmd->line);

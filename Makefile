@@ -31,7 +31,8 @@ SRC = $(RSC_DIR)/cmd_cepeu.c \
 	$(RSC_DIR)/path/path_utils.c \
 	$(RSC_DIR)/forks/cmd_forks.c \
 	$(RSC_DIR)/rediret/redirect.c \
-	$(RSC_DIR)/heredoc/utils.c
+	$(RSC_DIR)/heredoc/utils.c \
+	$(RSC_DIR)/checks/checks.c
 	
 OBJ = $(SRC:.c=.o)
 

@@ -221,6 +221,11 @@ void exec_command_redirect(int pos, t_cmd *cmd);
 char *get_heredoc_delimiter(char *cmd);
 char *remove_heredoc(char *cmd);
 void handle_heredoc(char *delimiter, int fd_destino);
+void mini_heredoc(t_cmd *cmd);
+
+//resources/checks/checks.c
+int checks_error_pattern(char* texto);
+int checks_str(t_cmd *cmd);
 
 
 # endif

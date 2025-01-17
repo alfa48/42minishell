@@ -139,6 +139,7 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 		fork_crt_env_vars(cmd);
 	else
 	{
+		printf("%s\n", cmd->root->command);	
 		fork_exec_cmd(cmd, cmd->root);
 		wait_forks(cmd);
 	}
