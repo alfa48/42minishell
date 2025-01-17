@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 21:09:35 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/06 21:09:37 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/17 11:05:49 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,13 @@
 char *find_executable(const char *command, t_env_var **g_env_list)
 {
     (void)(g_env_list);
+
+    if (command[0] == '.' || command[0] == '/')
+    {
+        if (access(command, X_OK) == 0)
+            return (ft_strdup(command));
+        return (NULL);
+    }
     char *path_env = get_env_var("PATH", *g_env_list);
     if (!path_env) {
         fprintf(stderr, "Erro: variável PATH não encontrada.\n");
@@ -32,7 +39,8 @@ char *find_executable(const char *command, t_env_var **g_env_list)
         snprintf(full_path, sizeof(full_path), "%s/%s", token, command);
 
         // Verifica se o executável existe e é acessível
-        if (access(full_path, X_OK) == 0) {
+        if (access(full_path, X_OK) == 0)
+        {
             free(path);
             return strdup(full_path); // Retorna o caminho completo do executável
         }
