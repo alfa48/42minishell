@@ -1,159 +1,184 @@
 #include "minishell.h"
-
-// Libera um array de strings e todos os seus elementos
-void free_array(char **array)
+void	free_array(char **array)
 {
-    int i;
+	int	i;
 
-    if (!array)
-        return;
+	if (!array)
+		return ;
     
-    i = 0;
-    while (array[i])
-    {
-        free(array[i]);
-        i++;
-    }
-    free(array);
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]);
+		i ++;
+	}
+	free(array);
 }
+
 // Verifica se um caractere marca o início de um redirecionamento
-static int is_redirect_char(char c) {
-    return (c == '<' || c == '>');
+static int	is_redirect_char(char c)
+{
+	return (c == '<' || c == '>');
 }
 
 // Função que verifica se há redirecionamento de entrada
-bool has_input_redirect(t_redirect **redirects) {
-    if (!redirects)
-        return false;
-    
-    for (int i = 0; redirects[i]; i++) {
-        if (ft_strcmp(redirects[i]->type, "<") == 0)
-            return true;
-    }
-    return false;
+bool	has_input_redirect(t_redirect **redirects)
+{
+	int	i;
+
+	i = 0;
+	if (!redirects)
+		return (false);
+  
+	while (redirects[i])
+	{
+		if (ft_strcmp(redirects[i]->type, "<") == 0)
+			return (true);
+		i ++;	
+	}
+	return (false);
 }
 
 // Função que verifica se há redirecionamento de saída
-bool has_output_redirect(t_redirect **redirects) {
-    if (!redirects)
-        return false;
-    
-    for (int i = 0; redirects[i]; i++) {
-        if (ft_strcmp(redirects[i]->type, ">") == 0 || 
-            ft_strcmp(redirects[i]->type, ">>") == 0)
-            return true;
-    }
-    return false;
+bool	has_output_redirect(t_redirect **redirects)
+{
+	int	i;
+
+	if (!redirects)
+		return (false);
+	i = 0;
+	while (redirects[i])
+	{
+		if (ft_strcmp(redirects[i]->type, ">") == 0 || 
+			ft_strcmp(redirects[i]->type, ">>") == 0)
+			return (true);	
+		i ++;
+	}
+	return (false);
 }
 
 // Função que remove redirecionamentos do comando
-char *remove_redirects(const char *cmd) {
-    if (!cmd)
-        return NULL;
+char	*remove_redirects(const char *cmd)
+{
+	bool	in_quotes;
+	bool	in_redirect;
+	char	*result;
+	char	*write_ptr;
+	char	quote_char;
+	char	*start;
+	const char	*read_ptr;
 
-    char *result = malloc(strlen(cmd) + 1);
-    char *write_ptr = result;
-    const char *read_ptr = cmd;
-    bool in_quotes = false;
-    char quote_char = 0;
-    bool in_redirect = false;
-
-    while (*read_ptr) {
-        // Gerencia aspas
-        if (*read_ptr == '"' || *read_ptr == '\'') {
-            if (!in_quotes) {
-                in_quotes = true;
-                quote_char = *read_ptr;
-            } else if (*read_ptr == quote_char) {
-                in_quotes = false;
-            }
-        }
-
-        // Se estamos dentro de aspas, copia tudo literalmente
-        if (in_quotes) {
-            *write_ptr++ = *read_ptr++;
-            continue;
-        }
-
-        // Detecta início de redirecionamento
-        if (is_redirect_char(*read_ptr) && !in_redirect) {
-            in_redirect = true;
-            // Pula o redirecionador e o arquivo
-            while (*read_ptr && (*read_ptr == '<' || *read_ptr == '>'))
-                read_ptr++;
-            // Pula espaços
-            while (*read_ptr && isspace(*read_ptr))
-                read_ptr++;
-            // Pula o nome do arquivo
-            while (*read_ptr && !isspace(*read_ptr))
-                read_ptr++;
-            // Remove espaços extras
-            while (*read_ptr && isspace(*read_ptr))
-                read_ptr++;
-            in_redirect = false;
-            continue;
-        }
-
-        // Copia caractere normal
-        *write_ptr++ = *read_ptr++;
-    }
-
-    *write_ptr = '\0';
-
-    // Remove espaços extras no final
-    write_ptr--;
-    while (write_ptr >= result && isspace(*write_ptr))
-        write_ptr--;
-    *(write_ptr + 1) = '\0';
-
-    // Remove espaços extras no início
-    char *start = result;
-    while (*start && isspace(*start))
-        start++;
-
-    if (start != result) {
-        memmove(result, start, strlen(start) + 1);
-    }
-
-    return result;
+	if (!cmd)
+		return (NULL);
+	result = malloc(ft_strlen(cmd) + 1);
+	write_ptr = result;
+	read_ptr = cmd;
+	in_quotes = false;
+	quote_char = 0;
+	in_redirect = false;
+	while (*read_ptr)
+	{
+		// Gerencia aspas
+		if (*read_ptr == '"' || *read_ptr == '\'')
+		{
+			if (!in_quotes)
+			{
+				in_quotes = true;
+				quote_char = *read_ptr;
+			}
+			else if (*read_ptr == quote_char)
+				in_quotes = false;
+		}
+		// Se estamos dentro de aspas, copia tudo literalmente
+		if (in_quotes)
+		{
+			*write_ptr ++ = *read_ptr ++;
+			continue ;
+		}
+		// Detecta início de redirecionamento
+		if (is_redirect_char(*read_ptr) && !in_redirect)
+		{
+			in_redirect = true;
+			// Pula o redirecionador e o arquivo
+			while (*read_ptr && (*read_ptr == '<' || *read_ptr == '>'))
+				read_ptr ++;
+			// Pula espaços
+			while (*read_ptr && isspace(*read_ptr))
+				read_ptr ++;
+			// Pula o nome do arquivo
+			while (*read_ptr && !isspace(*read_ptr))
+				read_ptr ++;
+			// Remove espaços extras
+			while (*read_ptr && isspace(*read_ptr))
+				read_ptr ++;
+			in_redirect = false;
+			continue ;
+		}
+		// Copia caractere normal
+		*write_ptr ++ = *read_ptr ++;
+	}
+	*write_ptr = '\0';
+	// Remove espaços extras no final
+	write_ptr --;
+	while (write_ptr >= result && isspace(*write_ptr))
+		write_ptr --;
+	*(write_ptr + 1) = '\0';
+	// Remove espaços extras no início
+	start = result;
+	while (*start && isspace(*start))
+		start ++;
+	if (start != result)
+		ft_memmove(result, start, strlen(start) + 1);
+	return (result);
 }
 
 // Função para liberar a estrutura de redirecionamentos
-void free_redirects(t_redirect **redirects) {
-    if (!redirects)
-        return;
-        
-    for (int i = 0; redirects[i]; i++) {
-        free(redirects[i]->type);
-        free(redirects[i]->file);
-        free(redirects[i]);
-    }
-    free(redirects);
+void	free_redirects(t_redirect **redirects)
+{
+	int	i;
+
+	if (!redirects)
+		return ;
+	i = 0;        
+	while (redirects[i])
+	{
+		free(redirects[i]->type);
+		free(redirects[i]->file);
+		free(redirects[i]);
+		i ++;
+	}
+	free(redirects);
 }
 
 // Função para extrair redirecionamentos de um comando
-t_redirect **parse_redirects(char *cmd_str)
+t_redirect  **parse_redirects(char *cmd_str)
 {
-    t_redirect **redirects = malloc(sizeof(t_redirect*) * MAX_REDIRECTS);
-    char **tokens = ft_split(cmd_str, ' ');
-    int i = 0;
-    int redirect_count = 0;
-    
-    while (tokens[i] && redirect_count < MAX_REDIRECTS) {
-        if (is_redirect(tokens[i])) {
+    int     i;
+    int     redirect_count;
+    t_redirect  **redirects;
+    char    **tokens;
+
+    redirects = malloc(sizeof(t_redirect*) * MAX_REDIRECTS);
+    tokens = ft_split(cmd_str, ' ');
+    i = 0;
+    redirect_count = 0;
+    while (tokens[i] && redirect_count < MAX_REDIRECTS)
+    {
+        if (is_redirect(tokens[i]))
+        {
             redirects[redirect_count] = malloc(sizeof(t_redirect));
             redirects[redirect_count]->type = ft_strdup(tokens[i]);
             redirects[redirect_count]->file = ft_strdup(tokens[i + 1]);
             redirects[redirect_count]->fd = -1;
             redirect_count++;
             i += 2;
-        } else {
-            i++;
         }
+        else
+            i ++;
     }
     redirects[redirect_count] = NULL;
     free_array(tokens);
-    return redirects;
+    return (redirects);
 }
 
 // Função para aplicar redirecionamentos
