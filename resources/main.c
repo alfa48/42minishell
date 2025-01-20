@@ -14,24 +14,31 @@
 
 void	inorder_traversal(t_node *root)
 {
+	char	*tmp;
+
 	if (root == NULL)
 		return ;
 	inorder_traversal(root->left);
 	if (root->operator)
 		printf("Operator:%s$\n", (root->operator));
 	else
-		printf("Command:%s$\n", (root->command));
+	{
+		tmp = root->command;
+		root->command = process_cmd(root->command);
+		printf("Command:%s$\n", root->command);
+		free(tmp);
+	}
 	inorder_traversal(root->right);
 }
 
-int is_only_spaces(char *str)
+int	is_only_spaces(char *str)
 {
 	int	i;
 
 	i = -1;
 	while (str[++i])
 	{
-		if (str[i] > 32)//(str[i] != ' ' && str[i] != '\t')
+		if (str[i] > 32)
 			return (0);
 	}
 	return (1);
@@ -39,8 +46,8 @@ int is_only_spaces(char *str)
 
 int	main(void)
 {
-	t_cmd	*cmd;
-	extern char	**environ;
+	t_cmd			*cmd;
+	extern char		**environ;
 
 	cmd = malloc(sizeof(t_cmd));
 	handle_signals();
@@ -50,17 +57,16 @@ int	main(void)
 		init_args_ofen(cmd);
 		cmd->line = readline("minishell$> ");
 		if (!cmd->line)
-			return (0*printf("exit\n") + 1);
+			return (0 * printf("exit\n") + 1);
 		if (!is_only_spaces(cmd->line))
 		{
 			add_history(cmd->line);
 			if (checks_str(cmd))
-				continue;
-			cmd->line = expanding(cmd->line, cmd);	
-			cmd->line1 = ft_strdup(cmd->line);
+				continue ;
+			cmd->line = expanding(cmd->line, cmd);
 			cmd->root = init_shell(cmd->line);
 			inorder_traversal(cmd->root);
-			if (cmd->root)
+			if (cmd->root && cmd->line)
 			{
 				init_args_next(cmd);
 				if (cmd->size == 1)

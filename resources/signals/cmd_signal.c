@@ -12,20 +12,20 @@
 
 #include "minishell.h"
 
-void    handle_signals()
+void	handle_signals(void)
 {
-    signal(SIGINT, sigint_handler);
-    signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 }
 
-void    sigint_handler(int signum)
+void	sigint_handler(int signum)
 {
-    (void)signum;
-    if (signum == SIGINT)
-    {
-        printf("\n");
-        rl_on_new_line();
-        rl_replace_line("", 0);
-        rl_redisplay();
-    }
+	(void)signum;
+	if (signum == SIGINT)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 }

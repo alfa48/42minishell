@@ -30,7 +30,7 @@
 
 # define FILE_MODE_WRITE O_WRONLY | O_CREAT | O_TRUNC
 # define FILE_MODE_READ O_RDONLY
-# define MAX_REDIRECTS 3 
+# define MAX_REDIRECTS 6
 
 //function_one.c
 char	*ft_concat_char(char *str, char c);
@@ -93,7 +93,7 @@ t_token *next_token(t_cmd_line *c_line);
 
 
 //resources/main.c
-int main(void);
+int	main(void);
 
 //resources/mini_execv.c
 void	mini_val(char *str, t_cmd *cmd);
@@ -159,10 +159,13 @@ int	set_it(char *name, const char *value, t_env_var **g_env_list);
 char *get_env_var(const char *name, t_env_var *env_list);
 char *get_first_word(char *line);
 void cmd_not_found(char *str);
+int is_within_quotes(char *str, char *sep);
+int is_entirely_within_quotes(char *str);
 
 //resources/mini_expand.c
 char *concat_strings(char **str_array);
 char *expanding(char *str, t_cmd *cmd);
+char	*ft_strndup(const char *s, size_t n);
 
 //token/cmd_in/cmd_envexit.c
 void    free_ms(t_cmd *cmd);
@@ -170,7 +173,7 @@ void    mini_env(t_env_var *g_env_list);
 void    mini_exit(t_cmd *cmd);
 
 //resources/cmd_cepeu.c
-bool check_quotes_balance(const char *arg);
+bool	check_quotes_balance(const char *arg);
 void    mini_echo(char *arg);
 void    mini_cd(char *path, t_env_var *g_env_list);
 void    mini_pwd(void);
@@ -226,6 +229,5 @@ void mini_heredoc(t_cmd *cmd);
 //resources/checks/checks.c
 int checks_error_pattern(char* texto);
 int checks_str(t_cmd *cmd);
-
 
 # endif

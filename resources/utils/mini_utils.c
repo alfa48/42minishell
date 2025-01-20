@@ -56,27 +56,6 @@ char	**get_args(char *cmd)
 	return (execve_args);
 }
 
-void	execute_command( t_cmd *cmd, t_node *node)
-{
-		char	**execve_args;
-
-		pid_t pid = fork();
-		if (pid == 0)
-		{
-			execve_args = get_args(node->command);
-			fprintf(stderr, "Debug: Comando full %s\n", execve_args[0]);
-			execve(execve_args[0], execve_args, cmd->envl);
-			perror("execve failed");
-			exit(1);
-		}
-		else if (pid > 0)
-		{
-			cmd->pid_count ++;
-			printf("Um pid adicionado %d\n",cmd->pid_count);
-		}
-		else
-			perror("fork failed");
-}
 
 void execute_tree(t_node *root, t_cmd *cmd)//apagar
 {
@@ -126,7 +105,7 @@ void execute_commands(int pos, t_cmd *cmd)
     if (!cmd->array[pos])
 		return ;
     execute_commands(pos - 1, cmd);
-    
+
       if (pos > 0 && cmd->array[pos - 1])
           if (is_redirect(cmd->array[pos - 1]))
               return ;
@@ -196,12 +175,12 @@ int get_redirect_priority(char *type) {
 void sort_redirects(t_redirect **redirects) {
     int i, j;
     t_redirect *temp;
-    
+
     if (!redirects) return;
-    
+
     for (i = 0; redirects[i] && redirects[i + 1]; i++) {
         for (j = 0; redirects[j] && redirects[j + 1]; j++) {
-            if (get_redirect_priority(redirects[j]->type) > 
+            if (get_redirect_priority(redirects[j]->type) >
                 get_redirect_priority(redirects[j + 1]->type)) {
                 temp = redirects[j];
                 redirects[j] = redirects[j + 1];
@@ -257,17 +236,17 @@ void execute_single_command(char *cmd_str, t_cmd *cmd)
         close(saved_stdout);
         return;
     }
-    
+
     if (pid == 0) // Processo filho
     {
         int opened_fds[MAX_REDIRECTS * 2];
         int fd_count = 0;
-        
+
         // Aplica os redirecionamentos na ordem correta
         for (int i = 0; redirects[i]; i++)
         {
             int new_fd = -1;
-            
+
             if (ft_strcmp(redirects[i]->type, "<") == 0)
                 new_fd = open(redirects[i]->file, O_RDONLY);
             else if (ft_strcmp(redirects[i]->type, ">") == 0)
@@ -280,9 +259,9 @@ void execute_single_command(char *cmd_str, t_cmd *cmd)
                 perror("open failed");
                 goto cleanup_child;
             }
-            
+
             opened_fds[fd_count++] = new_fd;
-            
+
             if (ft_strcmp(redirects[i]->type, "<") == 0)
             {
                 if (dup2(new_fd, STDIN_FILENO) == -1)
@@ -392,33 +371,6 @@ void    exec(t_cmd *cmd)
         printf("Debug: get_heredoc_delimiter \n");//, heredoc_delim);
 
         heredoc_delim = get_heredoc_delimiter(cmd->line1);
-        /* if (heredoc_delim)
-        {
-            // Se tem heredoc, fecha a leitura do pipe anterior
-            // pois vamos usar apenas o heredoc
-            close(cmd->prev_pipe[0]);
-            
-            // Configura o heredoc
-            handle_heredoc(heredoc_delim, STDIN_FILENO);
-            free(heredoc_delim);
-        }
-
-        clean_cmd = NULL;
-          if (heredoc_delim)
-            clean_cmd = remove_heredoc(clean_cmd);
-        path = find_executable(get_first_word(ft_strdup(clean_cmd)), &(cmd->g_env_list));
-        args = get_args(clean_cmd);
-
-        // Cleanup antes do exec
-        free(clean_cmd);
-         if (execve(path, args, cmd->envl) == -1)
-        {
-            cmd_not_found(get_first_word(ft_strdup(cmd->line1)));
-            free(path);
-            free_array(args);
-            exit(EXIT_FAILURE);
-        }
-        */
     }
 	printf("Debug: root:\n");
     close(cmd->pipefd[0]);

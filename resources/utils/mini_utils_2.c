@@ -51,11 +51,35 @@ t_node	*create_node(char *operator, char *command, int index)
 	return (new);
 }
 
+int is_first_word_echo(char *command)
+{
+    char    first_word[256];
+    int     i = 0;
+
+    // Ignora espaços em branco iniciais
+    while (isspace(*command))
+        command++;
+
+    // Copia a primeira palavra para o buffer
+    while (*command && !isspace(*command) && i < 255)
+        first_word[i++] = *command++;
+    first_word[i] = '\0';
+
+    // Compara a primeira palavra com "echo"
+    if (strcmp(first_word, "echo") == 0)
+        return (1);
+
+    return (0);
+}
+
 char	*mini_epur_str(char *str)
 {
 	char	out[42000];
 	int	i;
 
+	if (is_first_word_echo(str))
+		return (ft_strdup(str));
+	str = process_cmd(str);
 	i = 0;
 	while (*str == ' ' || *str == '\t')
 		str ++;
@@ -99,19 +123,4 @@ int	is_echo_printable(char c)
 	if (ft_isprint(c))
 		return (1);
 	return (0);
-}
-
-void	*ft_memset_space(void *ptr, int value, size_t num)
-{
-	unsigned char	*p;
-	size_t			i;
-
-	p = ptr;
-	i = 0;
-	while (i < num && !is_special_char(p[i]))
-	{
-		p[i] = (unsigned char) value;
-		i ++;
-	}
-	return (ptr);
 }

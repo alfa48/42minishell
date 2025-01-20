@@ -14,9 +14,9 @@
 
 int	calc_tree_size(t_node *root)
 {
-    if (root == NULL)
-        return 0;
-    return (1 + calc_tree_size(root->left) + calc_tree_size(root->right));
+	if (root == NULL)
+		return (0);
+	return (1 + calc_tree_size(root->left) + calc_tree_size(root->right));
 }
 
 void    init_args_ofen(t_cmd  *cmd)
@@ -48,13 +48,13 @@ void    init_args(t_cmd  *cmd, char **environ)
 
 void    init_args_next(t_cmd  *cmd)
 {
-    cmd->size = calc_tree_size(cmd->root);
-    cmd->array = malloc((cmd->size + 2) * sizeof(char *));
-     // Inicializa o array com NULL
-    cmd->array[0] = NULL; // Primeiro elemento é NULL
-    cmd->index = 1;       // Começa a preencher a partir do segundo elemento
-    fill_array_cmd(cmd->root, cmd->array, &(cmd->index));
-    cmd->array[cmd->index] = NULL; // Último elemento é NULL
+	cmd->size = calc_tree_size(cmd->root);
+	cmd->array = malloc((cmd->size + 2) * sizeof(char *));
+	// Inicializa o array com NULL
+	cmd->array[0] = NULL; // Primeiro elemento é NULL
+	cmd->index = 1;       // Começa a preencher a partir do segundo elemento
+	fill_array_cmd(cmd->root, cmd->array, &(cmd->index));
+	cmd->array[cmd->index] = NULL; // Último elemento é NULL
 }
 
 void	fill_array_cmd(t_node *root, char **array, int *index)
@@ -70,4 +70,3 @@ void	fill_array_cmd(t_node *root, char **array, int *index)
 	root->index = *index;
 	fill_array_cmd(root->right, array, index);
 }
-

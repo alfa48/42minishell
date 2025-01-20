@@ -12,10 +12,9 @@
 
 #include "minishell.h"
 
-void    mini_exit(t_cmd *cmd)
+void	mini_exit(t_cmd *cmd)
 {
-	(void)cmd;
-	char *str;
+	char	*str;
 
 	ft_putstr_fd("exit\n", 1);
 	if (cmd->arg[1])
@@ -25,28 +24,27 @@ void    mini_exit(t_cmd *cmd)
 		{
 			if (ft_isalpha(*str))
 			{
-			    printf("minishell: exit: %s: numeric argument required\n", cmd->arg[1]);
+				printf("minishell: exit: %s: numeric argument required\n", cmd->arg[1]);
 				exit(0);
 			}
-			str++;
+			str ++;
 		}
 		if (cmd->arg[2])
 			printf("minishell: exit: too many arguments\n");	
 	}
-
-    exit(0);
+	exit(0);
 }
 
-void    mini_env(t_env_var *g_env_list) 
+void	mini_env(t_env_var *g_env_list) 
 {
-	t_env_var *current;
+	t_env_var	*current;
 
-    current = g_env_list;
-    while (current)
-    {
-        printf("%s=%s\n", current->name, current->value);
-        current = current->next;
-    }
+	current = g_env_list;
+	while (current)
+	{
+		printf("%s=%s\n", current->name, current->value);
+		current = current->next;
+	}
 }
 
 void	free_ms(t_cmd *cmd)

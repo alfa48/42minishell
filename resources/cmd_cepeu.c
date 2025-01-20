@@ -19,26 +19,26 @@ bool	check_quotes_balance(const char *arg)
 
 	in_single_quote = false;
 	in_double_quote = false;
-    while (*arg)
+	while (*arg)
 	{
-        if (*arg == '\'' && !in_double_quote)
-            in_single_quote = !in_single_quote;
-        else if (*arg == '"' && !in_single_quote)
-            in_double_quote = !in_double_quote;
-        arg ++;
-    }
-    if (!in_single_quote && !in_double_quote)
+		if (*arg == '\'' && !in_double_quote)
+			in_single_quote = !in_single_quote;
+		else if (*arg == '"' && !in_single_quote)
+			in_double_quote = !in_double_quote;
+		arg ++;
+	}
+	if (!in_single_quote && !in_double_quote)
 		return (true);
-    else
+	else
 	{
 		printf("Error: unclosed quotes\n");
 		return (false);
-    }
+	}
 }
 
 bool	is_valid_var_char(char c)
 {
-    return (ft_isalnum(c) || c == '_');
+	return (ft_isalnum(c) || c == '_');
 }
 
 char	*ft_findenv(char *s, t_env_var *g_env_list)
@@ -62,65 +62,90 @@ char	*ft_findenv(char *s, t_env_var *g_env_list)
 
 static int	process_quote_char(char *init, bool *in_s_q, bool *in_d_q)
 {
-    if (*init == '\'' && !*in_d_q)
-    {
-        *in_s_q = !*in_s_q;
-        return (1);
-    }
-    else if (*init == '"' && !*in_s_q)
-    {
-        *in_d_q = !*in_d_q;
-        return (1);
-    }
-    return (0);
+	if (*init == '\'' && !*in_d_q)
+	{
+		*in_s_q = !*in_s_q;
+		return (1);
+	}
+	else if (*init == '"' && !*in_s_q)
+	{
+		*in_d_q = !*in_d_q;
+		return (1);
+	}
+	return (0);
+}
+
+int	is_first_word_export(char *command)
+{
+	char	first_word[256];
+	int		i;
+
+	i = 0;
+	while (isspace(*command))
+		command++;
+	while (*command && !isspace(*command) && i < 255)
+		first_word[i++] = *command++;
+	first_word[i] = '\0';
+	if (strcmp(first_word, "export") == 0)
+		return (1);
+	return (0);
 }
 
 char	*process_cmd(char *arg)
 {
 	char	*out;
-    bool	in_s_q;
-    bool	in_d_q;
+	char	*tmp;
+	bool	in_s_q;
+	bool	in_d_q;
 
-    in_s_q = false;
-    in_d_q = false;
+	in_s_q = false;
+	in_d_q = false;
 	if (!(out = malloc((ft_strlen(arg) + 2))))
-		return NULL;
-	char *tmp = out;
-    while (*arg)
-    {
-        while (*arg == ' ' && !in_s_q && !in_d_q)
-        {
-            arg ++;
-            if (*arg && *arg != ' ')
+		return (NULL);
+	if (is_first_word_export(arg))
+		return (ft_strdup(arg));
+	tmp = out;
+	while (*arg)
+	{
+		while (*arg == ' ' && !in_s_q && !in_d_q)
+		{
+			arg ++;
+			if (*arg && *arg != ' ')
 			{
 				*out = ' ';
 				out ++;
 			}
-        }
-        if (!process_quote_char(arg, &in_s_q, &in_d_q))
+		}
+		if (!process_quote_char(arg, &in_s_q, &in_d_q))
 		{
-				*out = *arg;
-				out ++;
+			*out = *arg;
+			out ++;
 		}
 		if (*arg)
 			arg ++;
-    }
-     *out = '\0';
+	}
+	*out = '\0';
 	return (tmp);
 }
 
 void	mini_echo(char *arg)
 {
-    int		new_line;
+	int		new_line;
 	char	*init;
 
-    new_line = 0;
-    if (!(init = get_word(arg, &new_line)))
-        return ;
+	new_line = 0;
+	arg = process_cmd(arg);
+	if (!(init = get_word(arg, &new_line)))
+		return ;
 	else
-		write(1, init, ft_strlen(init));
-    if (new_line)
-        write(1, "\n", 1);
+	{
+		while (isspace(*init))
+			init ++;
+		if (init)
+			write(1, init, ft_strlen(init));
+	}
+	if (new_line)
+		write(1, "\n", 1);
 }
 
 void	mini_cd(char *path, t_env_var *g_env_list)
@@ -138,39 +163,30 @@ void	mini_cd(char *path, t_env_var *g_env_list)
 		perror("getcwd");
 }
 
- void	mini_pwd(void)
- {
- 	char    cwd[42000];
+void	mini_pwd(void)
+{
+	char    cwd[42000];
 
- 	if (getcwd(cwd, sizeof(cwd)) != NULL)
- 		printf("%s\n", cwd);
- 	else
- 		perror("pwd");
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+		printf("%s\n", cwd);
+	else
+		perror("pwd");
  }
 
-void execute_in_child(char *path, char **args)
+void	execute_in_child(char *path, char **args)
 {
-	    if (execve(path, args, NULL/*envp*/) == -1) {
-            free(path);
-            exit(EXIT_FAILURE);
-        }
-    free(path);
+	if (execve(path, args, NULL/*envp*/) == -1)
+	{
+		free(path);
+		exit(EXIT_FAILURE);
+	}
+	free(path);
 }
-
-
-// void	mini_pwd(t_env_var **g_env_list)
-// {
-// 	(void) g_env_list;
-// 	char *path = find_executable("pwd", g_env_list);
-//     char *args[] = { "pwd", NULL };
-//     execute_in_child(path, args);
-// }
-
 
 void	mini_export(char **args, t_env_var **g_env_list)
 {
-	int		i;
-	
+	int	i;
+
 	if (!args[1])
 	{
 		only_expor_cmd(*g_env_list);
@@ -185,7 +201,7 @@ void	mini_unset(char **args, t_env_var **g_env_list)
 	t_env_var	*current;
 	t_env_var	*tmp;
 
-	if (args == NULL)
+	if (args[0] == NULL || args[1] == NULL)
 		return ;
 	current = *g_env_list;
 	if (strcmp(args[1], current->name) == 0)

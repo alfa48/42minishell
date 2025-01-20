@@ -12,21 +12,6 @@
 
 #include "minishell.h"
 
-void	free_matrix_safe(char **matrix)
-{
-	int 	i;
-
-	i = -1;
-	if (!matrix)
-		return ;
-	while (matrix[++i] != NULL)
-	{
-		if (matrix[i] != NULL)
-			free(matrix[i]);
-	}
-	free(matrix);
-}
-
 char	*ft_strndup(const char *s, size_t n)
 {
 	size_t		len;
@@ -144,5 +129,10 @@ char	*expanding(char *str, t_cmd *cmd)
 		return (NULL);
 	if (!check_quotes_balance(str))
 		return (NULL);
-	return (expand_string(str, cmd));
+	cmd->line = expand_string(str, cmd);
+	if (cmd->line)
+		cmd->line1 = ft_strdup(cmd->line);
+	else
+		return (NULL);
+	return (cmd->line);
 }

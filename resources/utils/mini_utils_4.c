@@ -46,3 +46,28 @@ void cmd_not_found(char *str)
     ft_putstr_fd(str, 2);
     ft_putstr_fd(": command not found\n", 2);
 }
+
+int is_within_quotes(char *str, char *sep)
+{
+    int in_single_quote = 0;
+    int in_double_quote = 0;
+
+    while (str < sep)
+    {
+        if (*str == '\'' && !in_double_quote)
+            in_single_quote = !in_single_quote;
+        else if (*str == '\"' && !in_single_quote)
+            in_double_quote = !in_double_quote;
+        str++;
+    }
+    return (in_single_quote || in_double_quote);
+}
+
+int is_entirely_within_quotes(char *str)
+{
+    if ((str[0] == '\'' && str[strlen(str) - 1] == '\'') ||
+        (str[0] == '\"' && str[strlen(str) - 1] == '\"'))
+        return (1);
+    return (0);
+}
+
