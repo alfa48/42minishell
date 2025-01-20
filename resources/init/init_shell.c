@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   init_shell.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 10:07:11 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/20 12:08:48 by fjilaias         ###   ########.fr       */
+/*   Created: 2025/01/20 15:06:54 by manandre          #+#    #+#             */
+/*   Updated: 2025/01/20 15:06:56 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -42,16 +43,16 @@ t_node	*init_root_pipe(char *command_line)
 	t_node	*root;
 
 	root = NULL;
-	sep_position = ft_strchr(command_line, '|');  
+	sep_position = ft_strchr(command_line, '|');
 	if (sep_position)
-		return (handle_pipe(command_line));	
+		return (handle_pipe(command_line));
 	return (root);
 }
 
 int	has_redirect(char *command)
 {
 	char	*pos;
-	
+
 	pos = ft_strchr(command, '<');
 	if (pos && *(pos + 1) != '<')
 		return (1);
