@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/20 10:16:47 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/20 12:58:49 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	inorder_traversal(t_node *root)
 {
-	char	*tmp;
+	//char	*tmp;
 
 	if (root == NULL)
 		return ;
@@ -23,10 +23,10 @@ void	inorder_traversal(t_node *root)
 		printf("Operator:%s$\n", (root->operator));
 	else
 	{
-		tmp = root->command;
-		root->command = process_cmd(root->command);
+		//tmp = root->command;
+		//root->command = process_cmd(root->command);		
 		printf("Command:%s$\n", root->command);
-		free(tmp);
+		//free(tmp);
 	}
 	inorder_traversal(root->right);
 }
@@ -61,6 +61,7 @@ int	main(void)
 		if (!is_only_spaces(cmd->line))
 		{
 			add_history(cmd->line);
+			printf("%s\n",cmd->line);
 			if (checks_str(cmd))
 				continue ;
 			cmd->line = expanding(cmd->line, cmd);

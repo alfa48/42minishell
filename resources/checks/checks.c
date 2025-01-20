@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 09:08:22 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/17 16:27:26 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:42:34 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,50 +58,55 @@ int	checks_start_end(char *str)
 	return (0); // Nenhum erro encontrado
 }
 
-int	checks_error_pattern(char *str)
+int checks_error_pattern(char *str)
 {
-	int		i;
-	char		c;
-	char	space;
+    int     i;
+    char        c;
+    int     space;
 
-	i = 0;
-	while (str[i])
-	{
-		space = 0;
-		while (str[i] && str[i] <= 32)
-			i++;
-		if (str[i] && (str[i] == '<' || str[i] == '>' || str[i] == '|' || str[i] == '&'))
-		{
-			c = str[i];
-			while (str[i] && str[++i] <= 32)
-				space = 1;
-			if (!str[i])
-				return (0);
-			if (!space && ((c == '<' && str[i] == '<') || (c == '>' && str[i] == '>')))
-				continue ;
-			if (str[i] == '|')
-				return (1 + 0 * \
-				printf("minishell: syntax error near unexpected token '|'\n"));
-			else if (str[i] == '<' || str[i] == '>' || str[i] == '|')
-				return (1 + 0 * \
-				printf("minishell: syntax error near unexpected token `newline'\n"));
-		}
-		if (str[i])
-			i++;
-	}
-	return (0);
+    i = 0;
+    while (str[i])
+    {
+        space = 0;
+        while (str[i] && str[i] <= 32) // Pula espaços e caracteres de controle
+            i++;
+        if (str[i] && (str[i] == '<' || str[i] == '>' || str[i] == '|' || str[i] == '&'))
+        {
+            if (is_within_quotes(str, str + i)) // Verifica se está dentro de aspas
+            {
+                i ++;  // Move para o próximo caractere
+                continue;
+            }
+            c = str[i];
+            while (str[i] && str[++i] <= 32) // Pula espaços
+                space = 1;
+            if (!str[i])
+                return (0);
+            if (!space && ((c == '<' && str[i] == '<') || (c == '>' && str[i] == '>')))
+                continue ;
+            if (str[i] == '|')
+                return (1 + 0 * \
+                printf("minishell: syntax error near unexpected token '|'\n"));
+            else if (str[i] == '<' || str[i] == '>' || str[i] == '|')
+                return (1 + 0 * \
+                printf("minishell: syntax error near unexpected token `newline'\n"));
+        }
+        if (str[i])
+            i++;
+    }
+    return (0);
 }
-
 
 int	checks_str(t_cmd *cmd)
 {
 	char		*str;
 
-	str = mini_epur_str(cmd->line);
+	str = ft_strdup(cmd->line);
+	printf("%s\n", str);
 	if (!str)
 		return (1);
 	if (checks_start_end(str) || checks_error_pattern(str))
-		return (1);
+	 	return (1);
 	free(str);
 	return (0);
 }

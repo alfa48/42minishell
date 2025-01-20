@@ -40,8 +40,9 @@ void	fork_exec_cmd(t_cmd *cmd, t_node *node)
 	if (pid == 0)
 	{
 		clean_cmd = node->command;
-		// Check for heredoc first
+		printf("fork_exec_cmd\n");
 		heredoc_delim = get_heredoc_delimiter(node->command);
+		printf("HERE - %s\n", heredoc_delim);
 		if (heredoc_delim)
 		{
 			handle_heredoc(heredoc_delim, STDIN_FILENO);
@@ -49,13 +50,17 @@ void	fork_exec_cmd(t_cmd *cmd, t_node *node)
 		}
 		if (heredoc_delim)
 			clean_cmd = remove_heredoc(node->command);
-		path = find_executable(get_first_word(ft_strdup(clean_cmd)), &(cmd->g_env_list));
+		if (is_entirely_within_quotes(clean_cmd))
+			path = find_executable((process_cmd(clean_cmd)), &(cmd->g_env_list));
+		else
+			path = find_executable(get_first_word(ft_strdup(process_cmd(clean_cmd))), &(cmd->g_env_list));
 		args = get_args(clean_cmd);
+		clean_cmd = args[0];
 		if (execve(path, args, cmd->envl) == -1)
 		{
-			cmd_not_found(get_first_word(ft_strdup(clean_cmd)));
+			cmd_not_found(clean_cmd);
 			free(path);
 			exit(1);//exit(errno);
-        	}
+        }
 	}
 }

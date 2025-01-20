@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/14 14:49:14 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/20 11:51:04 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ void	mini_echo(char *arg)
 		return ;
 	else
 	{
-		while (isspace(*init))
+		while (*init && (*init <= 32))
 			init ++;
 		if (init)
 			write(1, init, ft_strlen(init));

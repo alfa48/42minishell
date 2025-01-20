@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 13:22:09 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/16 13:22:10 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:58:13 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,12 @@ char	*get_heredoc_delimiter(char *cmd)
 	char	*start;
 	char	*end;
 
+	
+	if (is_within_quotes(cmd, "<<"))
+		return (NULL);	
 	start = mini_strstr(cmd, "<<");
 	if (!start)
 		return (NULL);
-    
 	start += 2;  // Pula o "<<"
 	while (*start && *start <= 32)
 		start ++;

@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:13:10 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/14 13:10:58 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:46:50 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,21 +47,36 @@ void cmd_not_found(char *str)
     ft_putstr_fd(": command not found\n", 2);
 }
 
-int is_within_quotes(char *str, char *sep)
+int is_within_quotes(char *str, char *needed)
 {
     int in_single_quote = 0;
     int in_double_quote = 0;
+    int i = 0;
+    char *found;
 
-    while (str < sep)
+    if (!str || !needed || strlen(needed) == 0) // Verifica entradas inválidas
+        return 0;
+
+    // Busca a substring `needed` na string `str`
+    found = strstr(str, needed);
+    if (!found) // Se não encontrou a substring, retorna 0
+        return 0;
+
+    // Percorre a string até o início da substring encontrada
+    while (&str[i] != found) // Usa ponteiros para comparar posições
     {
-        if (*str == '\'' && !in_double_quote)
-            in_single_quote = !in_single_quote;
-        else if (*str == '\"' && !in_single_quote)
-            in_double_quote = !in_double_quote;
-        str++;
+        if (str[i] == '\'' && !in_double_quote)
+            in_single_quote = !in_single_quote; // Alterna estado de aspas simples
+        else if (str[i] == '\"' && !in_single_quote)
+            in_double_quote = !in_double_quote; // Alterna estado de aspas duplas
+        i++;
     }
+
+    // Retorna se a posição inicial da substring está dentro de aspas
     return (in_single_quote || in_double_quote);
 }
+
+
 
 int is_entirely_within_quotes(char *str)
 {

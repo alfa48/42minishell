@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:03:32 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/06 15:00:35 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/20 12:17:44 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,9 @@ char	*mini_epur_str(char *str)
 	char	out[42000];
 	int	i;
 
-	if (is_first_word_echo(str))
+	if (is_first_word_echo(str) || is_first_word_echo(&str[1]))
+		return (ft_strdup(str));
+	if (is_entirely_within_quotes(str))
 		return (ft_strdup(str));
 	str = process_cmd(str);
 	i = 0;

@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:24:48 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/14 14:48:08 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/20 12:36:46 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,25 @@ char	**get_args(char *cmd)
 	int		i;
 
 	i = 0;
-	cmd_args = ft_split(cmd, ' ');
-	execve_args = malloc((get_args_size(cmd_args) + 1) * sizeof(char *));
-	//execve_args[0] =  ft_strjoin("/bin/", cmd_args[0]);
-	execve_args[0] =  cmd_args[0];
-	while (++i < get_args_size(cmd_args))
-		execve_args[i] = cmd_args[i];
-	execve_args[i] = NULL;
-	return (execve_args);
+    if (!is_entirely_within_quotes(cmd))
+    {
+        
+        cmd_args = ft_split(cmd, ' ');
+        execve_args = malloc((get_args_size(cmd_args) + 1) * sizeof(char *));
+        //execve_args[0] =  ft_strjoin("/bin/", cmd_args[0]);
+        execve_args[0] =  cmd_args[0];
+        while (++i < get_args_size(cmd_args))
+            execve_args[i] = cmd_args[i];
+        execve_args[i] = NULL;
+    }
+    else
+    {
+        execve_args = malloc(2 * sizeof(char *));
+        execve_args[0] = process_cmd(cmd);
+        execve_args[1] = NULL;
+    }
+    return (execve_args);
+
 }
 
 
