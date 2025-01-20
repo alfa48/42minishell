@@ -6,19 +6,17 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 13:22:09 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/20 14:58:13 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/20 15:29:23 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Função auxiliar para obter o delimitador do heredoc
 char	*get_heredoc_delimiter(char *cmd)
 {
 	char	*start;
 	char	*end;
 
-	
 	if (is_within_quotes(cmd, "<<"))
 		return (NULL);	
 	start = mini_strstr(cmd, "<<");

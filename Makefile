@@ -6,7 +6,7 @@
 #    By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/15 08:24:27 by manandre          #+#    #+#              #
-#    Updated: 2024/10/30 15:59:08 by fjilaias         ###   ########.fr        #
+#    Updated: 2025/01/20 16:22:06 by fjilaias         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ RSC_DIR = ./resources
 SRC = $(RSC_DIR)/main/main.c \
 	$(RSC_DIR)/init/init_vars.c \
 	$(RSC_DIR)/init/init_shell.c \
+	$(RSC_DIR)/init/init_before.c \
 	$(RSC_DIR)/utils/heredoc.c \
 	$(RSC_DIR)/utils/exec_pipe_redirectrs.c \
 	$(RSC_DIR)/utils/mini_utils.c \
@@ -33,8 +34,6 @@ SRC = $(RSC_DIR)/main/main.c \
 	$(RSC_DIR)/parsers/parsers_cmd.c \
 	$(RSC_DIR)/parsers/first_handlers.c\
 	$(RSC_DIR)/expand/mini_expand.c \
-
-
 
 OBJ = $(SRC:.c=.o)
 

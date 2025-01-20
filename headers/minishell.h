@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/07 10:03:12 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/20 16:23:05 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,9 @@ int	has_redirect(char *command);
 t_node	*parse_command(char *command, t_node *root, int side);
 t_node	*parse_command_(char *command, t_node *root, int side);
 
+//resources/init_before.c
+t_cmd	*init_before_init(void);
+
 //resources/signals/cmd_signal.c
 void    handle_signals(void);
 void    sigint_handler(int signum);
@@ -229,5 +232,7 @@ void mini_heredoc(t_cmd *cmd);
 //resources/checks/checks.c
 int checks_error_pattern(char* texto);
 int checks_str(t_cmd *cmd);
+
+
 
 # endif
