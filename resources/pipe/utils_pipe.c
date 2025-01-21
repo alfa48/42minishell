@@ -6,11 +6,19 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:40:56 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/21 11:50:59 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/21 13:11:09 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void error_execve(char *ccmd, char *path, char  **args)
+{
+    		cmd_not_found(ccmd);
+			free(path);
+			free_array(args);
+			exit(1);
+}
 
 // Função que verifica se há redirecionamento de saída
 bool	has_output_redirect(t_redirect **redirects)
