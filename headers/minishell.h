@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/21 08:49:44 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/21 12:12:56 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,11 +121,24 @@ char *remove_redirects(const char *cmd);
 t_redirect **parse_redirects(char *cmd_str);
 void apply_redirects(t_redirect **redirects, int prev_pipe[2], int next_pipe[2]);
 void	execute_pipe(t_node *node, char **env, t_cmd *cmd);
-void	execute_pipe_right(int pos, t_cmd *cmd);
-void	execute_pipe_left(int pos, t_cmd *cmd);
 void execute_pipe_middle(int pos, t_cmd *cmd);
-void execute_pipe_middle_(int pos, t_cmd *cmd);
 void	execute_redirect(t_node *node, char **env,  t_cmd *cmd);
+
+
+//resources/pipe/exec_pipe_middle.c
+void execute_pipe_middle_(int pos, t_cmd *cmd);
+
+//resources/pipe/exec_pipe_right.c
+void	execute_pipe_right(int pos, t_cmd *cmd);
+
+//resources/pipe/exec_pipe_left.c
+void	execute_pipe_left(int pos, t_cmd *cmd);
+
+//resources/pipe/utils.c
+void setup_io(t_redirect **redirects, int *prev_pipe, int *next_pipe, bool is_middle);
+bool	has_output_redirect(t_redirect **redirects);
+bool	has_input_redirect(t_redirect **redirects);
+
 
 void	execute_redirect_(int pos,  t_cmd *cmd);
 void	exec_redout_(int pos, t_cmd *cmd);
@@ -137,9 +150,14 @@ char    **get_args(char *cmd);
 int is_operator(char *str);
 int is_redirect(char *str);
 char    *mini_strcat(char* dest, const char* src);
-void execute_commands(int pos, t_cmd *cmd);
 void	traverse_tree(t_node *root, char **array, int size, t_env_var *g_env_list);
 void	*ft_memset_space(void *ptr, int value, size_t num);
+
+//resources/exec/exec_single_commands.c
+void	execute_single_command(char *cmd_str, t_cmd *cmd);
+
+//resources/exec/exec_commands.c
+void execute_commands(int pos, t_cmd *cmd);
 
 
 //resources/exec/mini_exec.c
@@ -230,12 +248,15 @@ void exec_command_redirect(int pos, t_cmd *cmd);
 //resources/heredoc/util.c
 char *get_heredoc_delimiter(char *cmd);
 char *remove_heredoc(char *cmd);
-void handle_heredoc(char *delimiter, int fd_destino);
+void handle_heredoc(char *delimiter, int fd_destino[2]);
 void mini_heredoc(t_cmd *cmd);
 
 //resources/checks/checks.c
 int checks_error_pattern(char* texto);
 int checks_str(t_cmd *cmd);
+
+//resources/heredoc/utils.c
+void handle_heredoc_left(char *delimiter, int pipe_fd[2]);
 
 
 
