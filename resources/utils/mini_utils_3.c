@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:13:10 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/06 15:28:00 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/21 12:49:36 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ static int	is_it_repeated(char *name, const char *value, t_env_var *current)
 	{
 		if (ft_strcmp(current->name, name) == 0)
 		{
-        		free(current->value);
-				current->value = ft_strdup(value);
+			free(current->value);
+			current->value = ft_strdup(value);
 			if (!current->value)
 				return (0 * printf("Failed to allocate memory\n"));
 			return (42);
 		}
 		current = current->next;
-        }
+	}
 	return (0);
 }
 
@@ -54,10 +54,10 @@ int	set_it(char *name, const char *value, t_env_var **g_env_list)
 
 void	set_or_add_env_var(const char *env_entry, t_env_var **g_env_list)
 {
-	char	name[256];
-	char	*equal_sign;
+	char		name[256];
+	char		*equal_sign;
 	const char	*value;
-	size_t	name_len;
+	size_t		name_len;
 
 	equal_sign = ft_strchr(env_entry, '=');
 	if (equal_sign)
@@ -87,7 +87,7 @@ void	initialize_env_list(t_env_var **g_env_list, char **envp)
 	while (envp[i])
 	{
 		set_or_add_env_var(envp[i], g_env_list);
-		i ++;
+		i++;
 	}
 }
 
@@ -104,12 +104,12 @@ char	*mini_strstr(const char *haystack, const char *needle)
 		n = needle;
 		while (*h && *n && *h == *n)
 		{
-			h ++;
-			n ++;
+			h++;
+			n++;
 		}
 		if (!*n)
 			return ((char *)haystack);
-		haystack ++;
+		haystack++;
 	}
 	return (NULL);
 }

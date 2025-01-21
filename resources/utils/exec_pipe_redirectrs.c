@@ -139,7 +139,7 @@ void	free_redirects(t_redirect **redirects)
 
 	if (!redirects)
 		return ;
-	i = 0;        
+	i = 0;
 	while (redirects[i])
 	{
 		free(redirects[i]->type);

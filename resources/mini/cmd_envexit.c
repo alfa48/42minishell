@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:17:02 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/21 10:23:14 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/21 14:34:07 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	mini_pwd(void)
 
 void	execute_in_child(char *path, char **args)
 {
-	if (execve(path, args, NULL /*envp*/) == -1)
+	if (execve(path, args, NULL) == -1)
 	{
 		free(path);
 		exit(EXIT_FAILURE);

@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 13:22:09 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/20 15:29:23 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/21 11:25:22 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,10 @@ void	handle_heredoc(char *delimiter, int fd_destino)
 	else
 	{
 		// Processo pai
-		close(pipe_heredoc[1]);        
+		close(pipe_heredoc[1]);
 		// Redireciona a leitura do heredoc para o fd_destino
 		dup2(pipe_heredoc[0], fd_destino);
-		close(pipe_heredoc[0]);        
+		close(pipe_heredoc[0]);
 		// Espera o processo do heredoc terminar
 		waitpid(pid, NULL, 0);
 	}

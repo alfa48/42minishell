@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   mini_buit_ins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:25 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/21 11:12:30 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/21 15:47:47 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	mini_echo(char *arg)
+void	mini_echo(char *arg, char *siline)
 {
 	int		new_line;
 	char	*init;
 
 	new_line = 0;
 	arg = process_cmd(arg);
-	init = get_word(arg, &new_line);
+	init = get_word(arg, &new_line, siline);
 	if (!init)
 		return ;
 	else

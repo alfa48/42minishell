@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 09:34:57 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/06 16:26:36 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/21 15:40:59 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	calc_tree_size(t_node *root)
 	return (1 + calc_tree_size(root->left) + calc_tree_size(root->right));
 }
 
-void    init_args_ofen(t_cmd  *cmd)
+void	init_args_ofen(t_cmd *cmd)
 {
 	cmd->root = NULL;
 	cmd->line = NULL;
@@ -31,7 +31,7 @@ void    init_args_ofen(t_cmd  *cmd)
 	cmd->index = 0;
 }
 
-void    init_args(t_cmd  *cmd, char **environ)
+void	init_args(t_cmd *cmd, char **environ)
 {
 	cmd->envl = NULL;
 	cmd->g_env_list = NULL;
@@ -41,20 +41,18 @@ void    init_args(t_cmd  *cmd, char **environ)
 	initialize_env_list(&(cmd->g_env_list), environ);
 	if (!cmd->g_env_list)
 	{
-		//geral_free(cmd);
 	}
 	cmd->g_env_list->counter_exp = 0;
 }
 
-void    init_args_next(t_cmd  *cmd)
+void	init_args_next(t_cmd *cmd)
 {
 	cmd->size = calc_tree_size(cmd->root);
 	cmd->array = malloc((cmd->size + 2) * sizeof(char *));
-	// Inicializa o array com NULL
-	cmd->array[0] = NULL; // Primeiro elemento é NULL
-	cmd->index = 1;       // Começa a preencher a partir do segundo elemento
+	cmd->array[0] = NULL;
+	cmd->index = 1;
 	fill_array_cmd(cmd->root, cmd->array, &(cmd->index));
-	cmd->array[cmd->index] = NULL; // Último elemento é NULL
+	cmd->array[cmd->index] = NULL;
 }
 
 void	fill_array_cmd(t_node *root, char **array, int *index)

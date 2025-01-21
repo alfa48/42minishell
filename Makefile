@@ -19,6 +19,7 @@ RSC_DIR = ./resources
 SRC = $(RSC_DIR)/main/main.c \
 	$(RSC_DIR)/init/init_vars.c \
 	$(RSC_DIR)/init/init_shell.c \
+	$(RSC_DIR)/init/init_shell_utils.c \
 	$(RSC_DIR)/init/init_before.c \
 	$(RSC_DIR)/utils/heredoc.c \
 	$(RSC_DIR)/utils/exec_pipe_redirectrs.c \
@@ -27,6 +28,7 @@ SRC = $(RSC_DIR)/main/main.c \
 	$(RSC_DIR)/utils/mini_utils_3.c \
 	$(RSC_DIR)/utils/mini_utils_4.c \
 	$(RSC_DIR)/utils/mini_utils_5.c \
+	$(RSC_DIR)/utils/mini_utils_6.c \
 	$(RSC_DIR)/mini/cmd_envexit.c \
 	$(RSC_DIR)/mini/mini_buit_ins.c \
 	$(RSC_DIR)/mini/mini_execv.c \
@@ -40,6 +42,7 @@ SRC = $(RSC_DIR)/main/main.c \
 	$(RSC_DIR)/parsers/parsers_cmd.c \
 	$(RSC_DIR)/parsers/first_handlers.c\
 	$(RSC_DIR)/expand/mini_expand.c \
+	$(RSC_DIR)/expand/expand_utils.c \
 	$(RSC_DIR)/exec/mini_exec.c
 
 OBJ = $(SRC:.c=.o)

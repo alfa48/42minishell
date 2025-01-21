@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:28:30 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/06 16:23:12 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/21 15:40:24 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,9 @@ typedef	struct s_cmd
     int		pid_count;
 	int	pipefd[2];//pipe de entrada
 	int prev_pipe[2]; // Pipe anterio
-
 	int status_cmd;
+	bool in_s_q;
+    bool in_d_q;
 	t_env_var 	*val_only;
 	t_env_var	*g_env_list;
 
