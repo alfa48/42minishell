@@ -18,11 +18,11 @@ char	*get_heredoc_delimiter(char *cmd)
 	char	*end;
 
 	if (is_within_quotes(cmd, "<<"))
-		return (NULL);	
+		return (NULL);
 	start = mini_strstr(cmd, "<<");
 	if (!start)
 		return (NULL);
-	start += 2;  // Pula o "<<"
+	start += 2;
 	while (*start && *start <= 32)
 		start ++;
 
@@ -32,7 +32,7 @@ char	*get_heredoc_delimiter(char *cmd)
 	return (ft_substr(start, 0, end - start));
 }
 
-// Função para remover o heredoc do comando
+// Function to remove heredoc from the command
 char	*remove_heredoc(char *cmd)
 {
 	char	*heredoc_pos;
@@ -42,11 +42,9 @@ char	*remove_heredoc(char *cmd)
 	if (!heredoc_pos)
 		return (ft_strdup(cmd));
 
-	// Aloca espaço para o comando sem o heredoc
 	clean_cmd = malloc(sizeof(char) * (heredoc_pos - cmd + 1));
 	if (!clean_cmd)
 		return (NULL);
-	// Copia apenas a parte antes do heredoc
 	ft_strlcpy(clean_cmd, cmd, heredoc_pos - cmd + 1);
 
 	return (clean_cmd);
@@ -88,7 +86,7 @@ void	handle_heredoc(char *delimiter, int fd_destino)
 			buffer[bytes_read] = '\0';
 			// Remove o \n do final se existir
 			if (buffer[bytes_read - 1] == '\n')
-				buffer[bytes_read - 1] = '\0';            
+				buffer[bytes_read - 1] = '\0';
 			// Verifica se é o delimitador
 			if (ft_strcmp(buffer, delimiter) == 0)
 				break ;

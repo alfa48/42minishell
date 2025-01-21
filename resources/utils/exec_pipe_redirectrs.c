@@ -644,6 +644,87 @@ void setup_io(t_redirect **redirects, int *prev_pipe, int *next_pipe, bool is_mi
         dup2(next_pipe[1], STDOUT_FILENO);
 }
 
+
+void handle_heredoc_left(char *delimiter, int pipe_fd[2])
+{
+    pid_t pid;
+    char *heredoc_content = NULL;
+    size_t heredoc_len = 0;
+    char buffer[1024];
+    ssize_t bytes_read;
+
+    pid = fork();
+    if (pid == -1)
+    {
+        perror("heredoc fork failed");
+        return;
+    }
+
+    if (pid == 0)
+    {
+        // No filho: Fecha o lado de leitura do pipe
+        close(pipe_fd[0]);
+
+        while (1)
+        {
+            ft_putstr_fd("> ", 1);
+            bytes_read = read(STDIN_FILENO, buffer, 1023);
+            if (bytes_read <= 0)
+                break;
+
+            buffer[bytes_read] = '\0';
+
+            // Remove o '\n' do final para comparar com o delimitador
+            if (buffer[bytes_read - 1] == '\n')
+                buffer[bytes_read - 1] = '\0';
+
+            if (ft_strcmp(buffer, delimiter) == 0) // Se for o delimitador, encerra
+                break;
+
+            // Adiciona o conteúdo lido ao conteúdo acumulado
+            heredoc_content = realloc(heredoc_content, heredoc_len + bytes_read);
+            if (!heredoc_content)
+            {
+                perror("heredoc realloc failed");
+                exit(EXIT_FAILURE);
+            }
+            ft_memcpy(heredoc_content + heredoc_len, buffer, bytes_read - 1); // Sem o '\0'
+            heredoc_content[heredoc_len + bytes_read - 1] = '\n';             // Adiciona o '\n'
+            heredoc_len += bytes_read; // Atualiza o tamanho total
+        }
+
+        // Escreve todo o conteúdo acumulado no pipe de uma vez
+        if (heredoc_content)
+        {
+            if (write(pipe_fd[1], heredoc_content, heredoc_len) == -1)
+                perror("heredoc write failed");
+            free(heredoc_content);
+        }
+
+        close(pipe_fd[1]); // Fecha o lado de escrita do pipe
+        exit(EXIT_SUCCESS);
+    }
+    else
+    {
+        // No pai: Fecha o lado de escrita do pipe
+        close(pipe_fd[1]);
+
+        // Configura o pipe para ser o novo stdin
+        if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
+        {
+            perror("dup2 failed");
+            close(pipe_fd[0]);
+            return;
+        }
+        close(pipe_fd[0]); // Fecha o lado de leitura original após duplicar
+
+        // Aguarda o término do processo filho
+        waitpid(pid, NULL, 0);
+    }
+}
+
+
+
 void execute_pipe_right(int pos, t_cmd *cmd) {
     int pid;
     char *path;
@@ -662,13 +743,14 @@ void execute_pipe_right(int pos, t_cmd *cmd) {
         // Check for heredoc first
         heredoc_delim = get_heredoc_delimiter(cmd->array[pos]);
         if (heredoc_delim) {
-            handle_heredoc(heredoc_delim, STDIN_FILENO);
+            // Se temos um heredoc à esquerda do pipe, usamos a nova função
+            handle_heredoc_left(heredoc_delim, cmd->pipefd);
             free(heredoc_delim);
+        } else {
+            // Parse redirects and setup IO como antes
+            redirects = parse_redirects(cmd->array[pos]);
+            setup_io(redirects, NULL, cmd->pipefd, false);
         }
-
-        // Parse redirects and setup IO
-        redirects = parse_redirects(cmd->array[pos]);
-        setup_io(redirects, NULL, cmd->pipefd, false);
 
         // Close unused pipe ends
         close(cmd->pipefd[0]);

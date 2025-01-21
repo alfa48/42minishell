@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/20 16:23:05 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/21 08:49:44 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@
 
 # define FILE_MODE_WRITE O_WRONLY | O_CREAT | O_TRUNC
 # define FILE_MODE_READ O_RDONLY
-# define MAX_REDIRECTS 6
+# define MAX_REDIRECTS 10
+# define PIPE '|'
 
 //function_one.c
 char	*ft_concat_char(char *str, char c);
@@ -136,10 +137,13 @@ char    **get_args(char *cmd);
 int is_operator(char *str);
 int is_redirect(char *str);
 char    *mini_strcat(char* dest, const char* src);
-void    exec(t_cmd *cmd);
 void execute_commands(int pos, t_cmd *cmd);
 void	traverse_tree(t_node *root, char **array, int size, t_env_var *g_env_list);
 void	*ft_memset_space(void *ptr, int value, size_t num);
+
+
+//resources/exec/mini_exec.c
+void    exec(t_cmd *cmd);
 
 //resources/utils/mini_utils_2.c
 void	free_tree(t_node *root);
