@@ -6,7 +6,11 @@
 #    By: manandre <manandre@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/15 08:24:27 by manandre          #+#    #+#              #
+#
 #    Updated: 2025/01/21 08:35:21 by manandre         ###   ########.fr        #
+#
+#    Updated: 2025/01/21 09:28:26 by fjilaias         ###   ########.fr        #
+#									       #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +26,9 @@ SRC = $(RSC_DIR)/main/main.c \
 	$(RSC_DIR)/utils/mini_utils_2.c \
 	$(RSC_DIR)/utils/mini_utils_3.c \
 	$(RSC_DIR)/utils/mini_utils_4.c \
+	$(RSC_DIR)/utils/mini_utils_5.c \
 	$(RSC_DIR)/mini/cmd_envexit.c \
+	$(RSC_DIR)/mini/mini_buit_ins.c \
 	$(RSC_DIR)/mini/mini_execv.c \
 	$(RSC_DIR)/signals/cmd_signal.c \
 	$(RSC_DIR)/path/path_utils.c \
@@ -51,14 +57,14 @@ $(NAME) : $(OBJ) $(LIBFT_A)
 %.o: %.c
 	$(CCFLAGS) -I$(LIBFT_DIR) -Iheaders -c $< -o $@
 
-clean:	
+clean:
 	rm -f $(OBJ)
 	$(MAKE) clean -C $(LIBFT_DIR)
 
 fclean: clean
 	rm -f $(NAME)
 	$(MAKE) fclean -C $(LIBFT_DIR)
-	
+
 $(LIBFT_A):
 		$(MAKE) -C $(LIBFT_DIR)
 

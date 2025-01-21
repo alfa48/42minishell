@@ -6,107 +6,125 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 09:08:22 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/20 14:42:34 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/21 10:41:34 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	checks_start_end(char *str)
+static int	check_last(char *str, int size, int *rs, char *patterns)
 {
 	int	i;
 	int	j;
-	int	rs;
-	int	size;
 
-	rs = 0;
-	if (!str || !*str)
-		return (0);
-	char patterns[] = {'<', '>', '|'};
-	size = sizeof(patterns) / sizeof(patterns[0]);
-	i = 0;
-	// Verifica o primeiro caractere
-	while (i < size)
-	{
-		// "" ->34; ' ->39
-		if (str[0] == patterns[i])
-		{
-			rs = 1;
-			break;
-		}
-		i ++;
-	}
-	// Encontrar o ultimo caractere não nulo
 	i = 0;
 	while (str[i])
-		i ++;
-	i--; // Agora i aponta para o último caractere
-
-    // Verifica o último caractere
+		i++;
+	i--;
 	j = 0;
 	while (j < size)
 	{
 		if (str[i] == patterns[j])
-			rs = 1;
-		j ++;
+			*rs = 1;
+		j++;
 	}
-	if (rs)
+	if (*rs)
 	{
 		printf("minishell: syntax error near unexpected token `newline'\n");
 		return (1);
 	}
-	return (0); // Nenhum erro encontrado
+	return (0);
 }
 
-int checks_error_pattern(char *str)
+static int	checks_start_end(char *str)
 {
-    int     i;
-    char        c;
-    int     space;
+	int		i;
+	int		rs;
+	int		size;
+	char	patterns[3];
 
-    i = 0;
-    while (str[i])
-    {
-        space = 0;
-        while (str[i] && str[i] <= 32) // Pula espaços e caracteres de controle
-            i++;
-        if (str[i] && (str[i] == '<' || str[i] == '>' || str[i] == '|' || str[i] == '&'))
-        {
-            if (is_within_quotes(str, str + i)) // Verifica se está dentro de aspas
-            {
-                i ++;  // Move para o próximo caractere
-                continue;
-            }
-            c = str[i];
-            while (str[i] && str[++i] <= 32) // Pula espaços
-                space = 1;
-            if (!str[i])
-                return (0);
-            if (!space && ((c == '<' && str[i] == '<') || (c == '>' && str[i] == '>')))
-                continue ;
-            if (str[i] == '|')
-                return (1 + 0 * \
-                printf("minishell: syntax error near unexpected token '|'\n"));
-            else if (str[i] == '<' || str[i] == '>' || str[i] == '|')
-                return (1 + 0 * \
-                printf("minishell: syntax error near unexpected token `newline'\n"));
-        }
-        if (str[i])
-            i++;
-    }
-    return (0);
+	if (!str || !*str)
+		return (0);
+	i = 0;
+	rs = 0;
+	patterns[0] = '<';
+	patterns[1] = '>';
+	patterns[2] = '|';
+	size = sizeof(patterns) / sizeof(patterns[0]);
+	while (i < size)
+	{
+		if (str[0] == patterns[i])
+		{
+			rs = 1;
+			break ;
+		}
+		i++;
+	}
+	if (check_last(str, size, &rs, patterns))
+		return (1);
+	return (0);
+}
+
+static int	handle_token_check(char *str, int *i, int *space, char *sms_error)
+{
+	char	c;
+
+	if (str[*i] && (str[*i] == '<' || str[*i] == '>' || str[*i] == '|'
+			|| str[*i] == '&'))
+	{
+		if (is_within_quotes(str, str + *i))
+		{
+			(*i)++;
+			return (0);
+		}
+		c = str[*i];
+		while (str[++(*i)] && str[*i] <= 32)
+			*(space) = 1;
+		if (!str[*i])
+			return (0);
+		if (!*space && ((c == '<' && str[*i] == '<') || (c == '>'
+					&& str[*i] == '>')))
+			return (0);
+		if (str[*i] == '|')
+			return (1 + 0 * printf("%s '|'\n", sms_error));
+		else if (str[*i] == '<' || str[*i] == '>' || str[*i] == '|')
+			return (1 + 0 * printf("%s `newline'\n", sms_error));
+	}
+	return (0);
+}
+
+int	checks_error_pattern(char *str)
+{
+	char	*sms;
+	int		i;
+	int		space;
+
+	i = 0;
+	space = 0;
+	sms = "minishell: syntax error near unexpected token";
+	while (str[i])
+	{
+		while (str[i] && str[i] <= 32)
+			i++;
+		if (handle_token_check(str, &i, &space, sms))
+		{
+			return (1);
+		}
+		if (str[i])
+			i++;
+	}
+	return (0);
 }
 
 int	checks_str(t_cmd *cmd)
 {
-	char		*str;
+	char	*str;
 
 	str = ft_strdup(cmd->line);
-	printf("%s\n", str);
 	if (!str)
 		return (1);
 	if (checks_start_end(str) || checks_error_pattern(str))
-	 	return (1);
+		return (1);
 	free(str);
 	return (0);
 }

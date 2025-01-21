@@ -6,22 +6,11 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:03:32 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/20 12:17:44 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/21 10:48:11 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_tree(t_node *root)
-{
-	if (root == NULL)
-		return ;
-	free_tree(root->left);
-	if (root->command)
-		free(root->command);
-	free_tree(root->right);
-	free(root);
-}
 
 t_node	*add_node(t_node *root, t_node *new, int side)
 {
@@ -115,14 +104,5 @@ int	is_special_char(char c)
             return (1);
 		i ++;
 	}
-	return (0);
-}
-
-int	is_echo_printable(char c)
-{
-	if (is_special_char(c))
-		return (1);
-	if (ft_isprint(c))
-		return (1);
 	return (0);
 }
