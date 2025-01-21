@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:40:56 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/21 13:11:09 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/21 15:41:30 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,4 +86,19 @@ void setup_io(t_redirect **redirects, int *prev_pipe, int *next_pipe, bool is_mi
 
     if (!has_output_redirect(redirects) && next_pipe && next_pipe[1] != -1)
         dup2(next_pipe[1], STDOUT_FILENO);
+}
+void execute_with_args(char *clean_cmd, t_redirect **redirects, t_cmd *cmd)
+{
+    char *path;
+    char **args;
+
+    path = find_executable(get_first_word(ft_strdup(clean_cmd)), &(cmd->g_env_list));
+    args = get_args(clean_cmd);
+
+    free(clean_cmd);
+    if (redirects)
+        free_redirects(redirects);
+
+    if (execve(path, args, cmd->envl) == -1)
+        error_execve(args[0], path, args);
 }

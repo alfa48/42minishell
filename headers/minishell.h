@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/21 14:48:28 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/21 15:42:44 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,7 @@ void setup_io(t_redirect **redirects, int *prev_pipe, int *next_pipe, bool is_mi
 bool	has_output_redirect(t_redirect **redirects);
 bool	has_input_redirect(t_redirect **redirects);
 void error_execve(char *ccmd, char *path, char  **args);
+void execute_with_args(char *clean_cmd, t_redirect **redirects, t_cmd *cmd);
 
 
 void	execute_redirect_(int pos,  t_cmd *cmd);
