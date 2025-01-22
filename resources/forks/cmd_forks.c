@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:18:01 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/21 11:48:48 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/22 10:17:10 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	wait_forks(t_cmd *cmd)
 	}
 }
 
-char	*fork_exec_heredoc(char *cmd)
+static char	*aux_exec_heredoc(char *cmd)
 {
 	char	*heredoc_delim;
 
@@ -61,20 +61,14 @@ void	fork_exec_cmd(t_cmd *cmd, t_node *node)
 	cmd->pid_count++;
 	if (pid == 0)
 	{
-		ccmd = node->command;
-		ccmd = fork_exec_heredoc(ccmd);
+		ccmd = aux_exec_heredoc(node->command);
 		if (is_entirely_within_quotes(ccmd))
 			path = find_executable((process_cmd(ccmd)), &(cmd->g_env_list));
 		else
 			path = find_executable(get_first_word(process_cmd(ccmd)),
 					&(cmd->g_env_list));
 		args = get_args(ccmd);
-		ccmd = args[0];
 		if (execve(path, args, cmd->envl) == -1)
-		{
-			cmd_not_found(ccmd);
-			free(path);
-			exit(1);
-		}
+			error_execve(args[0], path, args);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 15:57:35 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/13 15:57:36 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/22 10:26:01 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static int	is_redirect_char(const char *str, int *len)
 {
 	if (!str || !*str)
 		return (0);
-
 	if (str[0] == '<' || str[0] == '>')
 	{
 		*len = (str[1] == str[0]) ? 2 : 1;
@@ -27,14 +26,13 @@ static int	is_redirect_char(const char *str, int *len)
 
 static char	*extract_token(const char **str)
 {
-	int	redirect_len;
+	int			redirect_len;
 	const char	*start;
 	const char	*end;
-	char	*token;
+	char		*token;
 
 	if (!str || !*str || !**str)
 		return (NULL);
-
 	// Skip whitespace
 	while (**str && (**str == ' ' || **str == '\t'))
 		(*str)++;
@@ -51,25 +49,24 @@ static char	*extract_token(const char **str)
 	}
 	// If not redirect, read until we find a redirect
 	while (**str && !is_redirect_char(*str, &redirect_len))
-		(*str) ++;
+		(*str)++;
 	if (start == *str)
 		return (NULL);
-    // Remove trailing spaces
+	// Remove trailing spaces
 	end = *str;
-	while (end > start && (*(end-1) == ' ' || *(end-1) == '\t'))
-		end --;
-    
+	while (end > start && (*(end - 1) == ' ' || *(end - 1) == '\t'))
+		end--;
 	return (ft_strndup(start, end - start));
 }
 
 char	**ft_split_redirect(const char *str)
 {
-	int		i;
-	int		token_count;
+	int			i;
+	int			token_count;
 	const char	*counter;
 	const char	*parser;
-	char	*temp_token;
-	char	**result;
+	char		*temp_token;
+	char		**result;
 
 	if (!str)
 		return (NULL);
@@ -78,7 +75,7 @@ char	**ft_split_redirect(const char *str)
 	token_count = 0;
 	while ((temp_token = extract_token(&counter)))
 	{
-		token_count ++;
+		token_count++;
 		free(temp_token);
 	}
 	// Allocate array (+2 for NULL at start and end)
@@ -87,23 +84,24 @@ char	**ft_split_redirect(const char *str)
 		return (NULL);
 	// Second pass: fill array
 	parser = str;
-	i = 1;  // Start at 1 to leave NULL at index 0
+	i = 1; // Start at 1 to leave NULL at index 0
 	while ((temp_token = extract_token(&parser)) && i <= token_count)
 		result[i++] = temp_token;
-	result[i] = NULL;  // Ensure NULL termination
+	result[i] = NULL; // Ensure NULL termination
 	return (result);
 }
 
 void	exec_command_redirect(int pos, t_cmd *cmd)
 {
-	(void)  cmd;
-	(void)  pos;
 	int	i;
+
+	(void)cmd;
+	(void)pos;
 	// TODO: Implement pipeline execution here.
 	i = 1;
 	while (cmd->array_redirect[i])
 	{
 		execute_redirect_(i, cmd);
-		i ++;
+		i++;
 	}
 }

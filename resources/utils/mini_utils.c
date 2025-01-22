@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:24:48 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/21 08:36:44 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/22 09:44:20 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char	**get_args(char *cmd)
 	i = 0;
     if (!is_entirely_within_quotes(cmd))
     {
-        
+
         cmd_args = ft_split(cmd, ' ');
         execve_args = malloc((get_args_size(cmd_args) + 1) * sizeof(char *));
         //execve_args[0] =  ft_strjoin("/bin/", cmd_args[0]);
@@ -111,69 +111,6 @@ int is_redirect(char *str)
     return 0;
 }
 
-void execute_commands(int pos, t_cmd *cmd)
-{
-    if (!cmd->array[pos])
-		return ;
-    execute_commands(pos - 1, cmd);
-
-      if (pos > 0 && cmd->array[pos - 1])
-          if (is_redirect(cmd->array[pos - 1]))
-              return ;
-    // printf("DEBUG: Analisando token '%s'\n", cmd->array[pos]);
-
-    // Se é um comando (não um operador)
-    if (cmd->array[pos] && !is_operator(cmd->array[pos]))
-    {
-        // Verifica o próximo token no array
-        if (pos < cmd->size && cmd->array[pos + 1])
-        {
-            // Se o próximo(right) token é um pipe
-            if (ft_strcmp(cmd->array[pos + 1], "|") == 0)
-            {
-                if (pos > 0 && cmd->array[pos - 1])
-                    if (ft_strcmp(cmd->array[pos - 1], "|") == 0)// Se o próximo(right) e o anterior  tokens sao  pipes
-                    {
-                        printf("DEBUG: LOGICA DO PIPE MIDDLE para '| %s |'\n", cmd->array[pos]);
-
-                        execute_pipe_middle_(pos, cmd);
-                        return ;
-                    }
-                printf("DEBUG: LOGICA DO PIPE RIGHT para '%s |'\n", cmd->array[pos]);
-               // Criamos o primeiro pipe
-                if (pipe(cmd->pipefd) == -1)
-                {
-                    perror("pipe failed");
-                    return;
-                }
-                execute_pipe_right(pos, cmd);
-                return ;
-            }
-            printf("DEBUG: ANTES DO %s É NULL\n", cmd->array[pos]);
-        }
-        else if (pos > 0 && cmd->array[pos - 1])// Se o anterior existir
-        {
-            if (ft_strcmp(cmd->array[pos - 1], "|") == 0)// Se o anterior(left) token é um pipe
-            {
-                printf("DEBUG: LOGICA DO PIPE LEFT para '| %s'\n", cmd->array[pos]);
-                execute_pipe_left(pos, cmd);
-                 // Fecha pipes após último comando
-                close(cmd->pipefd[0]);
-                close(cmd->pipefd[1]);
-                return ;
-            }
-            return ;
-        }
-        //fork_exec_cmd_(cmd, cmd->array[pos]);
-        return ;
-    }
-    else if (cmd->array[pos])
-    {
-        printf("DEBUG: É UM OPERADOR(%s) NAO FACA NADA\n", cmd->array[pos]);
-		return ;
-    }
-}
-
 // Função auxiliar para verificar precedência de redirecionamentos
 int get_redirect_priority(char *type) {
     if (ft_strcmp(type, "<") == 0) return 1;  // Input tem prioridade mais alta
@@ -200,4 +137,3 @@ void sort_redirects(t_redirect **redirects) {
         }
     }
 }
-
