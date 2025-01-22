@@ -21,7 +21,6 @@ SRC = $(RSC_DIR)/main/main.c \
 	$(RSC_DIR)/init/init_shell.c \
 	$(RSC_DIR)/init/init_shell_utils.c \
 	$(RSC_DIR)/init/init_before.c \
-	$(RSC_DIR)/utils/heredoc.c \
 	$(RSC_DIR)/utils/exec_pipe_redirectrs.c \
 	$(RSC_DIR)/utils/mini_utils.c \
 	$(RSC_DIR)/utils/mini_utils_2.c \
@@ -37,6 +36,8 @@ SRC = $(RSC_DIR)/main/main.c \
 	$(RSC_DIR)/forks/cmd_forks.c \
 	$(RSC_DIR)/rediret/redirect.c \
 	$(RSC_DIR)/heredoc/utils.c \
+	$(RSC_DIR)/heredoc/utils_2.c \
+	$(RSC_DIR)/heredoc/utils_3.c \
 	$(RSC_DIR)/checks/checks.c \
 	$(RSC_DIR)/checks/cmd_cepeu.c \
 	$(RSC_DIR)/parsers/parsers_cmd.c \

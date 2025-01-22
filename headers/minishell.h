@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/22 12:00:52 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/22 15:25:34 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,8 +193,7 @@ void	*ft_memset_space(void *ptr, int value, size_t num);
 void	execute_single_command(char *cmd_str, t_cmd *cmd);
 
 //resources/exec/exec_commands.c
-void execute_commands(int pos, t_cmd *cmd);
-
+void	execute_commands(int pos, t_cmd *cmd);
 
 // resources/utils/mini_utils_4.c
 char			*get_env_var(const char *name, t_env_var *env_list);
