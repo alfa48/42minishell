@@ -1,11 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_pipe_redirectrs.c                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/22 14:37:29 by fjilaias          #+#    #+#             */
+/*   Updated: 2025/01/22 14:37:39 by fjilaias         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
 void	free_array(char **array)
 {
 	int	i;
 
 	if (!array)
 		return ;
-    
+
 	i = 0;
 	while (array[i])
 	{
@@ -20,10 +33,6 @@ static int	is_redirect_char(char c)
 {
 	return (c == '<' || c == '>');
 }
-
-
-
-
 
 // Função que remove redirecionamentos do comando
 char	*remove_redirects(const char *cmd)
@@ -301,13 +310,12 @@ void apply_redirections(t_redirect **redirects, int read_fd, int write_fd)
 
         redirects++;
     }
-    
     // Apply pipe redirections if no file redirections override them
     if (!has_input_redirect(redirects_head) && read_fd != -1)
         dup2(read_fd, STDIN_FILENO);
     if (!has_output_redirect(redirects_head) && write_fd != -1)
         dup2(write_fd, STDOUT_FILENO);
-        
+
     // Free resources
     if (redirects_head)
         free_redirects(redirects_head);
@@ -381,6 +389,13 @@ void	exec_redout_append(t_node *node, char **env, t_cmd *cmd)
 	}
 	// Processo pai: espera o término do processo filho
 	waitpid(pid, NULL, 0);
+}
+
+
+void	execute_tree(t_node *root, t_cmd *cmd)
+{
+	(void)root;
+	(void)cmd;
 }
 /*
 void	execute_redirect(t_node *node, char **env,  t_cmd *cmd)

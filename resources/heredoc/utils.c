@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 13:22:09 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/22 10:42:59 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:43:58 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ char	*get_heredoc_delimiter(char *cmd)
 	return (ft_substr(start, 0, end - start));
 }
 
-// Function to remove heredoc from the command
 char	*remove_heredoc(char *cmd)
 {
 	char	*heredoc_pos;
@@ -50,7 +49,6 @@ char	*remove_heredoc(char *cmd)
 	return (clean_cmd);
 }
 
-// Função principal para lidar com heredoc no meio do pipe
 void	handle_heredoc(char *delimiter, int fd_destino[2])
 {
 	int	pipe_heredoc[2];
