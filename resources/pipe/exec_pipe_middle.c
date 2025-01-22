@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:30:30 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/22 11:23:24 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/22 11:59:04 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,5 @@ void	execute_pipe_middle_(int pos, t_cmd *cmd)
 		execute_clean_command(cmd->array[pos], redirects, cmd);
 	}
 	else
-	{
-		close(cmd->prev_pipe[0]);
-		close(cmd->prev_pipe[1]);
-	}
+		mini_close_fd(cmd->prev_pipe[0], cmd->prev_pipe[1]);
 }

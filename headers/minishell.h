@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/21 16:15:07 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/22 12:00:52 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,6 @@ void	execute_pipe(t_node *node, char **env, t_cmd *cmd);
 void execute_pipe_middle(int pos, t_cmd *cmd);
 void	execute_redirect(t_node *node, char **env,  t_cmd *cmd);
 
-
 //resources/pipe/exec_pipe_middle.c
 void execute_pipe_middle_(int pos, t_cmd *cmd);
 
@@ -167,6 +166,7 @@ void	execute_pipe_right(int pos, t_cmd *cmd);
 
 //resources/pipe/exec_pipe_left.c
 void	execute_pipe_left(int pos, t_cmd *cmd);
+void	mini_close_fd(int fd_0, int fd_1);
 
 //resources/pipe/utils.c
 void setup_io(t_redirect **redirects, int *prev_pipe, int *next_pipe, bool is_middle);

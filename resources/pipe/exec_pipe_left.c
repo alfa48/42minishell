@@ -6,11 +6,17 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:35:09 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/22 11:22:54 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/22 11:59:11 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	mini_close_fd(int fd_0, int fd_1)
+{
+	close(fd_0);
+	close(fd_1);
+}
 
 static void	handle_redirects(t_redirect **redirects)
 {

@@ -6,21 +6,12 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:40:56 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/22 11:30:48 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/22 11:52:31 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	error_execve(char *ccmd, char *path, char **args)
-{
-	cmd_not_found(ccmd);
-	free(path);
-	free_array(args);
-	exit(1);
-}
-
-// Função que verifica se há redirecionamento de saída
 bool	has_output_redirect(t_redirect **redirects)
 {
 	int	i;
@@ -37,6 +28,7 @@ bool	has_output_redirect(t_redirect **redirects)
 	}
 	return (false);
 }
+
 // Função que verifica se há redirecionamento de entrada
 bool	has_input_redirect(t_redirect **redirects)
 {
@@ -54,58 +46,50 @@ bool	has_input_redirect(t_redirect **redirects)
 	return (false);
 }
 
-// Helper function to handle both pipes and redirects
-void	setup_io(t_redirect **redirects, int *prev_pipe, int *next_pipe,
-		bool is_middle)
+void	apply_file_redirections(t_redirect **r)
 {
 	int	i;
 
-	(void)is_middle;
 	i = 0;
-	if (redirects)
+	while (r[i++])
 	{
-		while (redirects[i++])
+		if (ft_strcmp(r[i]->type, "<") == 0)
 		{
-			if (ft_strcmp(redirects[i]->type, "<") == 0)
-			{
-				redirects[i]->fd = open(redirects[i]->file, O_RDONLY);
-				if (redirects[i]->fd != -1)
-					dup2(redirects[i]->fd, STDIN_FILENO);
-			}
-			else if (ft_strcmp(redirects[i]->type, ">") == 0)
-			{
-				redirects[i]->fd = open(redirects[i]->file,
-						O_WRONLY | O_CREAT | O_TRUNC, 0644);
-				if (redirects[i]->fd != -1)
-					dup2(redirects[i]->fd, STDOUT_FILENO);
-			}
-			else if (ft_strcmp(redirects[i]->type, ">>") == 0)
-			{
-				redirects[i]->fd = open(redirects[i]->file,
-						O_WRONLY | O_CREAT | O_APPEND, 0644);
-				if (redirects[i]->fd != -1)
-					dup2(redirects[i]->fd, STDOUT_FILENO);
-			}
+			r[i]->fd = open(r[i]->file, O_RDONLY);
+			if (r[i]->fd != -1)
+				dup2(r[i]->fd, STDIN_FILENO);
 		}
-		printf("DEBUG: %i\n", i);
+		else if (ft_strcmp(r[i]->type, ">") == 0)
+		{
+			r[i]->fd = open(r[i]->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (r[i]->fd != -1)
+				dup2(r[i]->fd, STDOUT_FILENO);
+		}
+		else if (ft_strcmp(r[i]->type, ">>") == 0)
+		{
+			r[i]->fd = open(r[i]->file,
+					O_WRONLY | O_CREAT | O_APPEND, 0644);
+			if (r[i]->fd != -1)
+				dup2(r[i]->fd, STDOUT_FILENO);
+		}
 	}
-	// Then handle pipes if no conflicting redirections exist
+}
+
+void	handle_pipes(t_redirect **redirects, int *prev_pipe, int *next_pipe)
+{
 	if (!has_input_redirect(redirects) && prev_pipe && prev_pipe[0] != -1)
 		dup2(prev_pipe[0], STDIN_FILENO);
 	if (!has_output_redirect(redirects) && next_pipe && next_pipe[1] != -1)
 		dup2(next_pipe[1], STDOUT_FILENO);
 }
-void	execute_with_args(char *clean_cmd, t_redirect **redirects, t_cmd *cmd)
-{
-	char	*path;
-	char	**args;
 
-	path = find_executable(get_first_word(ft_strdup(clean_cmd)),
-			&(cmd->g_env_list));
-	args = get_args(clean_cmd);
-	free(clean_cmd);
+void	setup_io(t_redirect **redirects, int *prev_pipe, int *next_pipe,
+		bool is_middle)
+{
+	(void)is_middle;
 	if (redirects)
-		free_redirects(redirects);
-	if (execve(path, args, cmd->envl) == -1)
-		error_execve(args[0], path, args);
+	{
+		apply_file_redirections(redirects);
+	}
+	handle_pipes(redirects, prev_pipe, next_pipe);
 }

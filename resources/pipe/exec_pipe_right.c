@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:32:54 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/22 10:22:49 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/22 11:52:40 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,27 @@ void	execute_pipe_right(int pos, t_cmd *cmd)
 		clean_cmd = remove_redirects(var_str);
 		execute_with_args(clean_cmd, redirects, cmd);
 	}
+}
+
+void	execute_with_args(char *clean_cmd, t_redirect **redirects, t_cmd *cmd)
+{
+	char	*path;
+	char	**args;
+
+	path = find_executable(get_first_word(ft_strdup(clean_cmd)),
+			&(cmd->g_env_list));
+	args = get_args(clean_cmd);
+	free(clean_cmd);
+	if (redirects)
+		free_redirects(redirects);
+	if (execve(path, args, cmd->envl) == -1)
+		error_execve(args[0], path, args);
+}
+
+void	error_execve(char *ccmd, char *path, char **args)
+{
+	cmd_not_found(ccmd);
+	free(path);
+	free_array(args);
+	exit(1);
 }
