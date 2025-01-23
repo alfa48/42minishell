@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:30:30 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/22 11:59:04 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/23 16:48:36 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void	execute_pipe_middle_(int pos, t_cmd *cmd)
 		handle_heredoc_or_input(cmd->prev_pipe[0], heredoc_delim);
 		dup2(cmd->pipefd[1], STDOUT_FILENO);
 		close(cmd->pipefd[1]);
-		redirects = parse_redirects(cmd->array[pos]);
+		redirects = parse_redirects(cmd->array[pos], cmd);
 		configure_redirects(redirects);
 		execute_clean_command(cmd->array[pos], redirects, cmd);
 	}

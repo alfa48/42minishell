@@ -1,0 +1,21 @@
+Felizmente eu terminei o minishell
+Felizmente eu terminei o minishell
+Felizmente eu terminei o minishell
+Felizmente eu terminei o minishell
+Felizmente eu terminei o minishell
+Felizmente eu terminei o minishell
+Felizmente eu terminei o minishell
+Felizmente eu terminei o minishell
+Felizmente eu terminei o minishell
+Felizmente eu terminei o minishell
+Felizmente eu terminei o minishell
+Felizmente eu terminei o minishell
+Felizmente eu terminei o minishell
+Felizmente eu terminei o minishell
+NAME = minishell
+all:	$(NAME)
+$(NAME) : $(OBJ) $(LIBFT_A)
+	$(CCFLAGS) $(OBJ) -L$(LIBFT_DIR) -lft -lreadline -o $(NAME)
+	rm -f $(NAME)
+	rm -f $(OBJ)
+	rm -f $(NAME)

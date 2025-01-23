@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:28:30 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/21 15:40:24 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/23 16:44:14 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,31 +55,6 @@ typedef struct	s_env_var
 	struct s_env_var	*next;
 }	t_env_var;
 
-typedef	struct s_cmd
-{
-	struct s_node	*root;
-	int		size;
-	char	**array;
-	char    **array_redirect;
-	char	*line;
-	char	*line1;
-	char	**arg;
-	char	**envl;
-	int		index;
-	int		nl;
-	int		ncmd;
-	int		status_cmd_prev;
-    int		pid_count;
-	int	pipefd[2];//pipe de entrada
-	int prev_pipe[2]; // Pipe anterio
-	int status_cmd;
-	bool in_s_q;
-    bool in_d_q;
-	t_env_var 	*val_only;
-	t_env_var	*g_env_list;
-
-}	t_cmd;
-
 typedef struct s_funcArray
 {
 	t_node	*(*handlers[5])(char *command_line);
@@ -95,5 +70,54 @@ typedef struct s_redirect {
     char *file;      // Nome do arquivo
     int fd;          // File descriptor
 } t_redirect;
+
+// Estrutura para gerenciar estado das quotes
+typedef struct {
+    bool in_quotes;
+    char quote_char;
+} QuoteState;
+
+// Estrutura para armazenar estado de redirecionamento
+typedef struct s_redirect_state {
+    bool in_quotes;
+    bool in_redirect;
+    char quote_char;
+    char *write_ptr;
+    const char *read_ptr;
+} t_redirect_state;
+
+typedef struct s_fd_data
+{
+    int *opened_fds;
+    int fd_count;
+} t_fd_data;
+
+typedef	struct s_cmd
+{
+	struct s_node	*root;
+	int		i;
+	int		size;
+	char	**array;
+	char    **array_redirect;
+	char	*line;
+	char	*line1;
+	char	**arg;
+	char	**envl;
+	char	*clean_cmd;
+	int		index;
+	int		nl;
+	int		ncmd;
+	int		status_cmd_prev;
+    int		pid_count;
+	int	pipefd[2];//pipe de entrada
+	int prev_pipe[2]; // Pipe anterio
+	int status_cmd;
+	bool in_s_q;
+    bool in_d_q;
+	t_redirect	**redirects;
+	t_env_var 	*val_only;
+	t_env_var	*g_env_list;
+
+}	t_cmd;
 
 #endif

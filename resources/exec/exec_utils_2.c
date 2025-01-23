@@ -1,25 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mini_exec.c                                        :+:      :+:    :+:   */
+/*   exec_utils_2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/21 08:32:29 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/23 16:43:05 by fjilaias         ###   ########.fr       */
+/*   Created: 2025/01/23 09:37:53 by fjilaias          #+#    #+#             */
+/*   Updated: 2025/01/23 10:01:09 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exec(t_cmd *cmd)
+void	free_array(char **array)
 {
-	pipe(cmd->pipefd);
-	if (ft_strchr(cmd->line1, PIPE))
-		execute_commands(cmd->size, cmd);
-	else if (has_redirect(cmd->line1))
-		execute_single_command(cmd->line1, cmd);
-	close(cmd->pipefd[0]);
-	close(cmd->pipefd[1]);
-	wait_forks(cmd);
+	int	i;
+
+	if (!array)
+		return ;
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}
+
+// Verifica se um caractere marca o início de um redirecionamento
+int	is_redirect_char(char c)
+{
+	return (c == '<' || c == '>');
 }

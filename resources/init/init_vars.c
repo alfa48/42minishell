@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 09:34:57 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/21 15:40:59 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/23 14:04:21 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ void	init_args_ofen(t_cmd *cmd)
 {
 	cmd->root = NULL;
 	cmd->line = NULL;
-	cmd->line1 = NULL;
 	cmd->arg = NULL;
+	cmd->line1 = NULL;
 	cmd->nl = 0;
 	cmd->ncmd = 0;
 	cmd->pid_count = 0;

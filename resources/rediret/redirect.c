@@ -6,13 +6,13 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 15:57:35 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/22 12:20:26 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/23 13:20:46 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_redirect_char(const char *str, int *len)
+static int	is_there_redirect_char(const char *str, int *len)
 {
 	if (!str || !*str)
 		return (0);
@@ -40,9 +40,9 @@ static char	*extract_token(const char **str)
 	if (!**str)
 		return (NULL);
 	start = *str;
-	if (is_redirect_char(start, &redirect_len))
+	if (is_there_redirect_char(start, &redirect_len))
 		return (strndup(start, redirect_len));
-	while (**str && !is_redirect_char(*str, &redirect_len))
+	while (**str && !is_there_redirect_char(*str, &redirect_len))
 		(*str)++;
 	end = *str;
 	while (end > start && (*(end - 1) == ' ' || *(end - 1) == '\t'))
@@ -89,7 +89,7 @@ char	**ft_split_redirect(const char *str)
 	return (result);
 }
 
-void	exec_command_redirect(int pos, t_cmd *cmd)
+/*void	exec_command_redirect(int pos, t_cmd *cmd)
 {
 	int	i;
 
@@ -101,4 +101,4 @@ void	exec_command_redirect(int pos, t_cmd *cmd)
 		execute_redirect_(i, cmd);
 		i++;
 	}
-}
+}*/

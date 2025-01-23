@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/22 15:25:34 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/23 16:46:20 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,12 +103,8 @@ void			fill_array_cmd(t_node *root, char **array, int *index);
 void			exec_heredoc(t_node *node, char **env, t_cmd *cmd);
 
 // resources/utils/exec_pipe_redirectrs.c
-void			free_array(char **array);
 void			free_redirects(t_redirect **redirects);
 char			*remove_redirects(const char *cmd);
-t_redirect		**parse_redirects(char *cmd_str);
-void			apply_redirects(t_redirect **redirects, int prev_pipe[2],
-					int next_pipe[2]);
 void			execute_pipe(t_node *node, char **env, t_cmd *cmd);
 void			execute_pipe_right(int pos, t_cmd *cmd);
 void			execute_pipe_left(int pos, t_cmd *cmd);
@@ -148,15 +144,6 @@ void			set_or_add_env_var(const char *env_entry,
 					t_env_var **g_env_list);
 void			initialize_env_list(t_env_var **g_env_list, char **ev);
 int				set_it(char *name, const char *value, t_env_var **g_env_list);
-//resources/utils/exec_pipe_redirectrs.c
-void free_array(char **array);
-void free_redirects(t_redirect **redirects);
-char *remove_redirects(const char *cmd);
-t_redirect **parse_redirects(char *cmd_str);
-void apply_redirects(t_redirect **redirects, int prev_pipe[2], int next_pipe[2]);
-void	execute_pipe(t_node *node, char **env, t_cmd *cmd);
-void execute_pipe_middle(int pos, t_cmd *cmd);
-void	execute_redirect(t_node *node, char **env,  t_cmd *cmd);
 
 //resources/pipe/exec_pipe_middle.c
 void execute_pipe_middle_(int pos, t_cmd *cmd);
@@ -190,10 +177,26 @@ void	traverse_tree(t_node *root, char **array, int size, t_env_var *g_env_list);
 void	*ft_memset_space(void *ptr, int value, size_t num);
 
 //resources/exec/exec_single_commands.c
-void	execute_single_command(char *cmd_str, t_cmd *cmd);
+int	execute_single_command(char *cmd_str, t_cmd *cmd);
+
+//resources/exec/exec_single_commands_utils.c
+void exit_child_process(t_cmd *cmd, char *path, char **args, t_fd_data *fd_data);
+int	apply_redirects(t_redirect **redirects, int *opened_fds, int *fd_count);
 
 //resources/exec/exec_commands.c
 void	execute_commands(int pos, t_cmd *cmd);
+
+//resources/exec/exec_pipe_redirectrs.c
+void free_redirects(t_redirect **redirects);
+char *remove_redirects(const char *cmd);
+t_redirect	**parse_redirects(char *cmd_str, t_cmd *cmd);
+void	execute_pipe(t_node *node, char **env, t_cmd *cmd);
+void execute_pipe_middle(int pos, t_cmd *cmd);
+void	execute_redirect(t_node *node, char **env,  t_cmd *cmd);
+
+//resources/exec/exec_utils_2.c
+int	is_redirect_char(char c);
+void	free_array(char **array);
 
 // resources/utils/mini_utils_4.c
 char			*get_env_var(const char *name, t_env_var *env_list);

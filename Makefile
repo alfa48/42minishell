@@ -21,7 +21,6 @@ SRC = $(RSC_DIR)/main/main.c \
 	$(RSC_DIR)/init/init_shell.c \
 	$(RSC_DIR)/init/init_shell_utils.c \
 	$(RSC_DIR)/init/init_before.c \
-	$(RSC_DIR)/utils/exec_pipe_redirectrs.c \
 	$(RSC_DIR)/utils/mini_utils.c \
 	$(RSC_DIR)/utils/mini_utils_2.c \
 	$(RSC_DIR)/utils/mini_utils_3.c \
@@ -46,7 +45,11 @@ SRC = $(RSC_DIR)/main/main.c \
 	$(RSC_DIR)/expand/expand_utils.c \
 	$(RSC_DIR)/exec/mini_exec.c \
 	$(RSC_DIR)/exec/exec_single_commands.c \
+	$(RSC_DIR)/exec/exec_single_commands_utils.c \
 	$(RSC_DIR)/exec/exec_commands.c \
+	$(RSC_DIR)/exec/exec_utils.c \
+	$(RSC_DIR)/exec/exec_utils_2.c \
+	$(RSC_DIR)/exec/exec_pipe_redirectrs.c \
 	$(RSC_DIR)/pipe/exec_pipe_left.c \
 	$(RSC_DIR)/pipe/exec_pipe_middle.c \
 	$(RSC_DIR)/pipe/exec_pipe_right.c \
