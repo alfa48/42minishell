@@ -6,13 +6,13 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:32:54 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/23 16:48:52 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:26:10 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*aux_heredoc_right(char *cmd, int pipefd[2])
+char	*aux_heredoc_right(char *cmd, int pipefd[2])
 {
 	char	*heredoc_delim;
 

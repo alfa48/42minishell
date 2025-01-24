@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/23 14:06:26 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:32:35 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ void	keep_on_shell(t_cmd *cmd)
 	add_history(cmd->line);
 	cmd->line = expanding(cmd->line, cmd);
 	cmd->root = init_shell(cmd->line);
-	inorder_traversal(cmd->root);
 	if (cmd->root && cmd->line)
 	{
+		inorder_traversal(cmd->root);
 		init_args_next(cmd);
 		if (cmd->size == 1)
 			mini_built_in(cmd, &(cmd->g_env_list));

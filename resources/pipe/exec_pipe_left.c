@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:35:09 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/23 16:48:23 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 15:19:30 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	mini_close_fd(int fd_0, int fd_1)
 	close(fd_1);
 }
 
-static void	handle_redirects(t_redirect **redirects)
+void	handle_redirects(t_redirect **redirects)
 {
 	int	i;
 
@@ -43,7 +43,7 @@ static void	handle_redirects(t_redirect **redirects)
 	}
 }
 
-static void	configure_stdin(char *heredoc_delim, int *pipefd)
+void	configure_stdin(char *heredoc_delim, int *pipefd)
 {
 	if (heredoc_delim)
 	{
@@ -58,7 +58,7 @@ static void	configure_stdin(char *heredoc_delim, int *pipefd)
 	}
 }
 
-static char	*prepare_command(char *cmd, char *heredoc_delim)
+char	*prepare_command(char *cmd, char *heredoc_delim)
 {
 	char	*clean_cmd;
 
@@ -89,6 +89,4 @@ void	execute_pipe_left(int pos, t_cmd *cmd)
 		clean_cmd = prepare_command(cmd->array[pos], heredoc_delim);
 		execute_with_args(clean_cmd, redirects, cmd);
 	}
-	close(cmd->pipefd[0]);
-	close(cmd->pipefd[1]);
 }

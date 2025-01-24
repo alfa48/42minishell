@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:23:19 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/23 16:46:39 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:37:48 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	free_src(t_cmd *cmd, int fds[2], char *clean_cmd, char *str)
 	return (0);
 }
 
-// Função principal
+// Função principal para executar um comando simples
 int	execute_single_command(char *cmd_str, t_cmd *cmd)
 {
 	int	fds[2];
