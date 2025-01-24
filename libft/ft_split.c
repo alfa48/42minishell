@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 02:14:57 by manandre          #+#    #+#             */
-/*   Updated: 2024/11/20 09:47:26 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 08:01:08 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@ static bool	is_inside_quotes(const char *str, size_t pos)
 {
 	bool	in_quotes;
 	size_t	i;
- 
+
 	in_quotes = false;
 	i = 0;
 	while (i < pos)
 	{
 		if (str[i] == '"' || str[i] == 39)
 			in_quotes = !in_quotes;
-		i ++;
+		i++;
 	}
 	return (in_quotes);
 }
@@ -37,9 +37,8 @@ static size_t	set_array_size(const char *str, char delimiter)
 	pos = 0;
 	while (str[pos])
 	{
-		if ((pos == 0 || str[pos - 1] == delimiter) &&
-			str[pos] != delimiter &&
-			!is_inside_quotes(str, pos))
+		if ((pos == 0 || str[pos - 1] == delimiter) && str[pos] != delimiter
+			&& !is_inside_quotes(str, pos))
 			size++;
 		pos++;
 	}
@@ -56,11 +55,12 @@ static size_t	word_position(const char *str, char delimiter)
 		if (str[pos] == '"' && !is_inside_quotes(str, pos))
 		{
 			pos++;
-			while (str[pos] && !(str[pos] == '"' && !is_inside_quotes(str, pos)))
+			while (str[pos] && !(str[pos] == '"' && !is_inside_quotes(str,
+						pos)))
 				pos++;
 		}
 		if (str[pos] == delimiter && !is_inside_quotes(str, pos))
-			break;
+			break ;
 		pos++;
 	}
 	return (pos);
@@ -68,10 +68,10 @@ static size_t	word_position(const char *str, char delimiter)
 
 char	**ft_split(char const *s, char c)
 {
-	char		**final_array;
-	size_t		limit;
-	size_t		array_size;
-	size_t		counter;
+	char	**final_array;
+	size_t	limit;
+	size_t	array_size;
+	size_t	counter;
 
 	if (!s)
 		return (NULL);
@@ -85,11 +85,10 @@ char	**ft_split(char const *s, char c)
 		while (*s == c && !is_inside_quotes(s, s - s))
 			s++;
 		limit = word_position(s, c);
-		final_array[counter] = ft_substr(s, 0,limit);
+		final_array[counter] = ft_substr(s, 0, limit);
 		s += limit;
 		counter++;
 	}
 	final_array[counter] = NULL;
 	return (final_array);
 }
-
