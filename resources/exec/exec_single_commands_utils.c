@@ -60,3 +60,54 @@ int	apply_redirects(t_redirect **redirects, int *opened_fds, int *fd_count)
 	}
 	return (1);
 }
+
+void	handle_red_stdin(t_redirect **redirects)
+{
+	int	i;
+
+	i = 0;
+	while (redirects && redirects[i])
+	{
+	
+		if (ft_strcmp(redirects[i]->type, "<") == 0)
+		{
+		    redirects[i]->fd = open(redirects[i]->file, O_RDONLY);
+		    if (redirects[i]->fd != -1)
+		        dup2(redirects[i]->fd, STDIN_FILENO);
+		    else
+		    {
+		        perror("Erro ao abrir arquivo de entrada");
+		        exit(EXIT_FAILURE);
+		    }
+		}
+        i++;
+        }
+}
+
+void	handle_redirects(t_redirect **redirects)
+{
+	int	i;
+
+	i = 0;
+	while (redirects && redirects[i])
+	{
+		if (ft_strcmp(redirects[i]->type, ">") == 0)
+		{
+			redirects[i]->fd = open(redirects[i]->file,
+					O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (redirects[i]->fd != -1)
+				dup2(redirects[i]->fd, STDOUT_FILENO);
+			return ;
+		}
+		else if (ft_strcmp(redirects[i]->type, ">>") == 0)
+		{
+			redirects[i]->fd = open(redirects[i]->file,
+					O_WRONLY | O_CREAT | O_APPEND, 0644);
+			if (redirects[i]->fd != -1)
+				dup2(redirects[i]->fd, STDOUT_FILENO);
+			return ;
+		}
+		i++;
+	}
+	handle_red_stdin(redirects);
+}
