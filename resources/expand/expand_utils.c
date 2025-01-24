@@ -1,25 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mini_exec.c                                        :+:      :+:    :+:   */
+/*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/21 08:32:29 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/23 16:43:05 by fjilaias         ###   ########.fr       */
+/*   Created: 2025/01/21 11:22:00 by fjilaias          #+#    #+#             */
+/*   Updated: 2025/01/21 16:18:21 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exec(t_cmd *cmd)
+char	*ft_strndup(const char *s, size_t n)
 {
-	pipe(cmd->pipefd);
-	if (ft_strchr(cmd->line1, PIPE))
-		execute_commands(cmd->size, cmd);
-	else if (has_redirect(cmd->line1))
-		execute_single_command(cmd->line1, cmd);
-	close(cmd->pipefd[0]);
-	close(cmd->pipefd[1]);
-	wait_forks(cmd);
+	size_t	len;
+	size_t	i;
+	char	*dup;
+
+	len = 0;
+	if (!s)
+		return (NULL);
+	while (s[len] && len < n)
+		len++;
+	dup = (char *)malloc(len + 1);
+	if (!dup)
+		return (NULL);
+	i = -1;
+	while (++i < len)
+		dup[i] = s[i];
+	dup[len] = '\0';
+	return (dup);
 }

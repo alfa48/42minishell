@@ -6,46 +6,13 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:56:05 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/20 13:19:53 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/21 16:01:24 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char    *get_word(char *line, int *sig)
-{
-	char	*init;
-	char	*end;
-	char	*start;
-	int		i;
-
-	i = -1;
-	init = mini_strstr(line, "echo");
-	while (init[++i] > 32)
-		;
-	if (init == NULL)
-		return (NULL);
-	end = &init[i];
-	init = mini_strstr(end, "-n");
-	i = -1;
-	if (!init || init[2] != 32)
-	{
-		while (*end == ' ' || *end == '\t')
-			end ++;
-		start = end;
-		*sig = 1;
-	}
-	else
-	{
-		init += 2;
-		while (*init == ' ' || *end == '\t')
-			init ++;
-		start = init;
-	}
-	return (start);
-}
-
-void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
+void	mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 {
 	cmd->status_cmd = 0;
 	cmd->arg = ft_split(cmd->root->command, ' ');
@@ -64,7 +31,7 @@ void    mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 	else if (strcmp(cmd->arg[0], "unset") == 0)
 		mini_unset(cmd->arg, g_env_list);
 	else if (ft_strcmp("echo", cmd->arg[0]) == 0)
-		mini_echo(cmd->line);
+		mini_echo(cmd->line, cmd->line1);
 	else
 	{
 		printf("%s\n", cmd->root->command);
@@ -87,43 +54,56 @@ void	list_env_vars(t_env_var *g_env_list)
 
 static int	compare_env_vars(const void *a, const void *b)
 {
-	t_env_var	*varA;
-	t_env_var	*varB;
+	t_env_var	*var_a;
+	t_env_var	*var_b;
 
-	varA = *(t_env_var **)a;
-	varB = *(t_env_var **)b;
-	return (strcmp(varA->name, varB->name));
+	var_a = *(t_env_var **)a;
+	var_b = *(t_env_var **)b;
+	return (strcmp(var_a->name, var_b->name));
+}
+
+int	env_list_size(t_env_var *g_env_list)
+{
+	int			count;
+	t_env_var	*current;
+
+	count = 0;
+	current = g_env_list;
+	if (!current)
+		return (-1);
+	while (current != NULL)
+	{
+		count++;
+		current = current->next;
+	}
+	return (count);
 }
 
 void	only_expor_cmd(t_env_var *g_env_list)
 {
-	int	i;
-	int	count;
+	int			i;
+	int			count;
 	t_env_var	*current;
 	t_env_var	**env_array;
 
-	count = 0;
-	i = -1; 
-	current = g_env_list;  
-	while (current)
-	{
-		count ++;  
-		current = current->next;
-	}
-	if (!(env_array = malloc(count * sizeof(t_env_var *))))
+	i = -1;
+	count = env_list_size(g_env_list);
+	env_array = malloc(count * sizeof(t_env_var *));
+	if (!env_array)
 	{
 		perror("malloc");
 		return ;
 	}
 	current = g_env_list;
-	while (++ i < count)
+	while (++i < count)
 	{
-		env_array[i] = current; 
+		env_array[i] = current;
 		current = current->next;
 	}
 	qsort(env_array, count, sizeof(t_env_var *), compare_env_vars);
-	i = -1;  
-	while (++ i < count)
-		printf("declare -x %s=\"%s\"\n", env_array[i]->name, env_array[i]->value);  
+	i = -1;
+	while (++i < count)
+		printf("declare -x %s=\"%s\"\n", env_array[i]->name,
+			env_array[i]->value);
 	free(env_array);
 }

@@ -1,25 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mini_exec.c                                        :+:      :+:    :+:   */
+/*   utils_3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/21 08:32:29 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/23 16:43:05 by fjilaias         ###   ########.fr       */
+/*   Created: 2025/01/22 15:08:05 by fjilaias          #+#    #+#             */
+/*   Updated: 2025/01/22 15:18:06 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exec(t_cmd *cmd)
+char	*remove_heredoc(char *cmd)
 {
-	pipe(cmd->pipefd);
-	if (ft_strchr(cmd->line1, PIPE))
-		execute_commands(cmd->size, cmd);
-	else if (has_redirect(cmd->line1))
-		execute_single_command(cmd->line1, cmd);
-	close(cmd->pipefd[0]);
-	close(cmd->pipefd[1]);
-	wait_forks(cmd);
+	char	*heredoc_pos;
+	char	*clean_cmd;
+
+	heredoc_pos = mini_strstr(cmd, "<<");
+	if (!heredoc_pos)
+		return (ft_strdup(cmd));
+	clean_cmd = malloc(sizeof(char) * (heredoc_pos - cmd + 1));
+	if (!clean_cmd)
+		return (NULL);
+	ft_strlcpy(clean_cmd, cmd, heredoc_pos - cmd + 1);
+	return (clean_cmd);
 }

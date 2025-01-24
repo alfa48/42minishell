@@ -6,19 +6,54 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 21:09:35 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/17 11:05:49 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/22 11:21:39 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+char	*construct_full_path(const char *directory, const char *command)
+{
+	char	*full_path;
+	int		length;
+
+	length = ft_strlen(directory) + ft_strlen(command) + 2;
+	full_path = malloc(length);
+	if (full_path == NULL)
+	{
+		perror("malloc");
+		return (NULL);
+	}
+	ft_strlcpy(full_path, directory, ft_strlen(directory) + 1);
+	mini_strcat(full_path, "/");
+	mini_strcat(full_path, command);
+	return (full_path);
+}
+
+char	*find_in_directories(const char *command, char **directories)
+{
+	char	*full_path;
+	int		i;
+
+	i = 0;
+	while (directories[i] != NULL)
+	{
+		full_path = construct_full_path(directories[i], command);
+		if (full_path == NULL)
+			return (NULL);
+		if (access(full_path, X_OK) == 0)
+			return (full_path);
+		free(full_path);
+		i++;
+	}
+	return (NULL);
+}
+
 char	*find_executable(const char *command, t_env_var **g_env_list)
 {
-	(void)(g_env_list);
-	char	full_path[1024];
 	char	*path_env;
-	char	*path;
-	char	*token;
+	char	**directories;
+	char	*result;
 
 	if (command[0] == '.' || command[0] == '/')
 	{
@@ -32,25 +67,13 @@ char	*find_executable(const char *command, t_env_var **g_env_list)
 		ft_putstr_fd("Erro: variável PATH não encontrada.\n", 2);
 		return (NULL);
 	}
-	path = ft_strdup(path_env);
-	if (!path)
+	directories = ft_split(path_env, ':');
+	if (!directories)
 	{
-		perror("strdup");
+		perror("ft_split");
 		return (NULL);
 	}
-	token = strtok(path, ":"); // Divide o PATH em diretórios
-	while (token)
-	{
-        // Constrói o caminho completo para o comando
-        snprintf(full_path, sizeof(full_path), "%s/%s", token, command);
-        // Verifica se o executável existe e é acessível
-		if (access(full_path, X_OK) == 0)
-		{
-        		free(path);
-        		return (ft_strdup(full_path)); // Retorna o caminho completo do executável
-		}
-        token = strtok(NULL, ":"); // Próximo diretório
-	}
-	free(path);
-	return (NULL); // Não encontrado
+	result = find_in_directories(command, directories);
+	free(directories);
+	return (result);
 }

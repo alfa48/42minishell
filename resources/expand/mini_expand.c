@@ -6,31 +6,11 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 16:07:45 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/07 10:31:16 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/21 15:42:31 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*ft_strndup(const char *s, size_t n)
-{
-	size_t		len;
-	size_t		i;
-	char	*dup;
-
-	len = 0;
-	if (!s)
-		return (NULL);
-	while (s[len] && len < n)
-		len ++;
-	if (!(dup = (char *)malloc(len + 1)))
-		return (NULL);
-	i = -1;
-	while (++i < len)
-		dup[i] = s[i];
-	dup[len] = '\0';
-	return (dup);
-}
 
 char	*ft_strjoin_free(char *s1, const char *s2)
 {
@@ -47,7 +27,7 @@ char	*ft_strjoin_free(char *s1, const char *s2)
 	return (new_str);
 }
 
-char    *expand_variable(char *str, char *result, int *i, t_cmd *cmd)
+char	*expand_variable(char *str, char *result, int *i, t_cmd *cmd)
 {
 	int		var_start;
 	char	*var_name;
@@ -55,12 +35,12 @@ char    *expand_variable(char *str, char *result, int *i, t_cmd *cmd)
 
 	var_start = *i + 1;
 	while (ft_isalnum(str[var_start]) || str[var_start] == '_')
-		var_start ++;
+		var_start++;
 	var_name = ft_strndup(str + *i + 1, var_start - (*i + 1));
 	var_value = ft_findenv(var_name, cmd->g_env_list);
 	if (str[var_start] == '?')
 	{
-		var_start ++;
+		var_start++;
 		var_value = ft_itoa(cmd->status_cmd);
 	}
 	if (!var_value)
@@ -72,24 +52,24 @@ char    *expand_variable(char *str, char *result, int *i, t_cmd *cmd)
 	return (result);
 }
 
-char	*process_char(char *str, char *r, int *i, bool *in_s_q, bool *in_d_q, t_cmd *cmd)
+char	*process_char(char *str, char *r, int *i, t_cmd *cmd)
 {
 	char	temp[2];
 
-	if (str[*i] == '\'' && !*in_d_q)
+	if (str[*i] == '\'' && !(cmd->in_d_q))
 	{
-		*in_s_q = !*in_s_q;
-		r = ft_strjoin_free(r, "'");
-		(*i) ++;
+		cmd->in_s_q = !cmd->in_s_q;
+		r = ft_strjoin_free(r, "\'");
+		(*i)++;
 	}
-	else if (str[*i] == '"' && !*in_s_q)
+	else if (str[*i] == '"' && !(cmd->in_s_q))
 	{
-		*in_d_q = !*in_d_q;
+		cmd->in_d_q = !cmd->in_d_q;
 		r = ft_strjoin_free(r, "\"");
-		(*i) ++;
+		(*i)++;
 	}
-	else if (str[*i] == '$' && !*in_s_q &&
-		(ft_isalnum(str[*i + 1]) || str[*i + 1] == '_' || str[*i + 1] == '?'))
+	else if (str[*i] == '$' && !(cmd->in_s_q) && (ft_isalnum(str[*i + 1])
+			|| str[*i + 1] == '_' || str[*i + 1] == '?'))
 		r = expand_variable(str, r, i, cmd);
 	else
 	{
@@ -105,22 +85,21 @@ char	*expand_string(char *str, t_cmd *cmd)
 {
 	int		i;
 	char	*result;
-	bool	in_s_q;
-	bool	in_d_q;
 
 	i = 0;
+	cmd->in_s_q = false;
+	cmd->in_d_q = false;
 	result = malloc(1);
-	in_s_q = false, in_d_q = false;
 	if (!result)
 		return (NULL);
 	result[0] = '\0';
 	while (str[i])
 	{
-		result = process_char(str, result, &i, &in_s_q, &in_d_q, cmd);
+		result = process_char(str, result, &i, cmd);
 		if (!result)
 			return (NULL);
 	}
- 	return (result);
+	return (result);
 }
 
 char	*expanding(char *str, t_cmd *cmd)

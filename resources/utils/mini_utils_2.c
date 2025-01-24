@@ -6,65 +6,40 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:03:32 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/21 10:48:11 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/21 13:05:39 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_node	*add_node(t_node *root, t_node *new, int side)
+int	is_first_word_echo(char *command)
 {
-	if (root)
-	{
-		if (side == 0)
-			root->left = new;
-		else
-			root->right = new;
-	}
-	return (new);
+	char	first_word[256];
+	int		i;
+
+	i = 0;
+	while (isspace(*command))
+		command++;
+	while (*command && !isspace(*command) && i < 255)
+		first_word[i++] = *command++;
+	first_word[i] = '\0';
+	if (strcmp(first_word, "echo") == 0)
+		return (1);
+	return (0);
 }
 
-t_node	*create_node(char *operator, char *command, int index)
+static char	*return_epur(int *i, char *str)
 {
-	t_node *new;
-
-	new = malloc(sizeof(t_node));
-	if (new)
-	{
-		new->index = index;
-		new->operator = operator;
-		new->command = command;
-		new->left = NULL;
-		new->right  =NULL;
-	}
-	return (new);
-}
-
-int is_first_word_echo(char *command)
-{
-    char    first_word[256];
-    int     i = 0;
-
-    // Ignora espaços em branco iniciais
-    while (isspace(*command))
-        command++;
-
-    // Copia a primeira palavra para o buffer
-    while (*command && !isspace(*command) && i < 255)
-        first_word[i++] = *command++;
-    first_word[i] = '\0';
-
-    // Compara a primeira palavra com "echo"
-    if (strcmp(first_word, "echo") == 0)
-        return (1);
-
-    return (0);
+	if ((*i) > 0)
+		return (ft_strdup(str));
+	else
+		return (NULL);
 }
 
 char	*mini_epur_str(char *str)
 {
 	char	out[42000];
-	int	i;
+	int		i;
 
 	if (is_first_word_echo(str) || is_first_word_echo(&str[1]))
 		return (ft_strdup(str));
@@ -73,36 +48,34 @@ char	*mini_epur_str(char *str)
 	str = process_cmd(str);
 	i = 0;
 	while (*str == ' ' || *str == '\t')
-		str ++;
+		str++;
 	while (*str)
 	{
 		out[i++] = *str;
 		if (*str++ == ' ')
 		{
 			while (*str == ' ' || *str == '\t')
-				str ++;
+				str++;
 			if (!*str)
-				i --;
+				i--;
 		}
 	}
 	out[i] = '\0';
-	if (i > 0)
-		return (ft_strdup(out));
-	else
-		return (NULL);
+	return (return_epur(&i, out));
 }
 
 int	is_special_char(char c)
 {
-	int i = 0;
+	int			i;
 	const char	*special_chars;
 
+	i = 0;
 	special_chars = ", +-=/^@#%:~´.'";
 	while (special_chars[i] != '\0')
-    {
-        if (c == special_chars[i])
-            return (1);
-		i ++;
+	{
+		if (c == special_chars[i])
+			return (1);
+		i++;
 	}
 	return (0);
 }

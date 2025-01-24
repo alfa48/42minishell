@@ -3,14 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe_left.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:35:09 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/21 15:50:20 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/23 16:48:23 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	mini_close_fd(int fd_0, int fd_1)
+{
+	close(fd_0);
+	close(fd_1);
+}
 
 static void	handle_redirects(t_redirect **redirects)
 {
@@ -51,6 +57,7 @@ static void	configure_stdin(char *heredoc_delim, int *pipefd)
 		close(pipefd[0]);
 	}
 }
+
 static char	*prepare_command(char *cmd, char *heredoc_delim)
 {
 	char	*clean_cmd;
@@ -77,9 +84,11 @@ void	execute_pipe_left(int pos, t_cmd *cmd)
 		heredoc_delim = get_heredoc_delimiter(cmd->array[pos]);
 		close(cmd->pipefd[1]);
 		configure_stdin(heredoc_delim, cmd->pipefd);
-		redirects = parse_redirects(cmd->array[pos]);
+		redirects = parse_redirects(cmd->array[pos], cmd);
 		handle_redirects(redirects);
 		clean_cmd = prepare_command(cmd->array[pos], heredoc_delim);
 		execute_with_args(clean_cmd, redirects, cmd);
 	}
+	close(cmd->pipefd[0]);
+	close(cmd->pipefd[1]);
 }

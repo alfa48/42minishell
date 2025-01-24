@@ -3,154 +3,120 @@
 /*                                                        :::      ::::::::   */
 /*   exec_single_commands.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:23:19 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/21 11:24:03 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/23 16:46:39 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	execute_single_command(char *cmd_str, t_cmd *cmd)
+// Função para restaurar e limpar file descriptors
+void	cleanup_fds(int saved_st_in_out[2])
 {
-	int			pid;
+	if (saved_st_in_out[0] != -1)
+		close(saved_st_in_out[0]);
+	if (saved_st_in_out[1] != -1)
+		close(saved_st_in_out[1]);
+}
+
+void	execute_child_process(t_redirect **redirects, t_cmd *cmd)
+{
+	int			opened_fds[MAX_REDIRECTS * 2];
 	char		*path;
 	char		**args;
-	t_redirect	**redirects;
-	char		*clean_cmd;
-	int			saved_stdin;
-	int			saved_stdout;
-	int			opened_fds[MAX_REDIRECTS * 2];
-	int			fd_count;
-	int			new_fd;
-	int			status;
+	t_fd_data	fd_data;
 
 	path = NULL;
 	args = NULL;
-	redirects = NULL;
-	clean_cmd = NULL;
-	saved_stdin = dup(STDIN_FILENO);
-	saved_stdout = dup(STDOUT_FILENO);
-	if (!cmd_str || !cmd)
+	fd_data.fd_count = 0;
+	fd_data.opened_fds = opened_fds;
+	if (!apply_redirects(redirects, fd_data.opened_fds, &(fd_data.fd_count)))
+		exit_child_process(cmd, path, args, &fd_data);
+	path = find_executable(get_first_word(ft_strdup(cmd->clean_cmd)),
+			&(cmd->g_env_list));
+	if (!path)
 	{
-		if (saved_stdin != -1)
-			close(saved_stdin);
-		if (saved_stdout != -1)
-			close(saved_stdout);
-		return ;
+		cmd_not_found(get_first_word(ft_strdup(cmd->clean_cmd)));
+		exit_child_process(cmd, path, args, &fd_data);
 	}
-	// Parse os redirecionamentos do comando
-	redirects = parse_redirects(cmd_str);
-	if (!redirects)
+	args = get_args(cmd->clean_cmd);
+	if (!args)
+		exit_child_process(cmd, path, args, &fd_data);
+	execve(path, args, cmd->envl);
+	perror("execve failed");
+	exit_child_process(cmd, path, args, &fd_data);
+}
+
+// Função para lidar com o processo pai
+void	execute_parent_process(int pid, t_cmd *cmd, int saved_st_in_out[2],
+		char *clean_cmd)
+{
+	int	status;
+
+	waitpid(pid, &status, 0);
+	if (saved_st_in_out[0] != -1)
 	{
-		close(saved_stdin);
-		close(saved_stdout);
-		return ;
+		dup2(saved_st_in_out[0], STDIN_FILENO);
+		close(saved_st_in_out[0]);
 	}
-	// Obtém o comando limpo antes do fork
-	clean_cmd = remove_redirects(cmd_str);
-	if (!clean_cmd)
+	if (saved_st_in_out[1] != -1)
 	{
-		free_redirects(redirects);
-		close(saved_stdin);
-		close(saved_stdout);
-		return ;
+		dup2(saved_st_in_out[1], STDOUT_FILENO);
+		close(saved_st_in_out[1]);
 	}
-	pid = fork();
-	if (pid == -1)
+	free(clean_cmd);
+	free_redirects(cmd->redirects);
+	if (WIFEXITED(status))
+		cmd->status_cmd = WEXITSTATUS(status);
+}
+
+int	free_src(t_cmd *cmd, int fds[2], char *clean_cmd, char *str)
+{
+	if (ft_strcmp(str, "redirects") == 0)
+	{
+		cleanup_fds(fds);
+		return (1);
+	}
+	else if (ft_strcmp(str, "clean_cmd") == 0)
+	{
+		free_redirects(cmd->redirects);
+		cleanup_fds(fds);
+		return (1);
+	}
+	else if (ft_strcmp(str, "fork failed") == 0)
 	{
 		perror("fork failed");
 		free(clean_cmd);
-		free_redirects(redirects);
-		close(saved_stdin);
-		close(saved_stdout);
-		return ;
+		free_redirects(cmd->redirects);
+		cleanup_fds(fds);
+		return (1);
 	}
-	if (pid == 0) // Processo filho
-	{
-		fd_count = 0;
-		// Aplica os redirecionamentos na ordem correta
-		for (int i = 0; redirects[i]; i++)
-		{
-			new_fd = -1;
-			if (ft_strcmp(redirects[i]->type, "<") == 0)
-				new_fd = open(redirects[i]->file, O_RDONLY);
-			else if (ft_strcmp(redirects[i]->type, ">") == 0)
-				new_fd = open(redirects[i]->file, O_WRONLY | O_CREAT | O_TRUNC,
-						0644);
-			else if (ft_strcmp(redirects[i]->type, ">>") == 0)
-				new_fd = open(redirects[i]->file, O_WRONLY | O_CREAT | O_APPEND,
-						0644);
-			if (new_fd == -1)
-			{
-				perror("open failed");
-				goto cleanup_child;
-			}
-			opened_fds[fd_count++] = new_fd;
-			if (ft_strcmp(redirects[i]->type, "<") == 0)
-			{
-				if (dup2(new_fd, STDIN_FILENO) == -1)
-				{
-					perror("dup2 failed");
-					goto cleanup_child;
-				}
-			}
-			else
-			{
-				if (dup2(new_fd, STDOUT_FILENO) == -1)
-				{
-					perror("dup2 failed");
-					goto cleanup_child;
-				}
-			}
-		}
-		// Prepara argumentos e executa
-		path = find_executable(get_first_word(ft_strdup(clean_cmd)),
-				&(cmd->g_env_list));
-		if (!path)
-		{
-			cmd_not_found(get_first_word(ft_strdup(clean_cmd)));
-			goto cleanup_child;
-		}
-		args = get_args(clean_cmd);
-		if (!args)
-			goto cleanup_child;
-		execve(path, args, cmd->envl);
-		perror("execve failed");
-	cleanup_child:
-		// Limpa recursos no processo filho
-		for (int i = 0; i < fd_count; i++)
-			if (opened_fds[i] != -1)
-				close(opened_fds[i]);
-		free(clean_cmd);
-		free(path);
-		if (args)
-			free_array(args);
-		free_redirects(redirects);
-		exit(EXIT_FAILURE);
-	}
-	else // Processo pai
-	{
-		// Espera o filho terminar
-		waitpid(pid, &status, 0);
-		// Restaura os file descriptors
-		if (saved_stdin != -1)
-		{
-			dup2(saved_stdin, STDIN_FILENO);
-			close(saved_stdin);
-		}
-		if (saved_stdout != -1)
-		{
-			dup2(saved_stdout, STDOUT_FILENO);
-			close(saved_stdout);
-		}
-		// Limpa recursos
-		free(clean_cmd);
-		free_redirects(redirects);
-		if (WIFEXITED(status))
-		{
-			cmd->status_cmd = WEXITSTATUS(status);
-		}
-	}
+	return (0);
+}
+
+// Função principal
+int	execute_single_command(char *cmd_str, t_cmd *cmd)
+{
+	int	fds[2];
+	int	pid;
+
+	cmd->clean_cmd = NULL;
+	fds[0] = dup(STDIN_FILENO);
+	fds[1] = dup(STDOUT_FILENO);
+	cmd->redirects = parse_redirects(cmd_str, cmd);
+	if (!cmd->redirects)
+		return (0 * free_src(cmd, fds, cmd->clean_cmd, "redirects"));
+	cmd->clean_cmd = remove_redirects(cmd_str);
+	if (!cmd->clean_cmd)
+		return (0 * free_src(cmd, fds, cmd->clean_cmd, "clean_cmd"));
+	pid = fork();
+	if (pid == -1)
+		return (0 * free_src(cmd, fds, cmd->clean_cmd, "fork failed"));
+	if (pid == 0)
+		execute_child_process(cmd->redirects, cmd);
+	else
+		execute_parent_process(pid, cmd, fds, cmd->clean_cmd);
+	return (1);
 }

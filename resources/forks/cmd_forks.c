@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:18:01 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/21 16:33:57 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/24 08:11:00 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,6 @@ static char	*aux_exec_heredoc(char *cmd)
 	}
 	return (cmd);
 }
-
-        // Usa a função passada como parâmetro para tratar o heredoc
-
-
 
 void	fork_exec_cmd(t_cmd *cmd, t_node *node)
 {

@@ -1,40 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_enum.h                                   :+:      :+:    :+:   */
+/*   exec_utils_2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/15 14:08:07 by manandre          #+#    #+#             */
-/*   Updated: 2024/11/08 13:49:44 by fjilaias         ###   ########.fr       */
+/*   Created: 2025/01/23 09:37:53 by fjilaias          #+#    #+#             */
+/*   Updated: 2025/01/23 10:01:09 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_ENUM_H
-# define MINISHELL_ENUM_H
+#include "minishell.h"
 
-typedef enum	e_type_token
+void	free_array(char **array)
 {
-	INTERNAL_COMMAND,
-	EXTERNAL_COMMAND,
-	OPTION,
-	ARGUMENT,
-	STRING,
-	WILDCARD,
-	VARIABLE,
-	REDIRECTION,
-	PIPE,
-	COMMAND_SUBSTITUTION,
-	OPERATOR,
-	CONDITIONAL_AND,
-	CONDITIONAL_OR,
-	BACKGROUND_COMMAND,
-	COMMAND_SEQUENCE,
-	ESCAPE,
-	QUOTE,
-	E_SPACE,
-	END,
-	PATH
-}	t_type_token;
+	int	i;
 
-#endif
+	if (!array)
+		return ;
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}
+
+// Verifica se um caractere marca o início de um redirecionamento
+int	is_redirect_char(char c)
+{
+	return (c == '<' || c == '>');
+}
