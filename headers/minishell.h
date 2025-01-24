@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/23 16:46:20 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 08:11:42 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,6 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-# define BUFFER_SIZE 42
-# define FILE_MODE_WRITE O_WRONLY | O_CREAT | O_TRUNC
-# define FILE_MODE_READ O_RDONLY
 # define MAX_REDIRECTS 10
 # define PIPE '|'
 
@@ -81,7 +78,7 @@ void			exec(t_cmd *cmd);
 // resources/utils/mini_utils_2.c
 void			free_tree(t_node *root);
 char			*mini_epur_str(char *str);
-t_node			*create_node(char *operator, char * command, int index);
+t_node			*create_node(char *operator, char *command, int index);
 t_node			*add_node(t_node *root, t_node *new, int side);
 int				is_special_char(char c);
 int				is_echo_printable(char c);
@@ -93,56 +90,61 @@ void			set_or_add_env_var(const char *env_entry,
 void			initialize_env_list(t_env_var **g_env_list, char **ev);
 int				set_it(char *name, const char *value, t_env_var **g_env_list);
 
-//resources/pipe/exec_pipe_middle.c
+// resources/pipe/exec_pipe_middle.c
 void			execute_pipe_middle_(int pos, t_cmd *cmd);
 
-//resources/pipe/exec_pipe_right.c
-void	execute_pipe_right(int pos, t_cmd *cmd);
+// resources/pipe/exec_pipe_right.c
+void			execute_pipe_right(int pos, t_cmd *cmd);
 
-//resources/pipe/exec_pipe_left.c
-void	execute_pipe_left(int pos, t_cmd *cmd);
-void	mini_close_fd(int fd_0, int fd_1);
+// resources/pipe/exec_pipe_left.c
+void			execute_pipe_left(int pos, t_cmd *cmd);
+void			mini_close_fd(int fd_0, int fd_1);
 
-//resources/pipe/utils.c
-void	setup_io(t_redirect **redirects, int *prev_pipe, int *next_pipe, bool is_middle);
-bool	has_output_redirect(t_redirect **redirects);
-bool	has_input_redirect(t_redirect **redirects);
-void	error_execve(char *ccmd, char *path, char  **args);
-void	execute_with_args(char *clean_cmd, t_redirect **redirects, t_cmd *cmd);
-void	execute_redirect_(int pos,  t_cmd *cmd);
-void	exec_redout_(int pos, t_cmd *cmd);
+// resources/pipe/utils.c
+void			setup_io(t_redirect **redirects, int *prev_pipe, int *next_pipe,
+					bool is_middle);
+bool			has_output_redirect(t_redirect **redirects);
+bool			has_input_redirect(t_redirect **redirects);
+void			error_execve(char *ccmd, char *path, char **args);
+void			execute_with_args(char *clean_cmd, t_redirect **redirects,
+					t_cmd *cmd);
+void			execute_redirect_(int pos, t_cmd *cmd);
+void			exec_redout_(int pos, t_cmd *cmd);
 
-//resources/utils/mini_utils.c
-void	execute_tree(t_node *root, t_cmd *cmd);
-void	exec_redin(t_node *node, char **env, t_cmd *cmd);
-char    **get_args(char *cmd);
-int			is_operator(char *str);
-int			is_redirect(char *str);
-char    *mini_strcat(char* dest, const char* src);
-void	traverse_tree(t_node *root, char **array, int size, t_env_var *g_env_list);
-void	*ft_memset_space(void *ptr, int value, size_t num);
+// resources/utils/mini_utils.c
+void			execute_tree(t_node *root, t_cmd *cmd);
+void			exec_redin(t_node *node, char **env, t_cmd *cmd);
+char			**get_args(char *cmd);
+int				is_operator(char *str);
+int				is_redirect(char *str);
+char			*mini_strcat(char *dest, const char *src);
+void			traverse_tree(t_node *root, char **array, int size,
+					t_env_var *g_env_list);
+void			*ft_memset_space(void *ptr, int value, size_t num);
 
-//resources/exec/exec_single_commands.c
-int	execute_single_command(char *cmd_str, t_cmd *cmd);
+// resources/exec/exec_single_commands.c
+int				execute_single_command(char *cmd_str, t_cmd *cmd);
 
-//resources/exec/exec_single_commands_utils.c
-void	exit_child_process(t_cmd *cmd, char *path, char **args, t_fd_data *fd_data);
-int	apply_redirects(t_redirect **redirects, int *opened_fds, int *fd_count);
+// resources/exec/exec_single_commands_utils.c
+void			exit_child_process(t_cmd *cmd, char *path, char **args,
+					t_fd_data *fd_data);
+int				apply_redirects(t_redirect **redirects, int *opened_fds,
+					int *fd_count);
 
-//resources/exec/exec_commands.c
-void	execute_commands(int pos, t_cmd *cmd);
+// resources/exec/exec_commands.c
+void			execute_commands(int pos, t_cmd *cmd);
 
-//resources/exec/exec_pipe_redirectrs.c
-void	free_redirects(t_redirect **redirects);
-char	*remove_redirects(const char *cmd);
-t_redirect	**parse_redirects(char *cmd_str, t_cmd *cmd);
-void	execute_pipe(t_node *node, char **env, t_cmd *cmd);
-void	execute_pipe_middle(int pos, t_cmd *cmd);
-void	execute_redirect(t_node *node, char **env,  t_cmd *cmd);
+// resources/exec/exec_pipe_redirectrs.c
+void			free_redirects(t_redirect **redirects);
+char			*remove_redirects(const char *cmd);
+t_redirect		**parse_redirects(char *cmd_str, t_cmd *cmd);
+void			execute_pipe(t_node *node, char **env, t_cmd *cmd);
+void			execute_pipe_middle(int pos, t_cmd *cmd);
+void			execute_redirect(t_node *node, char **env, t_cmd *cmd);
 
-//resources/exec/exec_utils_2.c
-int	is_redirect_char(char c);
-void	free_array(char **array);
+// resources/exec/exec_utils_2.c
+int				is_redirect_char(char c);
+void			free_array(char **array);
 
 // resources/utils/mini_utils_4.c
 char			*get_env_var(const char *name, t_env_var *env_list);
@@ -152,7 +154,7 @@ int				is_within_quotes(char *str, char *sep);
 int				is_entirely_within_quotes(char *str);
 
 // resources/utils/mini_utils_6.c
-char			*get_word(char *line, int *sig, char *sigline);;
+char			*get_word(char *line, int *sig, char *sigline);
 
 // resources/mini_expand.c
 char			*concat_strings(char **str_array);
@@ -228,19 +230,17 @@ void			mini_heredoc(t_cmd *cmd);
 int				checks_error_pattern(char *texto);
 int				checks_str(t_cmd *cmd);
 
-//resources/heredoc/util.c
-char *get_heredoc_delimiter(char *cmd);
-char *remove_heredoc(char *cmd);
-void	handle_heredoc(char *delimiter, int fd_destino[2]);
-void	mini_heredoc(t_cmd *cmd);
+// resources/heredoc/util.c
+char			*get_heredoc_delimiter(char *cmd);
+char			*remove_heredoc(char *cmd);
+void			handle_heredoc(char *delimiter, int fd_destino[2]);
+void			mini_heredoc(t_cmd *cmd);
 
-//resources/checks/checks.c
-int checks_error_pattern(char* texto);
-int checks_str(t_cmd *cmd);
+// resources/checks/checks.c
+int				checks_error_pattern(char *texto);
+int				checks_str(t_cmd *cmd);
 
-//resources/heredoc/utils.c
-void handle_heredoc_left(char *delimiter, int pipe_fd[2]);
+// resources/heredoc/utils.c
+void			handle_heredoc_left(char *delimiter, int pipe_fd[2]);
 
-
-
-# endif
+#endif
