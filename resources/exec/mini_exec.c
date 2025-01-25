@@ -29,6 +29,7 @@ void simple_cmd(char *str, t_cmd *cmd)
     pid = fork();
     if (pid == -1)
         return;
+    printf("S CMD - %s\n", str);
     if (pid == 0)
     {
 	heredoc_delim = get_heredoc_delimiter(str);

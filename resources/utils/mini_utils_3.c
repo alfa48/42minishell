@@ -41,10 +41,15 @@ int	set_it(char *name, const char *value, t_env_var **g_env_list)
 	if (!new_var)
 		return (0);
 	new_var->name = ft_strdup(name);
+	if (ft_strlen(value) > 2097152)
+	{
+		ft_putstr_fd("Too long env value\n", 2);
+		return (0);
+	}
 	if (value)
 		new_var->value = ft_strdup(value);
 	else
-		new_var->value = ft_strdup("''");
+		new_var->value = ft_strdup("");
 	if (!new_var->name || !new_var->value)
 		return (0);
 	new_var->next = *g_env_list;

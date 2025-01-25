@@ -89,16 +89,3 @@ char	**ft_split_redirect(const char *str)
 	return (result);
 }
 
-/*void	exec_command_redirect(int pos, t_cmd *cmd)
-{
-	int	i;
-
-	(void)cmd;
-	(void)pos;
-	i = 1;
-	while (cmd->array_redirect[i])
-	{
-		execute_redirect_(i, cmd);
-		i++;
-	}
-}*/

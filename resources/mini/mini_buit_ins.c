@@ -27,13 +27,13 @@ void	mini_echo(char *arg, char *siline)
 	{
 		while (*init && (*init <= 32))
 			init++;
-		if (init && new_line)
+		if (init && new_line == 1)
 		{
 			echo = ft_strjoin(init, "\n");
 			printf("%s", echo);
 			free(echo);
 		}
-		else
+		else if (init && new_line == 0)
 			printf("%s", init);
 	}
 }
