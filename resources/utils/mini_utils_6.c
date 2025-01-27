@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:47:11 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/22 14:40:33 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 10:57:27 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ char	*get_word(char *line, int *sig, char *siline)
 	init += 4;
 	while (*init && *init <= 32)
 		init++;
-	if (!mini_strstr(init, "-n") || is_within_quotes(siline, "-n"))
+	if ((mini_strstr(init, "-n") && *(mini_strstr(init, "-n") + 2) != ' ')
+		&& !is_within_quotes(siline, "-n"))
+		*sig = 2;
+	else if (!mini_strstr(init, "-n") || is_within_quotes(siline, "-n"))
 	{
 		while (*init && (*init == ' ' || *init == '\t'))
 			init++;
@@ -75,5 +78,12 @@ int	is_operator(char *str)
 			return (1);
 		i++;
 	}
+	return (0);
+}
+
+int	mini_isspace(int c)
+{
+	if (c != '\0' && c <= 32)
+		return (1);
 	return (0);
 }

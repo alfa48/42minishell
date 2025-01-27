@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/24 15:45:04 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:09:34 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void			*ft_memset_space(void *ptr, int value, size_t num);
 
 // resources/exec/mini_exec.c
 void			exec(t_cmd *cmd);
+void			cmd_not_found_end_exit(char *str);
 
 // resources/utils/mini_utils_2.c
 void			free_tree(t_node *root);
@@ -95,13 +96,13 @@ void			execute_pipe_middle_(int pos, t_cmd *cmd);
 
 // resources/pipe/exec_pipe_right.c
 void			execute_pipe_right(int pos, t_cmd *cmd);
-void	handle_redirects(t_redirect **redirects);
-char	*aux_heredoc_right(char *cmd, int pipefd[2]);
+void			handle_redirects(t_redirect **redirects);
+char			*aux_heredoc_right(char *cmd, int pipefd[2]);
 
 // resources/pipe/exec_pipe_left.c
 void			execute_pipe_left(int pos, t_cmd *cmd);
-void	configure_stdin(char *heredoc_delim, int *pipefd);
-char	*prepare_command(char *cmd, char *heredoc_delim);
+void			configure_stdin(char *heredoc_delim, int *pipefd);
+char			*prepare_command(char *cmd, char *heredoc_delim);
 void			mini_close_fd(int fd_0, int fd_1);
 
 // resources/pipe/utils.c
@@ -114,6 +115,7 @@ void			execute_with_args(char *clean_cmd, t_redirect **redirects,
 					t_cmd *cmd);
 void			execute_redirect_(int pos, t_cmd *cmd);
 void			exec_redout_(int pos, t_cmd *cmd);
+void			apply_file_redirections(t_redirect **r);
 
 // resources/utils/mini_utils.c
 void			execute_tree(t_node *root, t_cmd *cmd);
@@ -128,6 +130,7 @@ void			*ft_memset_space(void *ptr, int value, size_t num);
 
 // resources/exec/exec_single_commands.c
 int				execute_single_command(char *cmd_str, t_cmd *cmd);
+void			execute_child_process(t_redirect **redirects, t_cmd *cmd);
 
 // resources/exec/exec_single_commands_utils.c
 void			exit_child_process(t_cmd *cmd, char *path, char **args,
@@ -152,13 +155,17 @@ void			free_array(char **array);
 
 // resources/utils/mini_utils_4.c
 char			*get_env_var(const char *name, t_env_var *env_list);
-char	*get_first_word(const char *line);
+char			*get_first_word(const char *line);
 void			cmd_not_found(char *str);
 int				is_within_quotes(char *str, char *sep);
 int				is_entirely_within_quotes(char *str);
 
 // resources/utils/mini_utils_6.c
 char			*get_word(char *line, int *sig, char *sigline);
+int				mini_isspace(int c);
+
+// resources/utils/mini_utils_7.c
+char			*get_first_word(const char *line);
 
 // resources/mini_expand.c
 char			*concat_strings(char **str_array);

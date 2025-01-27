@@ -6,32 +6,11 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 10:30:10 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/23 16:17:57 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:00:07 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// Função para limpar e sair do processo filho
-void	exit_child_process(t_cmd *cmd, char *path, char **args,
-		t_fd_data *fd_data)
-{
-	int	i;
-
-	i = 0;
-	while (i < fd_data->fd_count)
-	{
-		if (fd_data->opened_fds[i] != -1)
-			close(fd_data->opened_fds[i]);
-		i++;
-	}
-	free(cmd->clean_cmd);
-	free(path);
-	if (args)
-		free_array(args);
-	free_redirects(cmd->redirects);
-	exit(EXIT_FAILURE);
-}
 
 // Função para aplicar redirecionamentos
 int	apply_redirects(t_redirect **redirects, int *opened_fds, int *fd_count)
@@ -59,4 +38,54 @@ int	apply_redirects(t_redirect **redirects, int *opened_fds, int *fd_count)
 			return (0);
 	}
 	return (1);
+}
+
+void	handle_red_stdin(t_redirect **redirects)
+{
+	int	i;
+
+	i = 0;
+	while (redirects && redirects[i])
+	{
+		if (ft_strcmp(redirects[i]->type, "<") == 0)
+		{
+			redirects[i]->fd = open(redirects[i]->file, O_RDONLY);
+			if (redirects[i]->fd != -1)
+				dup2(redirects[i]->fd, STDIN_FILENO);
+			else
+			{
+				perror("Error to open stdin file");
+				exit(EXIT_FAILURE);
+			}
+		}
+		i++;
+	}
+}
+
+void	handle_redirects(t_redirect **redirects)
+{
+	int	i;
+
+	i = 0;
+	while (redirects && redirects[i])
+	{
+		if (ft_strcmp(redirects[i]->type, ">") == 0)
+		{
+			redirects[i]->fd = open(redirects[i]->file,
+					O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (redirects[i]->fd != -1)
+				dup2(redirects[i]->fd, STDOUT_FILENO);
+			return ;
+		}
+		else if (ft_strcmp(redirects[i]->type, ">>") == 0)
+		{
+			redirects[i]->fd = open(redirects[i]->file,
+					O_WRONLY | O_CREAT | O_APPEND, 0644);
+			if (redirects[i]->fd != -1)
+				dup2(redirects[i]->fd, STDOUT_FILENO);
+			return ;
+		}
+		i++;
+	}
+	handle_red_stdin(redirects);
 }

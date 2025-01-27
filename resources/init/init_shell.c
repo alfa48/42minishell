@@ -32,7 +32,7 @@ t_node	*parse_command(char *command, t_node *root, int side)
 		if (sep_position[i])
 			return (func_array.parsers[i + 1](command, root, side));
 	}
-	node = create_node(NULL, mini_epur_str(command), 0);
+	node = create_node(NULL, ft_strdup(command), 0);
 	return (add_node(root, node, side));
 }
 
@@ -48,7 +48,7 @@ t_node	*parse_command_(char *command, t_node *root, int side)
 	sep_position = ft_strchr(command, '|');
 	if (sep_position)
 		return (func_array.parsers[0](command, root, side));
-	node = create_node(NULL, mini_epur_str(command), 0);
+	node = create_node(NULL, ft_strdup(command), 0);
 	return (add_node(root, node, side));
 }
 
@@ -110,6 +110,6 @@ t_node	*init_shell(char *command_line)
 	if (!root && has_redirect(command_line))
 		root = process_redirects(command_line);
 	if (!root)
-		root = create_node(NULL, mini_epur_str(command_line), 0);
+		root = create_node(NULL, ft_strdup(command_line), 0);
 	return (root);
 }

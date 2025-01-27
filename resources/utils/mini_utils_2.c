@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:03:32 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/21 13:05:39 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:10:53 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ int	is_first_word_echo(char *command)
 	int		i;
 
 	i = 0;
-	while (isspace(*command))
+	while (mini_isspace(*command))
 		command++;
-	while (*command && !isspace(*command) && i < 255)
+	while (*command && !mini_isspace(*command) && i < 255)
 		first_word[i++] = *command++;
 	first_word[i] = '\0';
 	if (strcmp(first_word, "echo") == 0)
@@ -38,7 +38,7 @@ static char	*return_epur(int *i, char *str)
 
 char	*mini_epur_str(char *str)
 {
-	char	out[42000];
+	char	*out;
 	int		i;
 
 	if (is_first_word_echo(str) || is_first_word_echo(&str[1]))
@@ -47,6 +47,7 @@ char	*mini_epur_str(char *str)
 		return (ft_strdup(str));
 	str = process_cmd(str);
 	i = 0;
+	out = malloc(sizeof(char) * ft_strlen(str) + 1);
 	while (*str == ' ' || *str == '\t')
 		str++;
 	while (*str)

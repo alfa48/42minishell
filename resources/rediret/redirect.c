@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 15:57:35 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/23 13:20:46 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 10:57:02 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,17 +88,3 @@ char	**ft_split_redirect(const char *str)
 	result[i] = NULL;
 	return (result);
 }
-
-/*void	exec_command_redirect(int pos, t_cmd *cmd)
-{
-	int	i;
-
-	(void)cmd;
-	(void)pos;
-	i = 1;
-	while (cmd->array_redirect[i])
-	{
-		execute_redirect_(i, cmd);
-		i++;
-	}
-}*/

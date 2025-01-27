@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:18:01 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/22 10:17:10 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:16:21 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,9 @@ void	fork_exec_cmd(t_cmd *cmd, t_node *node)
 	if (pid == 0)
 	{
 		ccmd = aux_exec_heredoc(node->command);
-		if (is_entirely_within_quotes(ccmd))
-			path = find_executable((process_cmd(ccmd)), &(cmd->g_env_list));
-		else
-			path = find_executable(get_first_word(process_cmd(ccmd)),
-					&(cmd->g_env_list));
+		cmd_not_found_end_exit(ccmd);
+		path = find_executable(get_first_word(process_cmd(ccmd)),
+				&(cmd->g_env_list));
 		args = get_args(ccmd);
 		if (execve(path, args, cmd->envl) == -1)
 			error_execve(args[0], path, args);

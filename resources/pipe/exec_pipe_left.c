@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:35:09 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/24 15:19:30 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:00:48 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,31 +16,6 @@ void	mini_close_fd(int fd_0, int fd_1)
 {
 	close(fd_0);
 	close(fd_1);
-}
-
-void	handle_redirects(t_redirect **redirects)
-{
-	int	i;
-
-	i = 0;
-	while (redirects && redirects[i])
-	{
-		if (ft_strcmp(redirects[i]->type, ">") == 0)
-		{
-			redirects[i]->fd = open(redirects[i]->file,
-					O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			if (redirects[i]->fd != -1)
-				dup2(redirects[i]->fd, STDOUT_FILENO);
-		}
-		else if (ft_strcmp(redirects[i]->type, ">>") == 0)
-		{
-			redirects[i]->fd = open(redirects[i]->file,
-					O_WRONLY | O_CREAT | O_APPEND, 0644);
-			if (redirects[i]->fd != -1)
-				dup2(redirects[i]->fd, STDOUT_FILENO);
-		}
-		i++;
-	}
 }
 
 void	configure_stdin(char *heredoc_delim, int *pipefd)
@@ -81,12 +56,14 @@ void	execute_pipe_left(int pos, t_cmd *cmd)
 		return ;
 	if (pid == 0)
 	{
+		cmd_not_found_end_exit(cmd->array[pos]);
 		heredoc_delim = get_heredoc_delimiter(cmd->array[pos]);
 		close(cmd->pipefd[1]);
 		configure_stdin(heredoc_delim, cmd->pipefd);
 		redirects = parse_redirects(cmd->array[pos], cmd);
 		handle_redirects(redirects);
-		clean_cmd = prepare_command(cmd->array[pos], heredoc_delim);
+		clean_cmd = prepare_command(process_cmd(cmd->array[pos]),
+				heredoc_delim);
 		execute_with_args(clean_cmd, redirects, cmd);
 	}
 }

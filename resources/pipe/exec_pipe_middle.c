@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:30:30 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/23 16:48:36 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 10:28:42 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ void	execute_pipe_middle_(int pos, t_cmd *cmd)
 		return ;
 	if (pid == 0)
 	{
+		cmd_not_found_end_exit(cmd->array[pos]);
 		heredoc_delim = get_heredoc_delimiter(cmd->array[pos]);
 		close(cmd->prev_pipe[1]);
 		close(cmd->pipefd[0]);
@@ -100,7 +101,7 @@ void	execute_pipe_middle_(int pos, t_cmd *cmd)
 		close(cmd->pipefd[1]);
 		redirects = parse_redirects(cmd->array[pos], cmd);
 		configure_redirects(redirects);
-		execute_clean_command(cmd->array[pos], redirects, cmd);
+		execute_clean_command(process_cmd(cmd->array[pos]), redirects, cmd);
 	}
 	else
 		mini_close_fd(cmd->prev_pipe[0], cmd->prev_pipe[1]);
