@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 15:57:35 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/23 13:20:46 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:10:29 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static char	*extract_token(const char **str)
 		return (NULL);
 	start = *str;
 	if (is_there_redirect_char(start, &redirect_len))
-		return (strndup(start, redirect_len));
+		return (ft_strndup(start, redirect_len));
 	while (**str && !is_there_redirect_char(*str, &redirect_len))
 		(*str)++;
 	end = *str;
@@ -77,7 +77,7 @@ char	**ft_split_redirect(const char *str)
 	if (!str)
 		return (NULL);
 	token_count = count_tokens(str);
-	result = calloc(token_count + 2, sizeof(char *));
+	result = ft_calloc(token_count + 2, sizeof(char *));
 	if (!result)
 		return (NULL);
 	parser = str;

@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   mini_utils_4.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:13:10 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/21 12:51:22 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:40:39 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_env_var(const char *name, t_env_var *env_list)
+char	*get_env_var(char *name, t_env_var *env_list)
 {
 	while (env_list)
 	{
-		if (strcmp(env_list->name, name) == 0)
+		if (ft_strcmp(env_list->name, name) == 0)
 		{
 			return (env_list->value);
 		}
@@ -76,8 +76,8 @@ int	is_within_quotes(char *str, char *needed)
 
 int	is_entirely_within_quotes(char *str)
 {
-	if ((str[0] == '\'' && str[strlen(str) - 1] == '\'') || (str[0] == '\"'
-			&& str[strlen(str) - 1] == '\"'))
+	if ((str[0] == '\'' && str[ft_strlen(str) - 1] == '\'') || (str[0] == '\"'
+			&& str[ft_strlen(str) - 1] == '\"'))
 		return (1);
 	return (0);
 }

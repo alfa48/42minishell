@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 08:32:29 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/24 08:04:29 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:50:53 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ void	exec(t_cmd *cmd)
 	if (ft_strchr(cmd->line1, PIPE))
 		execute_commands(cmd->size, cmd);
 	else if (has_redirect(cmd->line1))
+	{
+		//perror("E mesmo aqui\n");
 		execute_single_command(cmd->line1, cmd);
+	}
 	close(cmd->pipefd[0]);
 	close(cmd->pipefd[1]);
 	wait_forks(cmd);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/24 08:11:42 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:39:16 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ int				is_redirect_char(char c);
 void			free_array(char **array);
 
 // resources/utils/mini_utils_4.c
-char			*get_env_var(const char *name, t_env_var *env_list);
+char			*get_env_var(char *name, t_env_var *env_list);
 char			*get_first_word(char *line);
 void			cmd_not_found(char *str);
 int				is_within_quotes(char *str, char *sep);
@@ -155,6 +155,7 @@ int				is_entirely_within_quotes(char *str);
 
 // resources/utils/mini_utils_6.c
 char			*get_word(char *line, int *sig, char *sigline);
+void			*ft_realloc(void *ptr, size_t new_size);
 
 // resources/mini_expand.c
 char			*concat_strings(char **str_array);

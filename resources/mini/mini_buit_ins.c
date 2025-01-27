@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_buit_ins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:25 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/21 15:47:47 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:30:12 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	mini_unset(char **args, t_env_var **g_env_list)
 	if (args[0] == NULL || args[1] == NULL)
 		return ;
 	current = *g_env_list;
-	if (strcmp(args[1], current->name) == 0)
+	if (ft_strcmp(args[1], current->name) == 0)
 	{
 		(*g_env_list) = current->next;
 		current = NULL;
@@ -77,7 +77,7 @@ void	mini_unset(char **args, t_env_var **g_env_list)
 	}
 	while (current->next)
 	{
-		if (strcmp(args[1], current->next->name) == 0)
+		if (ft_strcmp(args[1], current->next->name) == 0)
 		{
 			tmp = current->next;
 			current->next = current->next->next;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/23 14:06:26 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:42:48 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ int	is_only_spaces(char *str)
 
 void	keep_on_shell(t_cmd *cmd)
 {
-	add_history(cmd->line);
 	cmd->line = expanding(cmd->line, cmd);
 	cmd->root = init_shell(cmd->line);
 	inorder_traversal(cmd->root);
@@ -68,6 +67,7 @@ int	main(void)
 			return (0 * printf("exit\n") + 1);
 		if (!is_only_spaces(cmd->line))
 		{
+			add_history(cmd->line);
 			if (checks_str(cmd))
 				continue ;
 			keep_on_shell(cmd);

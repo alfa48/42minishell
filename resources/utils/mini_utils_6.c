@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:47:11 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/24 08:11:37 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:23:50 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,23 @@ int	is_operator(char *str)
 		i++;
 	}
 	return (0);
+}
+
+void	*ft_realloc(void *ptr, size_t new_size)
+{
+	void	*new_ptr;
+
+	if (new_size == 0)
+	{
+		free(ptr);
+		return (NULL);
+	}
+	if (ptr == NULL)
+		return (malloc(new_size));
+	new_ptr = malloc(new_size);
+	if (!new_ptr)
+		return (NULL);
+	ft_memcpy(new_ptr, ptr, new_size);
+	free(ptr);
+	return (new_ptr);
 }

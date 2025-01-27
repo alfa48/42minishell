@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe_redirectrs.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 14:37:29 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/23 11:56:25 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:30:12 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void	trim_spaces(char *result)
 	char	*write_ptr;
 	char	*start;
 
-	write_ptr = result + strlen(result) - 1;
+	write_ptr = result + ft_strlen(result) - 1;
 	while (write_ptr >= result && isspace(*write_ptr))
 		write_ptr--;
 	*(write_ptr + 1) = '\0';
@@ -68,7 +68,7 @@ static void	trim_spaces(char *result)
 	while (*start && isspace(*start))
 		start++;
 	if (start != result)
-		ft_memmove(result, start, strlen(start) + 1);
+		ft_memmove(result, start, ft_strlen(start) + 1);
 }
 
 // Função principal para remover redirecionamentos

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_cepeu.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/21 10:59:29 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:31:22 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	is_first_word_export(char *command)
 	while (*command && !isspace(*command) && i < 255)
 		first_word[i++] = *command++;
 	first_word[i] = '\0';
-	if (strcmp(first_word, "export") == 0)
+	if (ft_strcmp(first_word, "export") == 0)
 		return (1);
 	return (0);
 }

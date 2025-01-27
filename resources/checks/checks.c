@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checks.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 09:08:22 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/21 10:41:34 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:44:04 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,62 +65,66 @@ static int	checks_start_end(char *str)
 	return (0);
 }
 
-static int	handle_token_check(char *str, int *i, int *space, char *sms_error)
+static int  handle_token_check(char *str, int *i, int *space, char *sms_error)
 {
-	char	c;
-
-	if (str[*i] && (str[*i] == '<' || str[*i] == '>' || str[*i] == '|'
-			|| str[*i] == '&'))
-	{
-		if (is_within_quotes(str, str + *i))
-		{
-			(*i)++;
-			return (0);
-		}
-		c = str[*i];
-		while (str[++(*i)] && str[*i] <= 32)
-			*(space) = 1;
-		if (!str[*i])
-			return (0);
-		if (!*space && ((c == '<' && str[*i] == '<') || (c == '>'
-					&& str[*i] == '>')))
-			return (0);
-		if (str[*i] == '|')
-			return (1 + 0 * printf("%s '|'\n", sms_error));
-		else if (str[*i] == '<' || str[*i] == '>' || str[*i] == '|')
-			return (1 + 0 * printf("%s `newline'\n", sms_error));
-	}
-	return (0);
+    char    c;    if (str[*i] && (str[*i] == '<' || str[*i] == '>' || str[*i] == '|'))
+    {
+        if (is_within_quotes(str, str + *i))
+        {
+            (*i)++;
+            return (0);
+        }
+        c = str[*i];
+        (*i)++;
+        if (c == '>' && str[*i] == '>')
+        {
+            (*i)++;
+        }
+        else if (c == '<' && str[*i] == '<')
+        {
+            (*i)++;
+        }
+        *space = 0;
+        while (str[*i] && str[*i] <= 32)
+        {
+            (*i)++;
+            *space = 1;
+        }
+        if (!str[*i] || str[*i] == '<' || str[*i] == '>' || str[*i] == '|')
+        {
+            printf("%s `%c'\n", sms_error, c);
+            return (1);
+        }
+    }
+    return (0);
 }
 
-int	checks_error_pattern(char *str)
+int checks_error_pattern(char *str)
 {
-	char	*sms;
-	int		i;
-	int		space;
-
-	i = 0;
-	space = 0;
-	sms = "minishell: syntax error near unexpected token";
-	while (str[i])
-	{
-		while (str[i] && str[i] <= 32)
-			i++;
-		if (handle_token_check(str, &i, &space, sms))
-		{
-			return (1);
-		}
-		if (str[i])
-			i++;
-	}
-	return (0);
+    char    *sms;
+    int     i;
+    int     space;    i = 0;
+    space = 0;
+    sms = "minishell: syntax error near unexpected token";
+    while (str[i])
+    {
+        while (str[i] && str[i] <= 32)
+            i++;
+        if (handle_token_check(str, &i, &space, sms))
+        {
+            return (1);
+        }
+        if (str[i])
+            i++;
+    }
+    return (0);
 }
 
 int	checks_str(t_cmd *cmd)
 {
 	char	*str;
 
-	str = ft_strdup(cmd->line);
+	str = mini_epur_str(cmd->line);
 	if (!str)
 		return (1);
 	if (checks_start_end(str) || checks_error_pattern(str))
