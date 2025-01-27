@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:13:10 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/24 10:40:39 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/27 07:52:12 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,41 @@ char	*get_env_var(char *name, t_env_var *env_list)
 	return (NULL);
 }
 
-char	*get_first_word(char *line)
+char	*get_first_word(const char *line)
 {
-	char	*end;
+	const char	*start;
+	const char	*end;
+	char		*word;
+	size_t		len;
 
-	while (*line && isspace(*line))
+	// Avança até o primeiro caractere não-espaço
+	while (*line && isspace((unsigned char)*line))
 		line++;
 	if (*line == '\0')
 		return (NULL);
+
+	// Encontra o final da palavra
+	start = line;
+	while (*line && !isspace((unsigned char)*line))
+		line++;
 	end = line;
-	while (*end && !isspace(*end))
-	{
-		end++;
-	}
-	*end = '\0';
-	return (line);
+
+	// Calcula o comprimento da palavra
+	len = end - start;
+
+	// Aloca memória para a nova string (mais 1 para o terminador nulo)
+	word = (char *)malloc(len + 1);
+	if (!word)
+		return (NULL);
+
+	// Copia a palavra para a nova string e adiciona o terminador nulo
+	strncpy(word, start, len);
+	word[len] = '\0';
+
+	return (word);
 }
+
+
 
 void	cmd_not_found(char *str)
 {

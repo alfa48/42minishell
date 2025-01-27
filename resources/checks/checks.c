@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 09:08:22 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/24 12:44:04 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/27 07:50:36 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,9 @@ static int	checks_start_end(char *str)
 
 static int  handle_token_check(char *str, int *i, int *space, char *sms_error)
 {
-    char    c;    if (str[*i] && (str[*i] == '<' || str[*i] == '>' || str[*i] == '|'))
+    char    c;
+
+    if (str[*i] && (str[*i] == '<' || str[*i] == '>' || str[*i] == '|'))
     {
         if (is_within_quotes(str, str + *i))
         {
@@ -103,7 +105,9 @@ int checks_error_pattern(char *str)
 {
     char    *sms;
     int     i;
-    int     space;    i = 0;
+    int     space;
+
+    i = 0;
     space = 0;
     sms = "minishell: syntax error near unexpected token";
     while (str[i])
@@ -119,6 +123,7 @@ int checks_error_pattern(char *str)
     }
     return (0);
 }
+
 
 int	checks_str(t_cmd *cmd)
 {

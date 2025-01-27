@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/24 10:39:16 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/27 07:52:48 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,13 @@ void			execute_pipe_middle_(int pos, t_cmd *cmd);
 
 // resources/pipe/exec_pipe_right.c
 void			execute_pipe_right(int pos, t_cmd *cmd);
+void	handle_redirects(t_redirect **redirects);
+char	*aux_heredoc_right(char *cmd, int pipefd[2]);
 
 // resources/pipe/exec_pipe_left.c
 void			execute_pipe_left(int pos, t_cmd *cmd);
+void	configure_stdin(char *heredoc_delim, int *pipefd);
+char	*prepare_command(char *cmd, char *heredoc_delim);
 void			mini_close_fd(int fd_0, int fd_1);
 
 // resources/pipe/utils.c
@@ -148,7 +152,7 @@ void			free_array(char **array);
 
 // resources/utils/mini_utils_4.c
 char			*get_env_var(char *name, t_env_var *env_list);
-char			*get_first_word(char *line);
+char	*get_first_word(const char *line);
 void			cmd_not_found(char *str);
 int				is_within_quotes(char *str, char *sep);
 int				is_entirely_within_quotes(char *str);

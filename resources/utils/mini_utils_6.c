@@ -22,7 +22,10 @@ char	*get_word(char *line, int *sig, char *siline)
 	init += 4;
 	while (*init && *init <= 32)
 		init++;
-	if (!mini_strstr(init, "-n") || is_within_quotes(siline, "-n"))
+	if ((mini_strstr(init, "-n") && *(mini_strstr(init, "-n") + 2) != ' ') && 
+		!is_within_quotes(siline, "-n"))
+		*sig = 2;
+	else if (!mini_strstr(init, "-n") || is_within_quotes(siline, "-n"))
 	{
 		while (*init && (*init == ' ' || *init == '\t'))
 			init++;

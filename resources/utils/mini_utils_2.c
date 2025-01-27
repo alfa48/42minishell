@@ -53,13 +53,14 @@ static int	is_spacial_command(char *str)
 
 char	*mini_epur_str(char *str)
 {
-	char	out[42000];
+	char	*out;
 	int		i;
 
 	if (is_spacial_command(str))
 		return (ft_strdup(str));
 	str = process_cmd(str);
 	i = 0;
+	out = malloc(sizeof(char) * ft_strlen(str) + 1);
 	while (*str == ' ' || *str == '\t')
 		str++;
 	while (*str)
