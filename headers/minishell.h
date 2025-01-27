@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 11:09:34 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 12:04:54 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 
 # define MAX_REDIRECTS 10
 # define PIPE '|'
+
+//global variables
+extern int g_sig_status_cmd;
 
 // resources/main/main.c
 int				main(void);
@@ -154,7 +157,7 @@ int				is_redirect_char(char c);
 void			free_array(char **array);
 
 // resources/utils/mini_utils_4.c
-char			*get_env_var(const char *name, t_env_var *env_list);
+char			*get_env_var(char *name, t_env_var *env_list);
 char			*get_first_word(const char *line);
 void			cmd_not_found(char *str);
 int				is_within_quotes(char *str, char *sep);
@@ -163,6 +166,7 @@ int				is_entirely_within_quotes(char *str);
 // resources/utils/mini_utils_6.c
 char			*get_word(char *line, int *sig, char *sigline);
 int				mini_isspace(int c);
+void	*ft_realloc(void *ptr, size_t new_size);
 
 // resources/utils/mini_utils_7.c
 char			*get_first_word(const char *line);
@@ -218,6 +222,7 @@ t_cmd			*init_before_init(void);
 // resources/signals/cmd_signal.c
 void			handle_signals(void);
 void			sigint_handler(int signum);
+void set_sig_status_cmd(t_cmd *cmd);
 
 // resources/path/path_utils.c
 char			*find_executable(const char *command, t_env_var **g_env_list);

@@ -6,11 +6,13 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 11:22:46 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 12:01:12 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int g_sig_status_cmd = 0;
 
 void	inorder_traversal(t_node *root)
 {
@@ -39,7 +41,6 @@ int	is_only_spaces(char *str)
 
 void	keep_on_shell(t_cmd *cmd)
 {
-	add_history(cmd->line);
 	cmd->line = expanding(cmd->line, cmd);
 	cmd->root = init_shell(cmd->line);
 	if (cmd->root && cmd->line)
@@ -64,10 +65,12 @@ int	main(void)
 	{
 		init_args_ofen(cmd);
 		cmd->line = readline("minishell$> ");
+		set_sig_status_cmd(cmd);
 		if (!cmd->line)
 			return (0 * printf("exit\n") + 1);
 		if (!is_only_spaces(cmd->line))
 		{
+			add_history(cmd->line);
 			if (checks_str(cmd))
 				continue ;
 			keep_on_shell(cmd);

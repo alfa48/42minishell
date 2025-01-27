@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:03:32 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 11:10:53 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 12:01:36 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	is_first_word_echo(char *command)
 	while (*command && !mini_isspace(*command) && i < 255)
 		first_word[i++] = *command++;
 	first_word[i] = '\0';
-	if (strcmp(first_word, "echo") == 0)
+	if (ft_strcmp(first_word, "echo") == 0)
 		return (1);
 	return (0);
 }
@@ -36,14 +36,27 @@ static char	*return_epur(int *i, char *str)
 		return (NULL);
 }
 
+static int	is_spacial_command(char *str)
+{
+	if (is_first_word_echo(str) || is_first_word_echo(&str[1]))
+		return (1);
+	if (mini_strstr(str, "<") || mini_strstr(str, ">") || mini_strstr(str, "|"))
+	{
+		if (is_within_quotes(str, "<") || is_within_quotes(str, ">")
+			|| is_within_quotes(str, "|"))
+			return (1);
+	}
+	if (is_entirely_within_quotes(str))
+		return (1);
+	return (0);
+}
+
 char	*mini_epur_str(char *str)
 {
 	char	*out;
 	int		i;
 
-	if (is_first_word_echo(str) || is_first_word_echo(&str[1]))
-		return (ft_strdup(str));
-	if (is_entirely_within_quotes(str))
+	if (is_spacial_command(str))
 		return (ft_strdup(str));
 	str = process_cmd(str);
 	i = 0;

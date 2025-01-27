@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 08:32:29 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/27 11:50:42 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 12:09:56 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	cmd_not_found_end_exit(char *str)
 	{
 		cmd_not_found(fw);
 		free(fw);
-		exit(0);
+		exit(14);
 	}
 }
 

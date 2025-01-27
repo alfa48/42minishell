@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 14:37:29 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 11:10:12 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:59:21 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	trim_spaces(char *result)
 	while (*start && mini_isspace(*start))
 		start++;
 	if (start != result)
-		ft_memmove(result, start, strlen(start) + 1);
+		ft_memmove(result, start, ft_strlen(start) + 1);
 }
 
 // Função principal para remover redirecionamentos

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 13:22:09 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/22 15:17:53 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:22:50 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static void	read_heredoc_content(char *delimiter, int write_fd)
 			buffer[bytes_read - 1] = '\0';
 		if (ft_strcmp(buffer, delimiter) == 0)
 			break ;
-		heredoc_content = realloc(heredoc_content, heredoc_len + bytes_read);
+		heredoc_content = ft_realloc(heredoc_content, heredoc_len + bytes_read);
 		ft_memcpy(heredoc_content + heredoc_len, buffer, bytes_read - 1);
 		heredoc_content[heredoc_len + bytes_read - 1] = '\n';
 		heredoc_len += bytes_read;

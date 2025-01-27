@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:56:05 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 11:22:31 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 12:03:51 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ void	mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 		mini_exit(cmd);
 	else if (ft_strcmp("export", cmd->arg[0]) == 0)
 		mini_export(cmd->arg, g_env_list);
-	else if (strcmp(cmd->arg[0], "env") == 0)
+	else if (ft_strcmp(cmd->arg[0], "env") == 0)
 		mini_env(*g_env_list);
-	else if (strcmp(cmd->arg[0], "unset") == 0)
+	else if (ft_strcmp(cmd->arg[0], "unset") == 0)
 		mini_unset(cmd->arg, g_env_list);
 	else if (ft_strcmp("echo", cmd->arg[0]) == 0)
 		mini_echo(cmd->line, cmd->line1);
@@ -59,7 +59,7 @@ static int	compare_env_vars(const void *a, const void *b)
 
 	var_a = *(t_env_var **)a;
 	var_b = *(t_env_var **)b;
-	return (strcmp(var_a->name, var_b->name));
+	return (ft_strcmp(var_a->name, var_b->name));
 }
 
 int	env_list_size(t_env_var *g_env_list)

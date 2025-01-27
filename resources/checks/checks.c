@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 09:08:22 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/27 10:56:35 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:58:52 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ int	checks_str(t_cmd *cmd)
 {
 	char	*str;
 
-	str = ft_strdup(cmd->line);
+	str = mini_epur_str(cmd->line);
 	if (!str)
 		return (1);
 	if (checks_start_end(str) || checks_error_pattern(str))
