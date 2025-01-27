@@ -18,7 +18,7 @@ t_cmd	*init_before_init(void)
 	t_cmd		*cmd;
 
 	cmd = malloc(sizeof(t_cmd));
-	handle_signals();
+	//handle_signals();
 	init_args(cmd, environ);
 	return (cmd);
 }

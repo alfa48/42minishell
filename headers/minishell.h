@@ -29,7 +29,7 @@
 # define PIPE '|'
 
 // global variables
-extern int		g_sig_status_cmd;
+extern int g_signal_status;
 
 // resources/main/main.c
 int				main(void);

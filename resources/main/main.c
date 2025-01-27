@@ -12,7 +12,20 @@
 
 #include "minishell.h"
 
-int		g_sig_status_cmd = 0;
+int g_signal_status = 0;
+
+static void    handle_sigint(int sig)
+{
+    (void)sig;
+    g_signal_status = 1;
+    write(1, "\n", 1);
+    if (waitpid(-1, NULL, WNOHANG) == -1)  // Se retornar -1, estamos no processo pai
+    {
+        rl_on_new_line();
+        rl_replace_line("", 0);
+        rl_redisplay();
+    }
+}
 
 void	inorder_traversal(t_node *root)
 {
@@ -56,28 +69,34 @@ void	keep_on_shell(t_cmd *cmd)
 	free_ms(cmd);
 }
 
-int	main(void)
+int    main(void)
 {
-	t_cmd	*cmd;
-
-
-	cmd = init_before_init();
-	while (1)
-	{
-		init_args_ofen(cmd);
-		cmd->line = readline("minishell$> ");
-		cmd->status_cmd_prev = 0;
-		set_sig_status_cmd(cmd);
-		if (!cmd->line)
-			return (0 * printf("exit\n") + 1);
-		if (!is_only_spaces(cmd->line))
-		{
-			add_history(cmd->line);
-			if (checks_str(cmd))
-				continue ;
-			keep_on_shell(cmd);
-		}
-		free(cmd->line);
-	}
-	return (0);
+      t_cmd    *cmd;
+    struct sigaction    sa;
+    
+    // Configurar o sigaction antes do loop principal
+    sigemptyset(&sa.sa_mask);
+    sa.sa_handler = handle_sigint;
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
+    
+    cmd = init_before_init();
+    while (1)
+    {
+        init_args_ofen(cmd);
+        cmd->line = readline("minishell$> ");
+        set_sig_status_cmd(cmd);
+        if (!cmd->line)
+            return (0 * write(1, "exit\n", 5) + 1);
+            
+        if (!is_only_spaces(cmd->line))
+        {
+            add_history(cmd->line);
+            if (checks_str(cmd))
+                continue;
+            keep_on_shell(cmd);
+        }
+        free(cmd->line);
+    }
+    return (0);
 }
