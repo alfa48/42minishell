@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 09:34:57 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/27 11:22:28 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 15:16:10 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	init_args(t_cmd *cmd, char **environ)
 	cmd->g_env_list = NULL;
 	cmd->val_only = NULL;
 	cmd->status_cmd = 0;
+	cmd->status_cmd_prev = 0;
 	cmd->envl = environ;
 	initialize_env_list(&(cmd->g_env_list), environ);
 	if (!cmd->g_env_list)

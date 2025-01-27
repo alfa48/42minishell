@@ -31,6 +31,7 @@ SRC = $(RSC_DIR)/main/main.c \
 	$(RSC_DIR)/mini/cmd_envexit.c \
 	$(RSC_DIR)/mini/mini_buit_ins.c \
 	$(RSC_DIR)/mini/mini_execv.c \
+	$(RSC_DIR)/mini/utils.c \
 	$(RSC_DIR)/signals/cmd_signal.c \
 	$(RSC_DIR)/path/path_utils.c \
 	$(RSC_DIR)/forks/cmd_forks.c \

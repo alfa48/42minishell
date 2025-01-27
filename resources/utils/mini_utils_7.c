@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:50:04 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 11:21:38 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 15:57:22 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,20 @@ char	*get_first_word(const char *line)
 		end = line;
 	}
 	return (extract_word(start, end));
+}
+
+void	replace_line(void)
+{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+}
+
+void	replace_line1(void)
+{
+		printf("\n");
+		//rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 }

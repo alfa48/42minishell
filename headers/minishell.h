@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 12:04:54 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 15:27:02 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,18 @@
 # define MAX_REDIRECTS 10
 # define PIPE '|'
 
-//global variables
-extern int g_sig_status_cmd;
+// global variables
+extern int		g_sig_status_cmd;
 
 // resources/main/main.c
 int				main(void);
 
-// resources/mini_execv.c
+// resources/mini/mini_built_ins.c
 void			only_expor_cmd(t_env_var *g_env_list);
 void			list_env_vars(t_env_var *g_env_list);
 void			mini_built_in(t_cmd *cmd, t_env_var **g_env_list);
+void			ft_qsort(void *base, size_t num, size_t size,
+					int (*compare)(const void *, const void *));
 
 // resources/init/init_vars
 int				calc_tree_size(t_node *root);
@@ -82,7 +84,7 @@ void			cmd_not_found_end_exit(char *str);
 // resources/utils/mini_utils_2.c
 void			free_tree(t_node *root);
 char			*mini_epur_str(char *str);
-t_node			*create_node(char *operator, char *command, int index);
+t_node			*create_node(char *operator, char * command, int index);
 t_node			*add_node(t_node *root, t_node *new, int side);
 int				is_special_char(char c);
 int				is_echo_printable(char c);
@@ -166,10 +168,12 @@ int				is_entirely_within_quotes(char *str);
 // resources/utils/mini_utils_6.c
 char			*get_word(char *line, int *sig, char *sigline);
 int				mini_isspace(int c);
-void	*ft_realloc(void *ptr, size_t new_size);
+void			*ft_realloc(void *ptr, size_t new_size);
 
 // resources/utils/mini_utils_7.c
 char			*get_first_word(const char *line);
+void			replace_line(void);
+void			replace_line1(void);
 
 // resources/mini_expand.c
 char			*concat_strings(char **str_array);
@@ -222,7 +226,8 @@ t_cmd			*init_before_init(void);
 // resources/signals/cmd_signal.c
 void			handle_signals(void);
 void			sigint_handler(int signum);
-void set_sig_status_cmd(t_cmd *cmd);
+void			set_sig_status_cmd(t_cmd *cmd);
+void			handle_signals_child(void);
 
 // resources/path/path_utils.c
 char			*find_executable(const char *command, t_env_var **g_env_list);

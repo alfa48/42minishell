@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:18:01 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 12:00:29 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:47:28 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,11 @@ void	wait_forks(t_cmd *cmd)
 				cmd->status_cmd = 127;
 			else if (exit_status == 2)
 				cmd->status_cmd = exit_status;
+			else if (exit_status == 130)
+				cmd->status_cmd = exit_status;
 			else
-			    cmd->status_cmd = 126;
+				cmd->status_cmd = 126;
+			cmd->status_cmd_prev = 1;
 		}
 		i++;
 	}
@@ -65,9 +68,6 @@ void	fork_exec_cmd(t_cmd *cmd, t_node *node)
 	cmd->pid_count++;
 	if (pid == 0)
 	{
-		ft_putstr_fd("HEREDOC :", 2);
-		ft_putstr_fd(node->command, 2);
-		ft_putstr_fd("\n", 2);
 		ccmd = aux_exec_heredoc(node->command);
 		cmd_not_found_end_exit(ccmd);
 		path = find_executable(get_first_word(process_cmd(ccmd)),

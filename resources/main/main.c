@@ -6,13 +6,13 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 12:01:12 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 16:51:43 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_sig_status_cmd = 0;
+int		g_sig_status_cmd = 0;
 
 void	inorder_traversal(t_node *root)
 {
@@ -60,11 +60,13 @@ int	main(void)
 {
 	t_cmd	*cmd;
 
+
 	cmd = init_before_init();
 	while (1)
 	{
 		init_args_ofen(cmd);
 		cmd->line = readline("minishell$> ");
+		cmd->status_cmd_prev = 0;
 		set_sig_status_cmd(cmd);
 		if (!cmd->line)
 			return (0 * printf("exit\n") + 1);
