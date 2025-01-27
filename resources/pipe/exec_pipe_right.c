@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe_right.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:32:54 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/24 13:26:10 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 10:21:47 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,5 @@ void	error_execve(char *ccmd, char *path, char **args)
 	cmd_not_found(ccmd);
 	free(path);
 	free_array(args);
-	exit(1);
+	exit(errno);
 }

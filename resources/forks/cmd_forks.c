@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:18:01 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/24 08:34:31 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/27 10:47:21 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,15 @@ void	wait_forks(t_cmd *cmd)
 		{
 			exit_status = WEXITSTATUS(status);
 			if (exit_status == 1)
-				cmd->status_cmd = 127;
+				cmd->status_cmd = 1;
 			else if (exit_status == 0)
 				cmd->status_cmd = 0;
+			else if (exit_status == 14)
+				cmd->status_cmd = 127;
+			else if (exit_status == 2)
+				cmd->status_cmd = exit_status;
 			else
-				cmd->status_cmd = 126;
+			    cmd->status_cmd = 126;
 		}
 		i++;
 	}

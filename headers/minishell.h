@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 07:52:48 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:22:29 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 
 # define MAX_REDIRECTS 10
 # define PIPE '|'
+
+//global variables
+extern int g_sig_status_cmd;
 
 // resources/main/main.c
 int				main(void);
@@ -212,6 +215,7 @@ t_cmd			*init_before_init(void);
 // resources/signals/cmd_signal.c
 void			handle_signals(void);
 void			sigint_handler(int signum);
+void set_sig_status_cmd(t_cmd *cmd);
 
 // resources/path/path_utils.c
 char			*find_executable(const char *command, t_env_var **g_env_list);
