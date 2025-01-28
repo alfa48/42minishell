@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 18:02:38 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/27 11:43:54 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/27 16:44:26 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void	sigint_handler(int signum)
 	{
 		printf("\n");
 		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
+		//rl_replace_line("", 0);
+		//rl_redisplay();
 		if (!g_sig_status_cmd)
 			g_sig_status_cmd = 130;
 	}
