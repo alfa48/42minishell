@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:28:30 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/24 08:01:51 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/28 10:37:19 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ typedef struct s_cmd
 	int					index;
 	int					nl;
 	int					ncmd;
-	int					status_cmd_prev;
 	int					pid_count;
 	int					pipefd[2];
 	int					prev_pipe[2];

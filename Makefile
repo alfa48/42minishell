@@ -27,9 +27,11 @@ SRC = $(RSC_DIR)/main/main.c \
 	$(RSC_DIR)/utils/mini_utils_4.c \
 	$(RSC_DIR)/utils/mini_utils_5.c \
 	$(RSC_DIR)/utils/mini_utils_6.c \
+	$(RSC_DIR)/utils/mini_utils_7.c \
 	$(RSC_DIR)/mini/cmd_envexit.c \
 	$(RSC_DIR)/mini/mini_buit_ins.c \
 	$(RSC_DIR)/mini/mini_execv.c \
+	$(RSC_DIR)/mini/utils.c \
 	$(RSC_DIR)/signals/cmd_signal.c \
 	$(RSC_DIR)/path/path_utils.c \
 	$(RSC_DIR)/forks/cmd_forks.c \
@@ -44,7 +46,6 @@ SRC = $(RSC_DIR)/main/main.c \
 	$(RSC_DIR)/expand/mini_expand.c \
 	$(RSC_DIR)/expand/expand_utils.c \
 	$(RSC_DIR)/exec/mini_exec.c \
-	$(RSC_DIR)/exec/exec_single_commands.c \
 	$(RSC_DIR)/exec/exec_single_commands_utils.c \
 	$(RSC_DIR)/exec/exec_commands.c \
 	$(RSC_DIR)/exec/exec_utils.c \

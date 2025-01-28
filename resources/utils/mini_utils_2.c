@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_utils_2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:03:32 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/24 10:43:22 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/27 12:01:36 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ int	is_first_word_echo(char *command)
 	int		i;
 
 	i = 0;
-	while (isspace(*command))
+	while (mini_isspace(*command))
 		command++;
-	while (*command && !isspace(*command) && i < 255)
+	while (*command && !mini_isspace(*command) && i < 255)
 		first_word[i++] = *command++;
 	first_word[i] = '\0';
 	if (ft_strcmp(first_word, "echo") == 0)

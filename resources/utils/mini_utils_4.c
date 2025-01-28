@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_utils_4.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:13:10 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 07:52:12 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/27 12:02:35 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,42 +24,6 @@ char	*get_env_var(char *name, t_env_var *env_list)
 	}
 	return (NULL);
 }
-
-char	*get_first_word(const char *line)
-{
-	const char	*start;
-	const char	*end;
-	char		*word;
-	size_t		len;
-
-	// Avança até o primeiro caractere não-espaço
-	while (*line && isspace((unsigned char)*line))
-		line++;
-	if (*line == '\0')
-		return (NULL);
-
-	// Encontra o final da palavra
-	start = line;
-	while (*line && !isspace((unsigned char)*line))
-		line++;
-	end = line;
-
-	// Calcula o comprimento da palavra
-	len = end - start;
-
-	// Aloca memória para a nova string (mais 1 para o terminador nulo)
-	word = (char *)malloc(len + 1);
-	if (!word)
-		return (NULL);
-
-	// Copia a palavra para a nova string e adiciona o terminador nulo
-	strncpy(word, start, len);
-	word[len] = '\0';
-
-	return (word);
-}
-
-
 
 void	cmd_not_found(char *str)
 {
@@ -88,7 +52,7 @@ int	is_within_quotes(char *str, char *needed)
 			in_single_quote = !in_single_quote;
 		else if (str[i] == '\"' && !in_single_quote)
 			in_double_quote = !in_double_quote;
-		i ++;
+		i++;
 	}
 	return (in_single_quote || in_double_quote);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe_right.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:32:54 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/27 10:21:47 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/27 12:05:11 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	execute_pipe_right(int pos, t_cmd *cmd)
 		return ;
 	if (pid == 0)
 	{
+		cmd_not_found_end_exit(cmd->array[pos]);
 		var_str = aux_heredoc_right(cmd->array[pos], cmd->pipefd);
 		redirects = parse_redirects(var_str, cmd);
 		setup_io(redirects, NULL, cmd->pipefd, false);

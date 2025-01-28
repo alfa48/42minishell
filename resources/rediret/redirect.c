@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 15:57:35 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/24 10:10:29 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/27 12:03:59 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,4 +88,3 @@ char	**ft_split_redirect(const char *str)
 	result[i] = NULL;
 	return (result);
 }
-

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 14:55:27 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/22 15:09:09 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/28 09:01:59 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ static int	create_pipe_and_fork(int pipe_heredoc[2], pid_t *pid)
 {
 	if (pipe(pipe_heredoc) == -1)
 	{
-		perror("heredoc pipe failed");
+		//perror("heredoc pipe failed");
 		return (-1);
 	}
 	*pid = fork();
 	if (*pid == -1)
 	{
-		perror("heredoc fork failed");
+		//perror("heredoc fork failed");
 		close(pipe_heredoc[0]);
 		close(pipe_heredoc[1]);
 		return (-1);

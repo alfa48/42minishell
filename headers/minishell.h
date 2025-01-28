@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 16:43:03 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/28 08:05:37 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,18 @@
 # define MAX_REDIRECTS 10
 # define PIPE '|'
 
-//global variables
-extern int g_sig_status_cmd;
+// global variables
+extern int g_signal_status;
 
 // resources/main/main.c
 int				main(void);
 
-// resources/mini_execv.c
+// resources/mini/mini_built_ins.c
 void			only_expor_cmd(t_env_var *g_env_list);
 void			list_env_vars(t_env_var *g_env_list);
 void			mini_built_in(t_cmd *cmd, t_env_var **g_env_list);
+void			ft_qsort(void *base, size_t num, size_t size,
+					int (*compare)(const void *, const void *));
 
 // resources/init/init_vars
 int				calc_tree_size(t_node *root);
@@ -77,11 +79,12 @@ void			*ft_memset_space(void *ptr, int value, size_t num);
 
 // resources/exec/mini_exec.c
 void			exec(t_cmd *cmd);
+void			cmd_not_found_end_exit(char *str);
 
 // resources/utils/mini_utils_2.c
 void			free_tree(t_node *root);
 char			*mini_epur_str(char *str);
-t_node			*create_node(char *operator, char *command, int index);
+t_node			*create_node(char *operator, char * command, int index);
 t_node			*add_node(t_node *root, t_node *new, int side);
 int				is_special_char(char c);
 int				is_echo_printable(char c);
@@ -98,13 +101,13 @@ void			execute_pipe_middle_(int pos, t_cmd *cmd);
 
 // resources/pipe/exec_pipe_right.c
 void			execute_pipe_right(int pos, t_cmd *cmd);
-void	handle_redirects(t_redirect **redirects);
-char	*aux_heredoc_right(char *cmd, int pipefd[2]);
+void			handle_redirects(t_redirect **redirects);
+char			*aux_heredoc_right(char *cmd, int pipefd[2]);
 
 // resources/pipe/exec_pipe_left.c
 void			execute_pipe_left(int pos, t_cmd *cmd);
-void	configure_stdin(char *heredoc_delim, int *pipefd);
-char	*prepare_command(char *cmd, char *heredoc_delim);
+void			configure_stdin(char *heredoc_delim, int *pipefd);
+char			*prepare_command(char *cmd, char *heredoc_delim);
 void			mini_close_fd(int fd_0, int fd_1);
 
 // resources/pipe/utils.c
@@ -117,6 +120,7 @@ void			execute_with_args(char *clean_cmd, t_redirect **redirects,
 					t_cmd *cmd);
 void			execute_redirect_(int pos, t_cmd *cmd);
 void			exec_redout_(int pos, t_cmd *cmd);
+void			apply_file_redirections(t_redirect **r);
 
 // resources/utils/mini_utils.c
 void			execute_tree(t_node *root, t_cmd *cmd);
@@ -131,6 +135,7 @@ void			*ft_memset_space(void *ptr, int value, size_t num);
 
 // resources/exec/exec_single_commands.c
 int				execute_single_command(char *cmd_str, t_cmd *cmd);
+void			execute_child_process(t_redirect **redirects, t_cmd *cmd);
 
 // resources/exec/exec_single_commands_utils.c
 void			exit_child_process(t_cmd *cmd, char *path, char **args,
@@ -155,14 +160,20 @@ void			free_array(char **array);
 
 // resources/utils/mini_utils_4.c
 char			*get_env_var(char *name, t_env_var *env_list);
-char	*get_first_word(const char *line);
+char			*get_first_word(const char *line);
 void			cmd_not_found(char *str);
 int				is_within_quotes(char *str, char *sep);
 int				is_entirely_within_quotes(char *str);
 
 // resources/utils/mini_utils_6.c
 char			*get_word(char *line, int *sig, char *sigline);
+int				mini_isspace(int c);
 void			*ft_realloc(void *ptr, size_t new_size);
+
+// resources/utils/mini_utils_7.c
+char			*get_first_word(const char *line);
+void			replace_line(void);
+void			replace_line1(void);
 
 // resources/mini_expand.c
 char			*concat_strings(char **str_array);
@@ -215,7 +226,8 @@ t_cmd			*init_before_init(void);
 // resources/signals/cmd_signal.c
 void			handle_signals(void);
 void			sigint_handler(int signum);
-void set_sig_status_cmd(t_cmd *cmd);
+void			set_sig_status_cmd(t_cmd *cmd);
+void			handle_signals_child(void);
 
 // resources/path/path_utils.c
 char			*find_executable(const char *command, t_env_var **g_env_list);

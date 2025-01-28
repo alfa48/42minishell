@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_single_commands.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:23:19 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/27 07:47:48 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/27 12:21:06 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	execute_parent_process(int pid, t_cmd *cmd, int saved_st_in_out[2],
 		char *clean_cmd)
 {
 	int	status;
+
 	waitpid(pid, &status, 0);
 	if (saved_st_in_out[0] != -1)
 	{

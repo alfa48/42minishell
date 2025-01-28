@@ -6,32 +6,11 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 10:30:10 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/23 16:17:57 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:51:04 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// Função para limpar e sair do processo filho
-void	exit_child_process(t_cmd *cmd, char *path, char **args,
-		t_fd_data *fd_data)
-{
-	int	i;
-
-	i = 0;
-	while (i < fd_data->fd_count)
-	{
-		if (fd_data->opened_fds[i] != -1)
-			close(fd_data->opened_fds[i]);
-		i++;
-	}
-	free(cmd->clean_cmd);
-	free(path);
-	if (args)
-		free_array(args);
-	free_redirects(cmd->redirects);
-	exit(EXIT_FAILURE);
-}
 
 // Função para aplicar redirecionamentos
 int	apply_redirects(t_redirect **redirects, int *opened_fds, int *fd_count)
@@ -68,20 +47,19 @@ void	handle_red_stdin(t_redirect **redirects)
 	i = 0;
 	while (redirects && redirects[i])
 	{
-	
 		if (ft_strcmp(redirects[i]->type, "<") == 0)
 		{
-		    redirects[i]->fd = open(redirects[i]->file, O_RDONLY);
-		    if (redirects[i]->fd != -1)
-		        dup2(redirects[i]->fd, STDIN_FILENO);
-		    else
-		    {
-		        perror("Erro ao abrir arquivo de entrada");
-		        exit(EXIT_FAILURE);
-		    }
+			redirects[i]->fd = open(redirects[i]->file, O_RDONLY);
+			if (redirects[i]->fd != -1)
+				dup2(redirects[i]->fd, STDIN_FILENO);
+			else
+			{
+				perror("Error to open stdin file");
+				exit(EXIT_FAILURE);
+			}
 		}
-        i++;
-        }
+		i++;
+	}
 }
 
 void	handle_redirects(t_redirect **redirects)

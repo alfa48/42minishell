@@ -3,48 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   mini_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 08:32:29 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/27 07:50:09 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/27 12:17:35 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int is_internal_command(char *cmd, const char *command)
+void	cmd_not_found_end_exit(char *str)
 {
-    return (ft_strncmp(cmd, command, ft_strlen(command)) == 0);
+	char	*fw;
+
+	fw = get_first_word(str);
+	if (is_entirely_within_quotes(str) || is_within_quotes(str, fw))
+	{
+		cmd_not_found(fw);
+		free(fw);
+		exit(14);
+	}
 }
 
-void simple_cmd(char *str, t_cmd *cmd)
+void	simple_cmd(char *str, t_cmd *cmd)
 {
-    int	pid;
-    char	*heredoc_delim = NULL;
-    char	*clean_cmd = NULL;
-    t_redirect	**redirects;
+	int		pid;
+	char	*heredoc_delim;
+	char	*clean_cmd;
 
-
-    cmd->pid_count++;
-    pid = fork();
-    if (pid == -1)
-        return;
-    printf("S CMD - %s\n", str);
-    if (pid == 0)
-    {
-	heredoc_delim = get_heredoc_delimiter(str);
-	close(cmd->pipefd[1]);
-        configure_stdin(heredoc_delim, cmd->pipefd);
-        redirects = parse_redirects(str, cmd);
-        handle_redirects(redirects);
-        clean_cmd = prepare_command(str, heredoc_delim);
-        if (is_internal_command(clean_cmd, "echo"))
-        {
-        	mini_echo(clean_cmd, str);
-        	exit(0);
-        }
-        execute_with_args(clean_cmd, redirects, cmd);
-    }
+	heredoc_delim = NULL;
+	clean_cmd = NULL;
+	cmd->pid_count++;
+	pid = fork();
+	if (pid == -1)
+		return ;
+	if (pid == 0)
+	{
+		heredoc_delim = get_heredoc_delimiter(str);
+		close(cmd->pipefd[1]);
+		configure_stdin(heredoc_delim, cmd->pipefd);
+		cmd->redirects = parse_redirects(str, cmd);
+		handle_redirects(cmd->redirects);
+		clean_cmd = prepare_command(str, heredoc_delim);
+		if (ft_strcmp(get_first_word(clean_cmd), "echo") == 0)
+		{
+			mini_echo(clean_cmd, str);
+			exit(0);
+		}
+		execute_with_args(clean_cmd, cmd->redirects, cmd);
+	}
 }
 
 void	exec(t_cmd *cmd)
