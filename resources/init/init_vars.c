@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_vars.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 09:34:57 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/28 10:37:08 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:31:18 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,13 @@ void	init_args(t_cmd *cmd, char **environ)
 {
 	cmd->envl = NULL;
 	cmd->g_env_list = NULL;
-	cmd->val_only = NULL;
 	cmd->status_cmd = 0;
 	cmd->envl = environ;
 	initialize_env_list(&(cmd->g_env_list), environ);
 	if (!cmd->g_env_list)
 	{
+		free(cmd);
+		exit(1);
 	}
 	cmd->g_env_list->counter_exp = 0;
 }

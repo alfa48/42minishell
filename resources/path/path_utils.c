@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 21:09:35 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/22 11:21:39 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/28 13:00:37 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,6 @@ char	*find_executable(const char *command, t_env_var **g_env_list)
 		return (NULL);
 	}
 	result = find_in_directories(command, directories);
-	free(directories);
+	free_array(directories);
 	return (result);
 }

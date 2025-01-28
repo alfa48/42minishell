@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:28:30 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/28 10:37:19 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:31:56 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ typedef struct s_fd_data
 typedef struct s_cmd
 {
 	struct s_node		*root;
+	size_t				is;
+	size_t				js;
 	int					i;
 	int					size;
 	char				**array;
@@ -85,7 +87,6 @@ typedef struct s_cmd
 	bool				in_s_q;
 	bool				in_d_q;
 	t_redirect			**redirects;
-	t_env_var			*val_only;
 	t_env_var			*g_env_list;
 
 }						t_cmd;

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/28 10:51:58 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:52:12 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_signal_status = 0;
+int		g_signal_status = 0;
 
 void	inorder_traversal(t_node *root)
 {
@@ -45,7 +45,6 @@ void	keep_on_shell(t_cmd *cmd)
 	cmd->root = init_shell(cmd->line);
 	if (cmd->root && cmd->line)
 	{
-		inorder_traversal(cmd->root);
 		init_args_next(cmd);
 		if (cmd->size == 1)
 			mini_built_in(cmd, &(cmd->g_env_list));
@@ -56,29 +55,29 @@ void	keep_on_shell(t_cmd *cmd)
 	free_ms(cmd);
 }
 
-int    main(void)
+int	main(void)
 {
-    t_cmd    *cmd;
-    int saved_stdin;
+	t_cmd	*cmd;
+	int		saved_stdin;
 
-    cmd = init_before_init();
-    saved_stdin = dup(STDIN_FILENO);
-    while (1)
-    {
-        init_args_ofen(cmd);
-        cmd->line = readline("minishell$> ");
-        set_sig_status_cmd(cmd);
-        if (!cmd->line)
-            return (0 * write(1, "exit\n", 5) + 1);
-        if (!is_only_spaces(cmd->line))
-        {
-            add_history(cmd->line);
-            if (checks_str(cmd))
-                continue;
-            keep_on_shell(cmd);
-        }
-        dup2(saved_stdin, STDIN_FILENO);
-        free(cmd->line);
-    }
-    return (0);
+	cmd = init_before_init();
+	saved_stdin = dup(STDIN_FILENO);
+	while (1)
+	{
+		init_args_ofen(cmd);
+		cmd->line = readline("minishell$> ");
+		add_history(cmd->line);
+		set_sig_status_cmd(cmd);
+		if (!cmd->line)
+			return (write_exit(cmd));
+		if (!is_only_spaces(cmd->line))
+		{
+			if (checks_str(cmd))
+				continue ;
+			keep_on_shell(cmd);
+		}
+		dup2(saved_stdin, STDIN_FILENO);
+		free(cmd->line);
+	}
+	return (0);
 }

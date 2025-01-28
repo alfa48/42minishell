@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_signal.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 18:02:38 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/28 10:52:52 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/28 11:01:17 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,18 @@ void	handle_signals(void)
 
 void	sigint_handler(int signum)
 {
-	int pipefd[2];
+	int	pipefd[2];
 
 	(void)signum;
 	if (signum == SIGINT)
 	{
 		pipe(pipefd);
 		write(pipefd[1], "\n", 1);
-    	dup2(pipefd[0], STDIN_FILENO);
+		dup2(pipefd[0], STDIN_FILENO);
 		close(pipefd[0]);
-
-
-
 		printf("\n");
 		rl_on_new_line();
-    	rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		if (!g_signal_status)
 			g_signal_status = 130;
 	}

@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 10:46:09 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/21 12:56:54 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/28 15:04:51 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,6 @@ bool	check_quotes_balance(const char *arg)
 	}
 }
 
-void	free_tree(t_node *root)
-{
-	if (root == NULL)
-		return ;
-	free_tree(root->left);
-	if (root->command)
-		free(root->command);
-	free_tree(root->right);
-	free(root);
-}
-
 int	is_echo_printable(char c)
 {
 	if (is_special_char(c))
@@ -73,7 +62,7 @@ char	*ft_findenv(char *s, t_env_var *g_env_list)
 		if (ft_strncmp(s, tmp->name, len) == 0)
 		{
 			if (!is_valid_var_char(s[len]))
-				return (tmp->value);
+				return (ft_strdup(tmp->value));
 		}
 		tmp = tmp->next;
 	}

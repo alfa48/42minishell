@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:56:05 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 12:33:00 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/28 12:57:01 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,43 +67,4 @@ int	env_list_size(t_env_var *g_env_list)
 		current = current->next;
 	}
 	return (count);
-}
-
-static int	compare_env_vars(const void *a, const void *b)
-{
-	t_env_var	*var_a;
-	t_env_var	*var_b;
-
-	var_a = *(t_env_var **)a;
-	var_b = *(t_env_var **)b;
-	return (ft_strcmp(var_a->name, var_b->name));
-}
-
-void	only_expor_cmd(t_env_var *g_env_list)
-{
-	int			i;
-	int			count;
-	t_env_var	*current;
-	t_env_var	**env_array;
-
-	i = -1;
-	count = env_list_size(g_env_list);
-	env_array = malloc(count * sizeof(t_env_var *));
-	if (!env_array)
-	{
-		perror("malloc");
-		return ;
-	}
-	current = g_env_list;
-	while (++i < count)
-	{
-		env_array[i] = current;
-		current = current->next;
-	}
-	ft_qsort(env_array, count, sizeof(t_env_var *), compare_env_vars);
-	i = -1;
-	while (++i < count)
-		printf("declare -x %s=\"%s\"\n", env_array[i]->name,
-			env_array[i]->value);
-	free(env_array);
 }

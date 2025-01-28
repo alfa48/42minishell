@@ -44,3 +44,19 @@ NAO: TEM REDIREICIONADORES?
 	minishell$> echo "'$USER'"
 	Command:echo "'manandre'"$
 	'manandre'
+
+
+
+
+
+
+
+
+
+	freeeeeeeeeeeeeeeee
+	root
+	line
+	line1
+	args
+	envl
+	val_only

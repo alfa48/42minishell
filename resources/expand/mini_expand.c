@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 16:07:45 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/21 15:42:31 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/28 15:39:32 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,17 @@ char	*ft_strjoin_free(char *s1, const char *s2)
 	char	*new_str;
 
 	if (!s1 || !s2)
+	{
+		if (s1)
+			free(s1);
 		return (NULL);
+	}
 	new_str = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!new_str)
+	{
+		free(s1);
 		return (NULL);
+	}
 	ft_strlcpy(new_str, s1, ft_strlen(s1) + 1);
 	mini_strcat(new_str, s2);
 	free(s1);
@@ -41,13 +48,16 @@ char	*expand_variable(char *str, char *result, int *i, t_cmd *cmd)
 	if (str[var_start] == '?')
 	{
 		var_start++;
+		if (var_value)
+			free(var_value);
 		var_value = ft_itoa(cmd->status_cmd);
 	}
-	if (!var_value)
-		var_value = ft_findenv(var_name, cmd->val_only);
 	free(var_name);
 	if (var_value)
+	{
 		result = ft_strjoin_free(result, var_value);
+		free(var_value);
+	}
 	*i = var_start;
 	return (result);
 }
@@ -89,29 +99,36 @@ char	*expand_string(char *str, t_cmd *cmd)
 	i = 0;
 	cmd->in_s_q = false;
 	cmd->in_d_q = false;
-	result = malloc(1);
+	result = ft_strdup("");
 	if (!result)
+	{
+		free(str);
 		return (NULL);
+	}
 	result[0] = '\0';
 	while (str[i])
 	{
 		result = process_char(str, result, &i, cmd);
 		if (!result)
+		{
+			free(str);
 			return (NULL);
+		}
 	}
 	return (result);
 }
 
 char	*expanding(char *str, t_cmd *cmd)
 {
+	char	*tmp;
+
 	if (!str || !cmd->g_env_list)
 		return (NULL);
 	if (!check_quotes_balance(str))
 		return (NULL);
-	cmd->line = expand_string(str, cmd);
-	if (cmd->line)
-		cmd->line1 = ft_strdup(cmd->line);
-	else
+	tmp = expand_string(str, cmd);
+	free(str);
+	if (!tmp)
 		return (NULL);
-	return (cmd->line);
+	return (tmp);
 }

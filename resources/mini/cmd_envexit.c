@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:17:02 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 10:51:37 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/28 11:59:35 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 void	mini_exit(t_cmd *cmd)
 {
 	char	*str;
+	int		flag;
 
+	flag = 0;
 	if (cmd->arg[1])
 	{
 		str = cmd->arg[1];
@@ -25,13 +27,17 @@ void	mini_exit(t_cmd *cmd)
 			{
 				printf("minishell: exit: %s: numeric argument required\n",
 					cmd->arg[1]);
-				exit(0);
+				flag = 1;
+				break;
 			}
 			str ++;
 		}
-		if (cmd->arg[2])
+		if (!flag  && cmd->arg[2])
 			printf("minishell: exit: too many arguments\n");
 	}
+	free_env_list(cmd->g_env_list);
+	free_tree(cmd->root);
+	free_ms(cmd);
 	exit(0);
 }
 
@@ -44,20 +50,6 @@ void	mini_env(t_env_var *g_env_list)
 	{
 		printf("%s=%s\n", current->name, current->value);
 		current = current->next;
-	}
-}
-
-void	free_ms(t_cmd *cmd)
-{
-	int	i;
-
-	i = -1;
-	if (cmd->arg)
-	{
-		while (cmd->arg[++i])
-			free(cmd->arg[i]);
-		free(cmd->arg);
-		cmd->arg = NULL;
 	}
 }
 

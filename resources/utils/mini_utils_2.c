@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:03:32 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 12:01:36 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:24:28 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	is_first_word_echo(char *command)
 static char	*return_epur(int *i, char *str)
 {
 	if ((*i) > 0)
-		return (ft_strdup(str));
+		return (str);
 	else
 		return (NULL);
 }

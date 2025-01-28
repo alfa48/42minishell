@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/28 08:05:37 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:24:19 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,7 @@
 # define PIPE '|'
 
 // global variables
-extern int g_signal_status;
-
+extern int		g_signal_status;
 // resources/main/main.c
 int				main(void);
 
@@ -264,4 +263,8 @@ int				checks_str(t_cmd *cmd);
 // resources/heredoc/utils.c
 void			handle_heredoc_left(char *delimiter, int pipe_fd[2]);
 
+// resources/free_up/free_inits.c
+void			free_env_list(t_env_var *g_env_list);
+int				write_exit(t_cmd *cmd);
+void			free_env_list2(t_env_var **g_env_list);
 #endif
