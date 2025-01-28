@@ -78,6 +78,7 @@ int	main(void)
 		}
 		dup2(saved_stdin, STDIN_FILENO);
 		free(cmd->line);
+		free(cmd->line1);
 	}
 	return (0);
 }

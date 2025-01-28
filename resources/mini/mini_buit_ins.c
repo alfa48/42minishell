@@ -41,14 +41,20 @@ void	mini_echo(char *arg, char *siline)
 void	mini_cd(char *path, t_env_var *g_env_list)
 {
 	char	cwd[PATH_MAX];
-
+	char	*tmp;
+	
+	tmp = NULL;
 	if (chdir(path) != 0)
 	{
 		perror("cd");
 		return ;
 	}
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		set_or_add_env_var(ft_strjoin("PWD=", cwd), &g_env_list);
+	{
+		tmp = ft_strjoin("PWD=", cwd);
+		set_or_add_env_var(tmp, &g_env_list);
+		free(tmp);
+	}
 	else
 		perror("getcwd");
 }
