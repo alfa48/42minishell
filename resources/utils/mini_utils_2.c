@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_utils_2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:03:32 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/28 14:24:28 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:05:54 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,28 +55,35 @@ char	*mini_epur_str(char *str)
 {
 	char	*out;
 	int		i;
+	char	*tmp;
 
 	if (is_spacial_command(str))
+	{
+		free(str);
 		return (ft_strdup(str));
+	}
 	str = process_cmd(str);
 	i = 0;
 	out = malloc(sizeof(char) * ft_strlen(str) + 1);
-	while (*str == ' ' || *str == '\t')
-		str++;
-	while (*str)
+	tmp = str;
+	while (*tmp == ' ' || *tmp == '\t')
+		tmp++;
+	while (*tmp)
 	{
-		out[i++] = *str;
-		if (*str++ == ' ')
+		out[i++] = *tmp;
+		if (*tmp++ == ' ')
 		{
-			while (*str == ' ' || *str == '\t')
-				str++;
-			if (!*str)
+			while (*tmp == ' ' || *tmp == '\t')
+				tmp++;
+			if (!*tmp)
 				i--;
 		}
 	}
+	free(str);
 	out[i] = '\0';
 	return (return_epur(&i, out));
 }
+
 
 int	is_special_char(char c)
 {

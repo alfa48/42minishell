@@ -57,6 +57,7 @@ void	execute_pipe_left(int pos, t_cmd *cmd)
 	if (pid == 0)
 	{
 		cmd_not_found_end_exit(cmd->array[pos]);
+		printf("execute_pipe_left\n");
 		heredoc_delim = get_heredoc_delimiter(cmd->array[pos]);
 		close(cmd->pipefd[1]);
 		configure_stdin(heredoc_delim, cmd->pipefd);

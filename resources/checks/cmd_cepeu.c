@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/28 16:25:25 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:48:21 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ char	*process_cmd(char *arg)
 	if (is_first_word_export(arg))
 	{
 		free(out);
-		return (ft_strdup(arg));
+		tmp = ft_strdup(arg);
+		return (tmp);
 	}
 	tmp = out;
 	while (*arg)

@@ -60,3 +60,14 @@ NAO: TEM REDIREICIONADORES?
 	args
 	envl
 	val_only
+
+
+
+
+	####################################################################
+	####################################################################
+	########################### ALERTA #################################
+	REGRAS DE LIBERACAO DE MEMORIA:
+	# SE UMA FUNCAO OLOCA DINAMICAMENTE MEMORIA É RESPONSABILIDADE DELA LIBERAR A MEMORIA; A NAO SER QUE ELA RETORNA A MEMORIA ALOCADA
+	# FUNCOES NAO DEVEM MODIFICAR VARIAVEIS QUE RECEBEM COMO PARAMETROS, SUJESTAO 
+	DUPLICAR E DEPOIS TRABALHAR COM A DUPLICADA.

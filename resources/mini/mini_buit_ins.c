@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:25 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/28 16:30:26 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/29 09:22:38 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ void	mini_cd(char *path, t_env_var *g_env_list)
 {
 	char	cwd[PATH_MAX];
 	char	*tmp;
-
-
+	
+	tmp = NULL;
 	if (chdir(path) != 0)
 	{
 		perror("cd");
@@ -54,7 +54,6 @@ void	mini_cd(char *path, t_env_var *g_env_list)
 		tmp = ft_strjoin("PWD=", cwd);
 		set_or_add_env_var(tmp, &g_env_list);
 		free(tmp);
-
 	}
 	else
 		perror("getcwd");

@@ -128,7 +128,9 @@ char	*expanding(char *str, t_cmd *cmd)
 		return (NULL);
 	tmp = expand_string(str, cmd);
 	free(str);
-	if (!tmp)
+	if (tmp)
+		cmd->line1 = ft_strdup(tmp);
+	else
 		return (NULL);
 	return (tmp);
 }

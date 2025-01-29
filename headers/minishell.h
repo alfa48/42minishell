@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/28 14:24:19 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:05:24 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,7 +264,17 @@ int				checks_str(t_cmd *cmd);
 void			handle_heredoc_left(char *delimiter, int pipe_fd[2]);
 
 // resources/free_up/free_inits.c
-void			free_env_list(t_env_var *g_env_list);
+void			free_env_list(t_env_var **g_env_list);
 int				write_exit(t_cmd *cmd);
-void			free_env_list2(t_env_var **g_env_list);
+void			free_cmd_array(t_cmd *cmd);
+void			free_lines(t_cmd *cmd);
+void			free_arg(t_cmd *cmd);
+void			free_cmd_array(t_cmd *cmd);
+void			free_ms(t_cmd *cmd);
+void			free_tree(t_node *root);
+int				write_exit(t_cmd *cmd);
+void			free_all(t_cmd *cmd);
+void			free_one_iterator(t_cmd *cmd);
+void			free_fds(t_cmd *cmd);
+
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:27:16 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/28 12:55:32 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/29 09:55:50 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,5 +100,5 @@ void	only_expor_cmd(t_env_var *g_env_list)
 			printf("declare -x %s\n", current->name);
 		current = current->next;
 	}
-	free_env_list(cloned_list);
+	free_env_list(&(cloned_list));
 }

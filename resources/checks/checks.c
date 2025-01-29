@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checks.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 09:08:22 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/27 11:58:52 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:40:37 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,12 +120,17 @@ int	checks_error_pattern(char *str)
 int	checks_str(t_cmd *cmd)
 {
 	char	*str;
+	char	*tmp;
+	int	rs;
 
-	str = mini_epur_str(cmd->line);
+    rs = 0;
+	tmp = ft_strdup(cmd->line);
+	str = mini_epur_str(tmp);
 	if (!str)
 		return (1);
 	if (checks_start_end(str) || checks_error_pattern(str))
-		return (1);
+        rs = 1;
 	free(str);
-	return (0);
+	free(tmp);
+	return (rs);
 }

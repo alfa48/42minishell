@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:28:30 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/28 14:31:56 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/29 11:41:37 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,20 +66,15 @@ typedef struct s_fd_data
 typedef struct s_cmd
 {
 	struct s_node		*root;
-	size_t				is;
-	size_t				js;
 	int					i;
 	int					size;
 	char				**array;
-	char				**array_redirect;
 	char				*line;
 	char				*line1;
 	char				**arg;
 	char				**envl;
 	char				*clean_cmd;
 	int					index;
-	int					nl;
-	int					ncmd;
 	int					pid_count;
 	int					pipefd[2];
 	int					prev_pipe[2];
