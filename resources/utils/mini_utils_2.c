@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:03:32 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/29 15:05:54 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:34:13 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ char	*mini_epur_str(char *str)
 	if (is_spacial_command(str))
 	{
 		free(str);
-		return (ft_strdup(str));
+		tmp = ft_strdup(str);
+		return (tmp);
 	}
 	str = process_cmd(str);
 	i = 0;
