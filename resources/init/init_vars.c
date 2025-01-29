@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 09:34:57 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/29 11:41:46 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/29 16:34:57 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	init_args_ofen(t_cmd *cmd)
 	cmd->line = NULL;
 	cmd->arg = NULL;
 	cmd->line1 = NULL;
+	cmd->array = NULL;
 	cmd->pid_count = 0;
 	cmd->index = 0;
 	g_signal_status = 0;

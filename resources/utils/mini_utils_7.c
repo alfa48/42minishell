@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_utils_7.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:50:04 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 15:57:22 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/29 16:19:57 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*extract_word(const char *start, const char *end)
 	word = (char *)malloc(len + 1);
 	if (!word)
 		return (NULL);
-	strncpy(word, start, len);
+	ft_strncpy(word, start, len);
 	word[len] = '\0';
 	return (word);
 }
@@ -66,18 +66,9 @@ char	*get_first_word(const char *line)
 	return (extract_word(start, end));
 }
 
-void	replace_line(void)
-{
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-}
-
 void	replace_line1(void)
 {
 		printf("\n");
-		//rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
 }

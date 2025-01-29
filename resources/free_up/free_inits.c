@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 11:11:16 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/29 11:44:26 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/29 16:31:07 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ void    free_all(t_cmd *cmd)
     free_arg(cmd);
     free_tree(cmd->root);
     free_env_list(&(cmd->g_env_list));
-	//free_fds(cmd);
     free(cmd);
     cmd = NULL;
 }
@@ -101,9 +100,9 @@ void    free_all(t_cmd *cmd)
 void free_one_iterator(t_cmd *cmd)
 {
 	free_lines(cmd);
-    free_cmd_array(cmd);
-    free_arg(cmd);
     free_tree(cmd->root);
+    free_arg(cmd);
+    free_cmd_array(cmd);
 }
 
 void	free_fds(t_cmd *cmd)

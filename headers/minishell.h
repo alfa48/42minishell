@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/29 15:05:24 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/29 16:19:23 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,7 @@ char			*get_first_word(const char *line);
 void			cmd_not_found(char *str);
 int				is_within_quotes(char *str, char *sep);
 int				is_entirely_within_quotes(char *str);
+char	*ft_strncpy(char *dst, const char *src, size_t n);
 
 // resources/utils/mini_utils_6.c
 char			*get_word(char *line, int *sig, char *sigline);
@@ -171,7 +172,6 @@ void			*ft_realloc(void *ptr, size_t new_size);
 
 // resources/utils/mini_utils_7.c
 char			*get_first_word(const char *line);
-void			replace_line(void);
 void			replace_line1(void);
 
 // resources/mini_expand.c
