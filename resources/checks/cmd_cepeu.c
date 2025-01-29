@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_cepeu.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:04:22 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 11:59:00 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/28 16:25:25 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,10 @@ char	*process_cmd(char *arg)
 	if (!out)
 		return (NULL);
 	if (is_first_word_export(arg))
+	{
+		free(out);
 		return (ft_strdup(arg));
+	}
 	tmp = out;
 	while (*arg)
 	{
