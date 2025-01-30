@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:18:01 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/30 20:46:57 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/31 00:27:42 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	wait_forks(t_cmd *cmd)
 			else if (exit_status == 14)
 				cmd->status_cmd = 127;
 			else if (exit_status == 2)
-				cmd->status_cmd = exit_status;
+				cmd->status_cmd = 127;
 			else if (exit_status == 130)
 				cmd->status_cmd = exit_status;
 			else

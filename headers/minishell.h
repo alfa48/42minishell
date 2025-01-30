@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/30 23:45:56 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/31 00:32:52 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,7 @@ void			fill_array_cmd(t_node *root, char **array, int *index);
 void			exec_heredoc(t_node *node, char **env, t_cmd *cmd);
 
 // resources/utils/exec_pipe_redirectrs.c
-void			free_redirects(t_redirect **redirects);
 char			*remove_redirects(const char *cmd);
-void			execute_pipe(t_node *node, char **env, t_cmd *cmd);
-void			execute_pipe_right(int pos, t_cmd *cmd);
-void			execute_pipe_left(int pos, t_cmd *cmd);
-void			execute_pipe_middle(int pos, t_cmd *cmd);
-void			execute_pipe_middle_(int pos, t_cmd *cmd);
-void			execute_redirect(t_node *node, char **env, t_cmd *cmd);
-void			execute_redirect_(int pos, t_cmd *cmd);
-void			exec_redout_(int pos, t_cmd *cmd);
 
 // resources/utils/mini_utils.c
 void			execute_tree(t_node *root, t_cmd *cmd);
@@ -73,9 +64,6 @@ int				is_operator(char *str);
 int				is_redirect(char *str);
 char			*mini_strcat(char *dest, const char *src);
 void			execute_commands(int pos, t_cmd *cmd);
-void			traverse_tree(t_node *root, char **array, int size,
-					t_env_var *g_env_list);
-void			*ft_memset_space(void *ptr, int value, size_t num);
 
 // resources/exec/mini_exec.c
 void			exec(t_cmd *cmd);
@@ -127,9 +115,6 @@ char			**get_args(char *cmd);
 int				is_operator(char *str);
 int				is_redirect(char *str);
 char			*mini_strcat(char *dest, const char *src);
-void			traverse_tree(t_node *root, char **array, int size,
-					t_env_var *g_env_list);
-void			*ft_memset_space(void *ptr, int value, size_t num);
 
 // resources/exec/exec_single_commands.c
 int				execute_single_command(char *cmd_str, t_cmd *cmd);
@@ -146,11 +131,7 @@ void			execute_commands(int pos, t_cmd *cmd);
 
 // resources/exec/exec_pipe_redirectrs.c
 void			free_redirects(t_redirect **redirects);
-char			*remove_redirects(const char *cmd);
 t_redirect		**parse_redirects(char *cmd_str, t_cmd *cmd);
-void			execute_pipe(t_node *node, char **env, t_cmd *cmd);
-void			execute_pipe_middle(int pos, t_cmd *cmd);
-void			execute_redirect(t_node *node, char **env, t_cmd *cmd);
 
 // resources/exec/exec_utils_2.c
 int				is_redirect_char(char c);
@@ -174,10 +155,8 @@ void			*ft_realloc(void *ptr, size_t new_size);
 
 // resources/utils/mini_utils_7.c
 char			*get_first_word(const char *line);
-void			replace_line1(void);
 
 // resources/mini_expand.c
-char			*concat_strings(char **str_array);
 char			*expanding(char *str, t_cmd *cmd);
 char			*ft_strndup(const char *s, size_t n);
 
@@ -237,7 +216,6 @@ char			*find_executable(const char *command, t_env_var **g_env_list);
 void			fork_crt_env_vars(t_cmd *cmd);
 void			wait_forks(t_cmd *cmd);
 void			fork_exec_cmd(t_cmd *cmd, t_node *node);
-void			fork_exec_cmd_(int pos, t_cmd *cmd);
 char			*aux_exec(char *ccmd, t_cmd *cmd);
 
 // resources/redirect/redirect.c
@@ -269,16 +247,13 @@ void			handle_heredoc_left(char *delimiter, int pipe_fd[2]);
 // resources/free_up/free_inits.c
 void			free_env_list(t_env_var **g_env_list);
 int				write_exit(t_cmd *cmd);
-void			free_cmd_array(t_cmd *cmd);
 void			free_lines(t_cmd *cmd);
 void			free_arg(t_cmd *cmd);
 void			free_cmd_array(t_cmd *cmd);
 void			free_ms(t_cmd *cmd);
 void			free_tree(t_node *root);
-int				write_exit(t_cmd *cmd);
 void			free_all(t_cmd *cmd);
 void			free_one_iterator(t_cmd *cmd);
-void			free_fds(t_cmd *cmd);
 int				free_unset(t_env_var *current);
 
 // resouces/mini_split/mini_split.c
