@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 09:07:53 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/30 10:06:18 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 18:32:58 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ t_redirect	**parse_redirects(char *cmd_str, t_cmd *cmd)
 	redirect_count = 0;
 	while (tokens[cmd->i] && redirect_count < MAX_REDIRECTS)
 	{
+		printf("redirect::::::::::\n");
 		if (is_redirect(tokens[cmd->i]))
 		{
 			redirects[redirect_count] = malloc(sizeof(t_redirect));
@@ -40,22 +41,4 @@ t_redirect	**parse_redirects(char *cmd_str, t_cmd *cmd)
 	redirects[redirect_count] = NULL;
 	free_array(tokens);
 	return (redirects);
-}
-
-// Função para liberar a estrutura de redirecionamentos
-void	free_redirects(t_redirect **redirects)
-{
-	int	i;
-
-	if (!redirects)
-		return ;
-	i = 0;
-	while (redirects[i])
-	{
-		free(redirects[i]->type);
-		free(redirects[i]->file);
-		free(redirects[i]);
-		i++;
-	}
-	free(redirects);
 }

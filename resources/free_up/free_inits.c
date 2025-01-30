@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_inits.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 11:11:16 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/30 13:17:55 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 18:18:16 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,7 @@ void free_tree(t_node *root)
     if (root->command)
 		free(root->command);
     free(root);
-}
-
-void	free_ms(t_cmd *cmd)
-{
-	if (!cmd)
-		return ;
+	root = NULL;
 }
 
 void	free_cmd_array(t_cmd *cmd)
@@ -86,17 +81,6 @@ void    free_lines(t_cmd *cmd)
 		free(cmd->line1);
 }
 
-void    free_all(t_cmd *cmd)
-{
-    free_lines(cmd);
-    free_cmd_array(cmd);
-    free_arg(cmd);
-    free_tree(cmd->root);
-    free_env_list(&(cmd->g_env_list));
-    free(cmd);
-    cmd = NULL;
-}
-
 void free_one_iterator(t_cmd *cmd)
 {
 	free_lines(cmd);
@@ -117,4 +101,35 @@ int	free_unset(t_env_var *current)
 	free(tmp->value);
 	free(tmp);
 	return (1);
+}
+
+// Função para liberar a estrutura de redirecionamentos
+void	free_redirects(t_redirect **redirects)
+{
+	int	i;
+
+	if (!redirects)
+		return ;
+	i = 0;
+	while (redirects[i])
+	{
+		free(redirects[i]->type);
+		free(redirects[i]->file);
+		free(redirects[i]);
+		i++;
+	}
+	free(redirects);
+	redirects = NULL;
+}
+
+void    free_all(t_cmd *cmd)
+{
+    free_lines(cmd);
+    free_cmd_array(cmd);
+    free_arg(cmd);
+    free_tree(cmd->root);
+    free_env_list(&(cmd->g_env_list));
+	//free_redirects(cmd->redirects);
+    free(cmd);
+    cmd = NULL;
 }

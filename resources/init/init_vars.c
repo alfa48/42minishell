@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_vars.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 09:34:57 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/30 12:46:48 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 18:19:35 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	init_args_ofen(t_cmd *cmd)
 	cmd->arg = NULL;
 	cmd->line1 = NULL;
 	cmd->array = NULL;
+	cmd->redirects = NULL;
 	cmd->pid_count = 0;
 	cmd->index = 0;
 	g_signal_status = 0;

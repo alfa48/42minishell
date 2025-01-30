@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 08:32:29 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/30 15:51:17 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/30 18:34:14 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	simple_cmd(char *str, t_cmd *cmd)
 	int		pid;
 	char	*heredoc_delim;
 	char	*clean_cmd;
+	char	*tmp;
 
 	heredoc_delim = NULL;
 	clean_cmd = NULL;
@@ -56,7 +57,7 @@ void	simple_cmd(char *str, t_cmd *cmd)
 		cmd->redirects = parse_redirects(str, cmd);
 		handle_redirects(cmd->redirects);
 		clean_cmd = prepare_command(str, heredoc_delim);
-		char *tmp = get_first_word(clean_cmd);
+		tmp = get_first_word(clean_cmd);
 		if (ft_strcmp(tmp, "echo") == 0)
 		{
 			mini_echo(clean_cmd, str);

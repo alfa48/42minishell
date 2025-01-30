@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/30 15:55:41 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/30 16:18:18 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,7 @@ void	keep_on_shell(t_cmd *cmd)
 			mini_built_in(cmd, &(cmd->g_env_list));
 		else
 			exec(cmd);
-		//free_tree(cmd->root);
 	}
-	//free_ms(cmd);
 }
 
 int	main(void)
