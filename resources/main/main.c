@@ -6,25 +6,13 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/30 22:58:06 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 23:28:27 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int		g_signal_status = 0;
-
-void	inorder_traversal(t_node *root)
-{
-	if (root == NULL)
-		return ;
-	inorder_traversal(root->left);
-	if (root->operator)
-		printf("Operator:%s$\n", (root->operator));
-	else
-		printf("Command:%s$\n", root->command);
-	inorder_traversal(root->right);
-}
 
 int	is_only_spaces(char *str)
 {

@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/30 23:05:13 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 23:45:56 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,9 @@ void			cmd_not_found(char *str);
 int				is_within_quotes(char *str, char *sep);
 int				is_entirely_within_quotes(char *str);
 char			*ft_strncpy(char *dst, const char *src, size_t n);
+
+// resources/utils/mini_utils_5.c
+int				is_valid_env_var_name(const char *str);
 
 // resources/utils/mini_utils_6.c
 char			*get_word(char *line, int *sig, char *sigline);

@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 10:46:09 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/30 21:21:13 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 23:50:16 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,24 @@ char	*ft_findenv(char *s, t_env_var *g_env_list)
 		tmp = tmp->next;
 	}
 	return (NULL);
+}
+
+int	is_valid_env_var_name(const char *str)
+{
+	if (!str || !*str)
+		return (0);
+	if ((!ft_isalpha(*str) && *str != '_') || ft_strlen(str) > 255)
+	{
+		ft_putstr_fd("export: invalid env name\n", 2);
+		return (0);
+	}
+	while (*++str)
+	{
+		if (!ft_isalnum(*str) && *str != '_')
+		{
+			ft_putstr_fd("export: invalid env name\n", 2);
+			return (0);
+		}
+	}
+	return (1);
 }

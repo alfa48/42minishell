@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 21:09:35 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/29 10:41:16 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/30 23:29:45 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,7 @@ char	*find_executable(const char *command, t_env_var **g_env_list)
 	}
 	path_env = get_env_var("PATH", *g_env_list);
 	if (!path_env)
-	{
-		ft_putstr_fd("Erro: variável PATH não encontrada.\n", 2);
 		return (NULL);
-	}
 	directories = ft_split(path_env, ':');
 	if (!directories)
 	{

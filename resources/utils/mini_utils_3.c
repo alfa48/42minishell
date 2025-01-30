@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:13:10 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/30 12:41:37 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 23:40:49 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ void	set_or_add_env_var(const char *env_entry, t_env_var **g_env_list)
 		ft_strlcpy(name, env_entry, name_len);
 		name[name_len] = '\0';
 		value = equal_sign + 1;
+		if (!is_valid_env_var_name(name))
+			return ;
 		if (set_it(name, value, g_env_list) == 42)
 			return ;
 	}
