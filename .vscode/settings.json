@@ -7,7 +7,8 @@
     "libft.h": "c",
     "stdio.h": "c",
     "minishell_enum.h": "c",
-    "errno.h": "c"
+    "errno.h": "c",
+    "typeinfo": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_inits.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 11:11:16 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/29 16:31:07 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/30 13:17:55 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,15 +105,16 @@ void free_one_iterator(t_cmd *cmd)
     free_cmd_array(cmd);
 }
 
-void	free_fds(t_cmd *cmd)
+int	free_unset(t_env_var *current)
 {
-	if (cmd->pipefd[0] != -1)
-		close(cmd->pipefd[0]);
-	if (cmd->pipefd[1] != -1)
-		close(cmd->pipefd[1]);
+	t_env_var *tmp;
 
-	if (cmd->prev_pipe[0] != -1)
-		close(cmd->prev_pipe[0]);
-	if (cmd->prev_pipe[1] != -1)
-		close(cmd->prev_pipe[1]);
+	if (!current)
+		return (0);
+	tmp = current->next;
+	current->next = current->next->next;
+	free(tmp->name);
+	free(tmp->value);
+	free(tmp);
+	return (1);
 }

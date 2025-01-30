@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:35:09 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/27 11:00:48 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 13:19:23 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	execute_pipe_left(int pos, t_cmd *cmd)
 	if (pid == 0)
 	{
 		cmd_not_found_end_exit(cmd->array[pos]);
-		printf("execute_pipe_left\n");
 		heredoc_delim = get_heredoc_delimiter(cmd->array[pos]);
 		close(cmd->pipefd[1]);
 		configure_stdin(heredoc_delim, cmd->pipefd);

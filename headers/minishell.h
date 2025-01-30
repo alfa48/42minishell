@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/29 16:19:23 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/30 13:17:14 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,7 @@ void			mini_pwd(void);
 void			mini_export(char **args, t_env_var **g_env_list);
 void			mini_unset(char **args, t_env_var **g_env_list);
 char			*ft_findenv(char *s, t_env_var *g_env_list);
-char			*process_cmd(char *arg);
+char	*process_cmd(char *arg);
 void			execute_in_child(char *path, char *args[]);
 
 // resources/first_handler.c
@@ -276,5 +276,6 @@ int				write_exit(t_cmd *cmd);
 void			free_all(t_cmd *cmd);
 void			free_one_iterator(t_cmd *cmd);
 void			free_fds(t_cmd *cmd);
+int			free_unset(t_env_var *current);
 
 #endif
