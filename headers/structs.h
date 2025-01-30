@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:28:30 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/29 11:41:37 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/30 23:05:37 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ typedef struct s_redirect
 	int					fd;
 }						t_redirect;
 
-// Estrutura para armazenar estado de redirecionamento
 typedef struct s_redirect_state
 {
 	bool				in_quotes;

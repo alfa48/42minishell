@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:27:16 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/29 09:55:50 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/30 20:40:34 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	sort_env_list(t_env_var *head)
 		{
 			if (ft_strcmp(i->name, j->name) > 0)
 			{
-				// Troca os valores
 				temp_name = i->name;
 				temp_value = i->value;
 				i->name = j->name;

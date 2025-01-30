@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:01:26 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/30 16:24:31 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 22:58:06 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,7 @@ void	keep_on_shell(t_cmd *cmd)
 			mini_built_in(cmd, &(cmd->g_env_list));
 		else
 			exec(cmd);
-		//free_tree(cmd->root);
 	}
-	//free_ms(cmd);
 }
 
 int	main(void)

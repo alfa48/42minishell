@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_forks.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:18:01 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/30 16:00:48 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/30 20:46:57 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	wait_forks(t_cmd *cmd)
 	int	status;
 	int	exit_status;
 
-	i = 0;
-	while (i < cmd->pid_count)
+	i = -1;
+	while (++i < cmd->pid_count)
 	{
 		waitpid(-1, &status, 0);
 		if (WIFEXITED(status))
@@ -38,15 +38,14 @@ void	wait_forks(t_cmd *cmd)
 			else
 				cmd->status_cmd = 126;
 		}
-		i++;
 	}
 }
 
 static char	*aux_exec_heredoc(char *cmd)
 {
 	char	*heredoc_delim;
-	char    *tmp;
-	char    *tmp1;
+	char	*tmp;
+	char	*tmp1;
 
 	tmp1 = NULL;
 	heredoc_delim = get_heredoc_delimiter(cmd);
@@ -61,19 +60,18 @@ static char	*aux_exec_heredoc(char *cmd)
 	if (tmp1)
 		return (tmp1);
 	else
-	    return (ft_strdup(cmd));
+		return (ft_strdup(cmd));
 }
 
 char	*aux_exec(char *ccmd, t_cmd *cmd)
 {
-	char    *tmp;
+	char	*tmp;
 	char	*tmp1;
 	char	*rs;
 
 	tmp = process_cmd(ccmd);
 	tmp1 = get_first_word(tmp);
-	rs = find_executable(tmp1,
-		&(cmd->g_env_list));
+	rs = find_executable(tmp1, &(cmd->g_env_list));
 	free(tmp1);
 	free(tmp);
 	return (rs);

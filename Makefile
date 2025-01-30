@@ -55,6 +55,8 @@ SRC = $(RSC_DIR)/main/main.c \
 	$(RSC_DIR)/pipe/exec_pipe_right.c \
 	$(RSC_DIR)/pipe/utils_pipe.c \
 	$(RSC_DIR)/free_up/free_inits.c \
+	$(RSC_DIR)/free_up/free_utils.c \
+	$(RSC_DIR)/mini_split/mini_split.c \
 
 OBJ = $(SRC:.c=.o)
 

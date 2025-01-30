@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 10:30:10 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/27 11:51:04 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 18:51:09 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ void	handle_redirects(t_redirect **redirects)
 					O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (redirects[i]->fd != -1)
 				dup2(redirects[i]->fd, STDOUT_FILENO);
-			return ;
 		}
 		else if (ft_strcmp(redirects[i]->type, ">>") == 0)
 		{
@@ -83,7 +82,6 @@ void	handle_redirects(t_redirect **redirects)
 					O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (redirects[i]->fd != -1)
 				dup2(redirects[i]->fd, STDOUT_FILENO);
-			return ;
 		}
 		i++;
 	}

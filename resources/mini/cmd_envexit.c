@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_envexit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:17:02 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/29 11:42:28 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/30 20:41:10 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ void	mini_exit(t_cmd *cmd)
 				printf("minishell: exit: %s: numeric argument required\n",
 					cmd->arg[1]);
 				flag = 1;
-				break;
+				break ;
 			}
-			str ++;
+			str++;
 		}
-		if (!flag  && cmd->arg[2])
+		if (!flag && cmd->arg[2])
 			printf("minishell: exit: too many arguments\n");
 	}
 	free_all(cmd);

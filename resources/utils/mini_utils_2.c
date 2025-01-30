@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:03:32 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/30 08:48:26 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 21:04:18 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@ int	is_first_word_echo(char *command)
 	return (0);
 }
 
-static char	*return_epur(int *i, char *str)
+static char	*return_epur(int *i, char *str, char *unsed)
 {
+	free(unsed);
+	str[*i] = '\0';
 	if ((*i) > 0)
 		return (str);
 	else
@@ -51,6 +53,11 @@ static int	is_spacial_command(char *str)
 	return (0);
 }
 
+static char	*auxi_epur(char *str)
+{
+	return (ft_strdup(str));
+}
+
 char	*mini_epur_str(char *str)
 {
 	char	*out;
@@ -59,10 +66,7 @@ char	*mini_epur_str(char *str)
 	char	*tmp1;
 
 	if (is_spacial_command(str))
-	{
-		tmp = ft_strdup(str);
-		return (tmp);
-	}
+		return (auxi_epur(str));
 	tmp = process_cmd(str);
 	tmp1 = tmp;
 	i = 0;
@@ -80,24 +84,5 @@ char	*mini_epur_str(char *str)
 				i--;
 		}
 	}
-	free(tmp);
-	out[i] = '\0';
-	return (return_epur(&i, out));
-}
-
-
-int	is_special_char(char c)
-{
-	int			i;
-	const char	*special_chars;
-
-	i = 0;
-	special_chars = ", +-=/^@#%:~´.'";
-	while (special_chars[i] != '\0')
-	{
-		if (c == special_chars[i])
-			return (1);
-		i++;
-	}
-	return (0);
+	return (return_epur(&i, out, tmp));
 }

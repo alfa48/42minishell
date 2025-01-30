@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 09:34:57 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/30 12:46:48 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 22:49:18 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ void	init_args_ofen(t_cmd *cmd)
 	cmd->arg = NULL;
 	cmd->line1 = NULL;
 	cmd->array = NULL;
+	cmd->redirects = NULL;
 	cmd->pid_count = 0;
 	cmd->index = 0;
+	cmd->size = 0;
 	g_signal_status = 0;
 }
 
@@ -51,7 +53,7 @@ void	init_args_next(t_cmd *cmd)
 	cmd->size = calc_tree_size(cmd->root);
 	cmd->array = malloc((cmd->size + 2) * sizeof(char *));
 	if (!cmd->array)
-    	return;
+		return ;
 	cmd->array[0] = NULL;
 	cmd->index = 1;
 	fill_array_cmd(cmd->root, cmd->array, &(cmd->index));

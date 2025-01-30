@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 08:32:29 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/30 15:51:17 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/30 20:33:10 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	free_simple_cmd_src(char *s1, char *s2, char *s3)
 		free(s2);
 	if (s3)
 		free(s3);
+	exit(0);
 }
 
 void	cmd_not_found_end_exit(char *str)
@@ -43,6 +44,7 @@ void	simple_cmd(char *str, t_cmd *cmd)
 	int		pid;
 	char	*heredoc_delim;
 	char	*clean_cmd;
+	char	*tmp;
 
 	heredoc_delim = NULL;
 	clean_cmd = NULL;
@@ -56,12 +58,11 @@ void	simple_cmd(char *str, t_cmd *cmd)
 		cmd->redirects = parse_redirects(str, cmd);
 		handle_redirects(cmd->redirects);
 		clean_cmd = prepare_command(str, heredoc_delim);
-		char *tmp = get_first_word(clean_cmd);
+		tmp = get_first_word(clean_cmd);
 		if (ft_strcmp(tmp, "echo") == 0)
 		{
 			mini_echo(clean_cmd, str);
 			free_simple_cmd_src(clean_cmd, heredoc_delim, tmp);
-			exit(0);
 		}
 		execute_with_args(clean_cmd, cmd->redirects, cmd);
 	}

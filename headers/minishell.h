@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/30 16:07:14 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/30 23:05:13 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@
 # define MAX_REDIRECTS 10
 # define PIPE '|'
 
-// global variables
+// global variable
 extern int		g_signal_status;
+
 // resources/main/main.c
 int				main(void);
 
@@ -83,10 +84,8 @@ void			cmd_not_found_end_exit(char *str);
 // resources/utils/mini_utils_2.c
 void			free_tree(t_node *root);
 char			*mini_epur_str(char *str);
-t_node			*create_node(char *operator, char * command, int index);
+t_node			*create_node(char *operator, char *command, int index);
 t_node			*add_node(t_node *root, t_node *new, int side);
-int				is_special_char(char c);
-int				is_echo_printable(char c);
 
 // resources/utils/mini_utils_3.c
 char			*mini_strstr(const char *haystack, const char *needle);
@@ -163,7 +162,7 @@ char			*get_first_word(const char *line);
 void			cmd_not_found(char *str);
 int				is_within_quotes(char *str, char *sep);
 int				is_entirely_within_quotes(char *str);
-char	*ft_strncpy(char *dst, const char *src, size_t n);
+char			*ft_strncpy(char *dst, const char *src, size_t n);
 
 // resources/utils/mini_utils_6.c
 char			*get_word(char *line, int *sig, char *sigline);
@@ -192,7 +191,7 @@ void			mini_pwd(void);
 void			mini_export(char **args, t_env_var **g_env_list);
 void			mini_unset(char **args, t_env_var **g_env_list);
 char			*ft_findenv(char *s, t_env_var *g_env_list);
-char	*process_cmd(char *arg);
+char			*process_cmd(char *arg);
 void			execute_in_child(char *path, char *args[]);
 
 // resources/first_handler.c
@@ -236,7 +235,7 @@ void			fork_crt_env_vars(t_cmd *cmd);
 void			wait_forks(t_cmd *cmd);
 void			fork_exec_cmd(t_cmd *cmd, t_node *node);
 void			fork_exec_cmd_(int pos, t_cmd *cmd);
-char	*aux_exec(char *ccmd, t_cmd *cmd);
+char			*aux_exec(char *ccmd, t_cmd *cmd);
 
 // resources/redirect/redirect.c
 char			**ft_split_redirect(const char *str);
@@ -277,6 +276,9 @@ int				write_exit(t_cmd *cmd);
 void			free_all(t_cmd *cmd);
 void			free_one_iterator(t_cmd *cmd);
 void			free_fds(t_cmd *cmd);
-int			free_unset(t_env_var *current);
+int				free_unset(t_env_var *current);
+
+// resouces/mini_split/mini_split.c
+char			**mini_split(char const *s, char c);
 
 #endif

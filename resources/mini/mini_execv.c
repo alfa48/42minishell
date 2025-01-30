@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:56:05 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/28 16:18:13 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 19:29:57 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	mini_built_in(t_cmd *cmd, t_env_var **g_env_list)
 {
 	cmd->status_cmd = 0;
-	cmd->arg = ft_split(cmd->root->command, ' ');
+	cmd->arg = mini_split(cmd->root->command, ' ');
 	if (!cmd)
 		return ;
 	if (ft_strcmp("cd", cmd->arg[0]) == 0)

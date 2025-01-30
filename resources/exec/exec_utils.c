@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 09:07:53 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/30 10:06:18 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 20:31:59 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 // Função para extrair redirecionamentos de um comandos
 t_redirect	**parse_redirects(char *cmd_str, t_cmd *cmd)
 {
-	int			redirect_count;
 	t_redirect	**redirects;
+	int			redirect_count;
 	char		**tokens;
 
 	cmd->i = 0;
@@ -40,22 +40,4 @@ t_redirect	**parse_redirects(char *cmd_str, t_cmd *cmd)
 	redirects[redirect_count] = NULL;
 	free_array(tokens);
 	return (redirects);
-}
-
-// Função para liberar a estrutura de redirecionamentos
-void	free_redirects(t_redirect **redirects)
-{
-	int	i;
-
-	if (!redirects)
-		return ;
-	i = 0;
-	while (redirects[i])
-	{
-		free(redirects[i]->type);
-		free(redirects[i]->file);
-		free(redirects[i]);
-		i++;
-	}
-	free(redirects);
 }

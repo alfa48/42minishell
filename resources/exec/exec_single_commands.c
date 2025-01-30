@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_single_commands.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:23:19 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/29 11:33:15 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/30 20:32:30 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,29 +94,4 @@ int	free_src(t_cmd *cmd, int fds[2], char *clean_cmd, char *str)
 		return (1);
 	}
 	return (0);
-}
-
-// Função principal para executar um comando simples
-int	execute_single_command(char *cmd_str, t_cmd *cmd)
-{
-	int	fds[2];
-	int	pid;
-
-	cmd->clean_cmd = NULL;
-	fds[0] = dup(STDIN_FILENO);
-	fds[1] = dup(STDOUT_FILENO);
-	cmd->redirects = parse_redirects(cmd_str, cmd);
-	if (!cmd->redirects)
-		return (0 * free_src(cmd, fds, cmd->clean_cmd, "redirects"));
-	cmd->clean_cmd = remove_redirects(cmd_str);
-	if (!cmd->clean_cmd)
-		return (0 * free_src(cmd, fds, cmd->clean_cmd, "clean_cmd"));
-	pid = fork();
-	if (pid == -1)
-		return (0 * free_src(cmd, fds, cmd->clean_cmd, "fork failed"));
-	if (pid == 0)
-		execute_child_process(cmd->redirects, cmd);
-	else
-		execute_parent_process(pid, cmd, fds, cmd->clean_cmd);
-	return (1);
 }

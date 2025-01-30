@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 16:07:45 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/28 15:39:32 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 23:04:23 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,10 @@ char	*expanding(char *str, t_cmd *cmd)
 	if (!str || !cmd->g_env_list)
 		return (NULL);
 	if (!check_quotes_balance(str))
+	{
+		free(str);
 		return (NULL);
+	}
 	tmp = expand_string(str, cmd);
 	free(str);
 	if (tmp)
