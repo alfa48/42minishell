@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/28 14:24:19 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 13:17:14 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,7 @@ char			*get_first_word(const char *line);
 void			cmd_not_found(char *str);
 int				is_within_quotes(char *str, char *sep);
 int				is_entirely_within_quotes(char *str);
+char	*ft_strncpy(char *dst, const char *src, size_t n);
 
 // resources/utils/mini_utils_6.c
 char			*get_word(char *line, int *sig, char *sigline);
@@ -171,7 +172,6 @@ void			*ft_realloc(void *ptr, size_t new_size);
 
 // resources/utils/mini_utils_7.c
 char			*get_first_word(const char *line);
-void			replace_line(void);
 void			replace_line1(void);
 
 // resources/mini_expand.c
@@ -192,7 +192,7 @@ void			mini_pwd(void);
 void			mini_export(char **args, t_env_var **g_env_list);
 void			mini_unset(char **args, t_env_var **g_env_list);
 char			*ft_findenv(char *s, t_env_var *g_env_list);
-char			*process_cmd(char *arg);
+char	*process_cmd(char *arg);
 void			execute_in_child(char *path, char *args[]);
 
 // resources/first_handler.c
@@ -264,7 +264,18 @@ int				checks_str(t_cmd *cmd);
 void			handle_heredoc_left(char *delimiter, int pipe_fd[2]);
 
 // resources/free_up/free_inits.c
-void			free_env_list(t_env_var *g_env_list);
+void			free_env_list(t_env_var **g_env_list);
 int				write_exit(t_cmd *cmd);
-void			free_env_list2(t_env_var **g_env_list);
+void			free_cmd_array(t_cmd *cmd);
+void			free_lines(t_cmd *cmd);
+void			free_arg(t_cmd *cmd);
+void			free_cmd_array(t_cmd *cmd);
+void			free_ms(t_cmd *cmd);
+void			free_tree(t_node *root);
+int				write_exit(t_cmd *cmd);
+void			free_all(t_cmd *cmd);
+void			free_one_iterator(t_cmd *cmd);
+void			free_fds(t_cmd *cmd);
+int			free_unset(t_env_var *current);
+
 #endif

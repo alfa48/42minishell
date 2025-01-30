@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_envexit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 14:17:02 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/28 11:59:35 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/29 11:42:28 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,7 @@ void	mini_exit(t_cmd *cmd)
 		if (!flag  && cmd->arg[2])
 			printf("minishell: exit: too many arguments\n");
 	}
-	free_env_list(cmd->g_env_list);
-	free_tree(cmd->root);
-	free_ms(cmd);
+	free_all(cmd);
 	exit(0);
 }
 

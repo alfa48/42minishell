@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:40:56 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/22 11:52:31 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 13:22:12 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,6 @@ void	setup_io(t_redirect **redirects, int *prev_pipe, int *next_pipe,
 {
 	(void)is_middle;
 	if (redirects)
-	{
 		apply_file_redirections(redirects);
-	}
 	handle_pipes(redirects, prev_pipe, next_pipe);
 }

@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:25 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/28 16:26:47 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 13:16:57 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 void	mini_echo(char *arg, char *siline)
 {
 	int		new_line;
+	char	*tmp;
 	char	*init;
 	char	*echo;
 
 	new_line = 0;
-	arg = process_cmd(arg);
-	init = get_word(arg, &new_line, siline);
+	tmp = process_cmd(arg);
+	init = get_word(tmp, &new_line, siline);
 	if (!init)
 		return ;
 	else
@@ -36,6 +37,7 @@ void	mini_echo(char *arg, char *siline)
 		else if (init && new_line == 0)
 			printf("%s", init);
 	}
+	free(tmp);
 }
 
 void	mini_cd(char *path, t_env_var *g_env_list)
@@ -61,7 +63,8 @@ void	mini_cd(char *path, t_env_var *g_env_list)
 
 void	mini_export(char **args, t_env_var **g_env_list)
 {
-	int	i;
+	int		i;
+	char	*tmp;
 
 	if (!args[1])
 	{
@@ -69,7 +72,9 @@ void	mini_export(char **args, t_env_var **g_env_list)
 		return ;
 	}
 	i = 1;
-	set_or_add_env_var(process_cmd(args[i]), g_env_list);
+	tmp = process_cmd(args[i]);
+	set_or_add_env_var(tmp, g_env_list);
+	free(tmp);
 }
 
 void	mini_unset(char **args, t_env_var **g_env_list)
@@ -80,20 +85,22 @@ void	mini_unset(char **args, t_env_var **g_env_list)
 	if (args[0] == NULL || args[1] == NULL)
 		return ;
 	current = *g_env_list;
-	if (ft_strcmp(args[1], current->name) == 0)
+	if (current && ft_strcmp(args[1], current->name) == 0)
 	{
-		(*g_env_list) = current->next;
-		current = NULL;
+		tmp = current;
+		*g_env_list = current->next;
+		current = *g_env_list;
+		free(tmp->name);
+		free(tmp->value);
+		free(tmp);
 		return ;
 	}
 	while (current->next)
 	{
 		if (ft_strcmp(args[1], current->next->name) == 0)
 		{
-			tmp = current->next;
-			current->next = current->next->next;
-			free(tmp);
-			return ;
+			if (free_unset(current))
+				return ;
 		}
 		current = current->next;
 	}

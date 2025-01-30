@@ -6,7 +6,7 @@
 /*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:13:10 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/28 16:21:48 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 12:41:37 by fjilaias         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	set_it(char *name, const char *value, t_env_var **g_env_list)
 	new_var->name = ft_strdup(name);
 	if (ft_strlen(value) > 2097152)
 	{
+		free(new_var);
 		ft_putstr_fd("Too long env value\n", 2);
 		return (0);
 	}
@@ -79,7 +80,7 @@ void	set_or_add_env_var(const char *env_entry, t_env_var **g_env_list)
 		name_len = ft_strlen(env_entry) + 1;
 		ft_strlcpy(name, env_entry, name_len);
 		name[name_len] = '\0';
-		if (set_it(name, "''", g_env_list) == 42)
+		if (set_it(name, "", g_env_list) == 42)
 			return ;
 	}
 }

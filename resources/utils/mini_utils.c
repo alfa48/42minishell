@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:24:48 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/27 11:02:41 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/29 13:54:15 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,11 @@ char	**get_args(char *cmd)
 	{
 		cmd_args = ft_split(cmd, ' ');
 		execve_args = malloc((get_args_size(cmd_args) + 1) * sizeof(char *));
-		execve_args[0] = cmd_args[0];
+		execve_args[0] = ft_strdup(cmd_args[0]);
 		while (++i < get_args_size(cmd_args))
-			execve_args[i] = cmd_args[i];
+			execve_args[i] = ft_strdup(cmd_args[i]);
 		execve_args[i] = NULL;
+		free_array(cmd_args);
 	}
 	else
 	{
