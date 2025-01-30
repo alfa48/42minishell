@@ -3,3 +3,4 @@ $(NAME) : $(OBJ) $(LIBFT_A)
 	$(CCFLAGS) $(OBJ) -L$(LIBFT_DIR) -lft -lreadline -o $(NAME)
 	rm -f $(OBJ)
 .PHONY: all clean fclean re
+MAI SAOLSJF    OK
