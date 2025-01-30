@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 08:52:19 by fjilaias          #+#    #+#             */
-/*   Updated: 2025/01/30 13:17:14 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 16:07:14 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,6 +236,7 @@ void			fork_crt_env_vars(t_cmd *cmd);
 void			wait_forks(t_cmd *cmd);
 void			fork_exec_cmd(t_cmd *cmd, t_node *node);
 void			fork_exec_cmd_(int pos, t_cmd *cmd);
+char	*aux_exec(char *ccmd, t_cmd *cmd);
 
 // resources/redirect/redirect.c
 char			**ft_split_redirect(const char *str);

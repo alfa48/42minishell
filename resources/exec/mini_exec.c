@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjilaias <fjilaias@student.42.fr>          +#+  +:+       +#+        */
+/*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 08:32:29 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/30 10:18:31 by fjilaias         ###   ########.fr       */
+/*   Updated: 2025/01/30 15:51:17 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,11 @@ void	cmd_not_found_end_exit(char *str)
 	{
 		cmd_not_found(fw);
 		free(fw);
+		free(str);
 		exit(14);
 	}
+	else
+		free(fw);
 }
 
 void	simple_cmd(char *str, t_cmd *cmd)

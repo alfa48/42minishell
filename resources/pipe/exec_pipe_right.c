@@ -6,7 +6,7 @@
 /*   By: manandre <manandre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:32:54 by manandre          #+#    #+#             */
-/*   Updated: 2025/01/29 13:55:16 by manandre         ###   ########.fr       */
+/*   Updated: 2025/01/30 16:14:04 by manandre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,19 @@ void	execute_with_args(char *clean_cmd, t_redirect **redirects, t_cmd *cmd)
 	char	*path;
 	char	**args;
 
-	path = find_executable(get_first_word(ft_strdup(clean_cmd)),
-			&(cmd->g_env_list));
+	path = aux_exec(clean_cmd, cmd);
 	args = get_args(clean_cmd);
-	free(clean_cmd);
+	if (!path)
+		path = ft_strdup("");
 	if (redirects)
 		free_redirects(redirects);
 	if (execve(path, args, cmd->envl) == -1)
+	{
 		error_execve(args[0], path, args);
+		free(clean_cmd);
+		free_all(cmd);
+		exit(errno);
+	}
 }
 
 void	error_execve(char *ccmd, char *path, char **args)
@@ -70,5 +75,4 @@ void	error_execve(char *ccmd, char *path, char **args)
 	cmd_not_found(ccmd);
 	free(path);
 	free_array(args);
-	exit(errno);
 }
